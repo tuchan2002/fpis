@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    /**
+     * 0 manufactory
+     * 1 retailer
+     * 2 customer
+     */
     role: {
       type: DataTypes.INTEGER,
       allowNull: false,
