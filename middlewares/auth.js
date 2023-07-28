@@ -4,11 +4,10 @@ const verifyToken = (req, res, next) => {
   const requestHeader = req.header("Authorization");
   const token = requestHeader && requestHeader.split(" ")[1];
 
-  console.log("1 ok", token);
   if (!token) {
     return res
       .status(401)
-      .json({ success: false, message: "Access token not found." });
+      .json({ success: false, message: "Unauthenticated." });
   }
 
   try {
