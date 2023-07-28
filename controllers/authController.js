@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const authController = {
   register: async (req, res) => {
-    const { name, email, password, address, phone_number } = req.body;
+    const { name, email, password, address, phone_number, role } = req.body;
 
     try {
       const user = await db.User.findOne({
@@ -25,6 +25,7 @@ const authController = {
         address,
         phone_number,
         password: hashedPassword,
+        role,
       };
 
       const createdUser = await db.User.create(newUser);
@@ -53,7 +54,7 @@ const authController = {
       if (!user) {
         return res
           .status(400)
-          .json({ message: "A user with email could not be found." });
+          .json({ message: "Incorrect email or password." });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
@@ -63,7 +64,8 @@ const authController = {
           .json({ message: "Incorrect email or password." });
       }
 
-      const access_token = createAccessToken({ id: user.id });
+      user.password = "";
+      const access_token = createAccessToken({ userId: user.id });
       return res.json({
         message: "Login successfully.",
         success: true,
@@ -72,6 +74,32 @@ const authController = {
           user: user,
         },
       });
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  },
+  getAuth: async (req, res) => {
+    console.log("OKOKO", req.userId);
+    try {
+      const user = await db.User.findOne({
+        attributes: { exclude: ["password"] },
+        where: {
+          id: req.userId,
+        },
+      });
+
+      if (!user) {
+        return res
+          .status(400)
+          .json({ success: false, message: "User not found" });
+      } else {
+        return res.status(200).json({
+          success: true,
+          data: {
+            user: user,
+          },
+        });
+      }
     } catch (err) {
       return res.status(500).json({ message: err.message });
     }
