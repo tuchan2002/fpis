@@ -12,15 +12,18 @@ contract FPIS {
 
   struct Manufactory {
     string name;
+    string location;
   }
 
   struct Retailer {
     string name;
+    string location;
   }
 
   struct Customer {
     string name;
     string email;
     string phone_number;
+    string location;
   }
 }
