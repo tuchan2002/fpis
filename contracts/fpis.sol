@@ -5,6 +5,22 @@ contract FPIS {
   struct Product {
     string model;
     string description;
-    string manufactoryName;
+    string manufactory;
+    string retailer;
+    string[] customer;
+  }
+
+  struct Manufactory {
+    string name;
+  }
+
+  struct Retailer {
+    string name;
+  }
+
+  struct Customer {
+    string name;
+    string email;
+    string phone_number;
   }
 }
