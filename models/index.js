@@ -35,6 +35,22 @@ const db = {};
 db.sequelize = sequelize;
 
 db.User = require("./user.js")(sequelize, DataTypes);
+db.Product = require("./product.js")(sequelize, DataTypes);
+
+// Associations
+const createOneToManyRelation = function (manyModel, oneModel, foreignKey, as) {
+  oneModel.hasMany(manyModel, {
+    foreignKey,
+    as,
+  });
+
+  manyModel.belongsTo(oneModel, {
+    foreignKey,
+    as,
+  });
+};
+
+createOneToManyRelation(db.Product, db.User, "user_id", "user_product");
 
 db.sequelize.sync({ alter: true }).then(() => {
   console.log("All models were synchronized successfully.");
