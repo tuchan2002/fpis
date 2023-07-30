@@ -52,7 +52,7 @@ const createOneToManyRelation = function (manyModel, oneModel, foreignKey, as) {
 
 createOneToManyRelation(db.Product, db.User, "user_id", "user_product");
 
-db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync({ alter: true }).then(() => {
   console.log("All models were synchronized successfully.");
 });
 

@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const authController = {
   register: async (req, res) => {
-    const { name, email, password, address, phone_number, role } = req.body;
+    const { name, email, password, location, phone_number, role } = req.body;
 
     try {
       const user = await db.User.findOne({
@@ -22,7 +22,7 @@ const authController = {
       const newUser = {
         name,
         email,
-        address,
+        location,
         phone_number,
         password: hashedPassword,
         role,
@@ -79,6 +79,7 @@ const authController = {
     }
   },
   getAuth: async (req, res) => {
+    console.log(req.userId);
     try {
       const user = await db.User.findOne({
         attributes: { exclude: ["password"] },
