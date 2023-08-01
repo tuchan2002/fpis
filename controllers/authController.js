@@ -38,22 +38,34 @@ const authController = {
       const createdUser = await db.User.create(newUser);
       createdUser.password = "";
 
-      // const isSavedToBlockchain = await createManufactory(
-      //   name,
-      //   email,
-      //   location
-      // );
-      // if (isSavedToBlockchain) {
-      //   console.log("OK");
-      // }
+      let isSavedToBlockchain;
+      if (role === 0) {
+        isSavedToBlockchain = await createManufactory(email, name, location);
+      } else if (role === 1) {
+        isSavedToBlockchain = await createRetailer(email, name, location);
+      } else if (role === 2) {
+        isSavedToBlockchain = await createManufactory(
+          email,
+          name,
+          location,
+          phone_number
+        );
+      }
 
-      return res.status(201).json({
-        message: "Register account successfully.",
-        success: true,
-        data: {
-          user: createdUser,
-        },
-      });
+      if (isSavedToBlockchain) {
+        console.log("Register account successful.");
+
+        return res.status(201).json({
+          message: "Register account successful.",
+          success: true,
+          data: {
+            user: createdUser,
+          },
+        });
+      } else {
+        console.log("Register account failed.");
+        return res.status(500).json({ message: "Save to blockchain failed." });
+      }
     } catch (err) {
       return res.status(500).json({ message: err.message });
     }
