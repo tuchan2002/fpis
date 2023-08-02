@@ -44,7 +44,7 @@ const authController = {
       } else if (role === 1) {
         isSavedToBlockchain = await createRetailer(email, name, location);
       } else if (role === 2) {
-        isSavedToBlockchain = await createManufactory(
+        isSavedToBlockchain = await createCustomer(
           email,
           name,
           location,
@@ -93,7 +93,10 @@ const authController = {
       }
 
       user.password = "";
-      const access_token = createAccessToken({ userId: user.id });
+      const access_token = createAccessToken({
+        userId: user.id,
+        role: user.role,
+      });
       return res.json({
         message: "Login successfully.",
         success: true,

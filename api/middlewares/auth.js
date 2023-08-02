@@ -13,6 +13,7 @@ const isAuth = (req, res, next) => {
   try {
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     req.userId = decodedToken.userId;
+    req.role = decodedToken.role;
     next();
   } catch (err) {
     return res.status(403).json({ success: false, message: "Invalid token." });
