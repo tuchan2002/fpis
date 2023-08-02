@@ -18,7 +18,6 @@ const productController = {
           id: req.userId,
         },
       });
-      console.log("user email", user.email);
 
       const isSavedToBlockchain = await createProductOnBlockchain(
         productID,
@@ -43,14 +42,66 @@ const productController = {
     const { productID } = req.params;
 
     try {
-      const product = await getProductDetail(productID);
-      return res
-        .status(201)
-        .json({ success: true, data: { product: product } });
+      const productDetail = await getProductDetail(productID);
+
+      return res.status(201).json({
+        success: true,
+        data: {
+          product: {
+            productID,
+            model: productDetail[0],
+            description: productDetail[1],
+            retailerEmail: productDetail[2],
+            customerEmail: productDetail[3],
+          },
+        },
+      });
     } catch (err) {
       return res.status(500).json({ message: err.message });
     }
   },
+
+  moveProductToRetailer: async (req, res) => {
+    const { productID, retailerEmail } = req.body;
+
+    try {
+      const user = await db.User.findOne({
+        where: {
+          email: retailerEmail,
+        },
+      });
+      if (!user) {
+        return res
+          .status(400)
+          .json({ message: "Email address does not exist." });
+      }
+
+      if (user.role !== 1) {
+        return res.status(400).json({ message: "Email is not retailer." });
+      }
+
+      const isSavedToBlockchain = await moveToRetailer(
+        productID,
+        retailerEmail
+      );
+      if (isSavedToBlockchain) {
+        return res
+          .status(201)
+          .json({ success: true, message: "Save to blockchain success." });
+      } else {
+        return res.status(500).json({ message: "Save to blockchain failed." });
+      }
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  },
+
+  // sellProductToCustomer: async (req, res) => {
+  //   try {
+  //   } catch (err) {
+  //     return res.status(500).json({ message: err.message });
+  //   }
+  // },
 };
 
 const createProductOnBlockchain = async (
@@ -75,6 +126,21 @@ const getProductDetail = async (productID) => {
     const productDetail = await contract.methods
       .getProductDetail(productID)
       .call({ from: accountAddress });
+
+    console.log(productDetail);
+    return productDetail;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const moveToRetailer = async (productID, retailerEmail) => {
+  try {
+    return await contract.methods
+      .moveToRetailer(productID, retailerEmail)
+      .send({
+        from: accountAddress,
+      });
 
     console.log(productDetail);
     return productDetail;
