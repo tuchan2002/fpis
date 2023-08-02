@@ -2,6 +2,7 @@ const router = require("express").Router();
 const productController = require("../controllers/productController");
 const isAuth = require("../middlewares/auth");
 const isManufactory = require("../middlewares/isManufactory");
+const isRetailer = require("../middlewares/isRetailer");
 
 router.post("/", isAuth, isManufactory, productController.createProduct); // only manufactory
 router.get("/:productID", isAuth, productController.getProductById);
@@ -11,11 +12,11 @@ router.post(
   isManufactory,
   productController.moveProductToRetailer
 );
-// router.post(
-//   "/sell-to-customer",
-//   isAuth,
-//   isRetailer,
-//   productController.sellProductToCustomer
-// );
+router.post(
+  "/sell-to-customer",
+  isAuth,
+  isRetailer,
+  productController.sellProductToCustomer
+);
 
 module.exports = router;

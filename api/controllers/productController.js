@@ -96,12 +96,49 @@ const productController = {
     }
   },
 
-  // sellProductToCustomer: async (req, res) => {
-  //   try {
-  //   } catch (err) {
-  //     return res.status(500).json({ message: err.message });
-  //   }
-  // },
+  sellProductToCustomer: async (req, res) => {
+    const { productID, customerEmail } = req.body;
+
+    try {
+      const customerUser = await db.User.findOne({
+        where: {
+          email: customerEmail,
+        },
+      });
+      if (!customerUser) {
+        return res
+          .status(400)
+          .json({ message: "Email address does not exist." });
+      }
+      if (customerUser.role !== 2) {
+        return res.status(400).json({ message: "Email is not customer." });
+      }
+
+      const retailerUser = await db.User.findOne({
+        attributes: ["email"],
+        where: {
+          id: req.userId,
+        },
+      });
+      const isSavedToBlockchain = await sellToFirstCustomer(
+        productID,
+        retailerUser.email,
+        customerEmail
+      );
+
+      console.log("is Saved To Blockchain", isSavedToBlockchain);
+
+      if (isSavedToBlockchain) {
+        return res
+          .status(201)
+          .json({ success: true, message: "Save to blockchain success." });
+      } else {
+        return res.status(500).json({ message: "Save to blockchain failed." });
+      }
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  },
 };
 
 const createProductOnBlockchain = async (
@@ -141,9 +178,18 @@ const moveToRetailer = async (productID, retailerEmail) => {
       .send({
         from: accountAddress,
       });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-    console.log(productDetail);
-    return productDetail;
+const sellToFirstCustomer = async (productID, retailerEmail, customerEmail) => {
+  try {
+    return await contract.methods
+      .sellToFirstCustomer(productID, retailerEmail, customerEmail)
+      .send({
+        from: accountAddress,
+      });
   } catch (error) {
     console.error(error);
   }
