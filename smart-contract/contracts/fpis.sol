@@ -39,7 +39,7 @@ contract FPIS {
   mapping (string => Retailer) private retailerList;
   mapping (string => Customer) private customerList;
 
-  function createManufactor(string memory _manufactorEmail, string memory _manufactorName, string memory _manufactorLocation) public payable returns (bool) {
+  function createManufactory(string memory _manufactorEmail, string memory _manufactorName, string memory _manufactorLocation) public payable returns (bool) {
     Retailer memory newManufactor;
     newManufactor.name = _manufactorName;
     newManufactor.location = _manufactorLocation;

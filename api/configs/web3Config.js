@@ -340,12 +340,18 @@ const abi = [
     type: "function",
   },
 ];
-const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 const contract = new web3.eth.Contract(abi, contractAddress);
 
+let accountAddress = "";
+web3.eth.getAccounts().then((accounts) => {
+  accountAddress = accounts[0];
+});
+
 module.exports = {
   web3,
   contract,
+  accountAddress,
 };
