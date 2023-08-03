@@ -1,6 +1,8 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+import "hardhat/console.sol";
+
 contract FPIS {
   struct Product {
     string model;
@@ -95,7 +97,10 @@ contract FPIS {
   }
 
   function changeCustomer(string memory _productID, string memory _oldCustomerEmail, string memory _newCustomerEmail) public payable returns (bool) {
+    console.log(_productID, _oldCustomerEmail, _newCustomerEmail);
+    
     Product memory product = productList[_productID];
+
     Customer memory oldCustomer = customerList[_oldCustomerEmail];
     uint numOfProductsOldCustomer = customerList[_oldCustomerEmail].products.length;
 

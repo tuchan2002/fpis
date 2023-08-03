@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npx hardhat node",
     "compile": "npx hardhat compile",
+    "deploy-contract": "npx hardhat run --network localhost scripts/deploy.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
