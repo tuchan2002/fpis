@@ -43,6 +43,7 @@ const productController = {
 
     try {
       const productDetail = await getProductDetail(productID);
+      console.log(productDetail);
 
       return res.status(201).json({
         success: true,
@@ -139,6 +140,61 @@ const productController = {
       return res.status(500).json({ message: err.message });
     }
   },
+
+  exchangeProductToAnotherCustomer: async (req, res) => {
+    const { productID, newCustomerEmail } = req.body;
+
+    try {
+      const newCustomer = await db.User.findOne({
+        where: {
+          email: newCustomerEmail,
+        },
+      });
+      if (!newCustomer) {
+        return res
+          .status(400)
+          .json({ message: "Email address does not exist." });
+      }
+      if (newCustomer.role !== 2) {
+        return res.status(400).json({ message: "Email is not customer." });
+      }
+
+      const oldCustomer = await db.User.findOne({
+        attributes: ["email"],
+        where: {
+          id: req.userId,
+        },
+      });
+      console.log("oldCustomer", oldCustomer.email);
+
+      const productListOfOldCustomer = await getProductsByCustomer(
+        oldCustomer.email
+      );
+      if (!productListOfOldCustomer.includes(productID)) {
+        console.log(
+          "productListOfOldCustomer.includes(productID)",
+          productListOfOldCustomer.includes(productID)
+        );
+        return res.status(400).json({ message: "You don't own this product." });
+      }
+
+      const isSavedToBlockchain = await changeCustomer(
+        productID,
+        oldCustomer.email,
+        newCustomerEmail
+      );
+
+      if (isSavedToBlockchain) {
+        return res
+          .status(201)
+          .json({ success: true, message: "Save to blockchain success." });
+      } else {
+        return res.status(500).json({ message: "Save to blockchain failed." });
+      }
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  },
 };
 
 const createProductOnBlockchain = async (
@@ -164,8 +220,20 @@ const getProductDetail = async (productID) => {
       .getProductDetail(productID)
       .call({ from: accountAddress });
 
-    console.log(productDetail);
     return productDetail;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getProductsByCustomer = async (customerEmail) => {
+  try {
+    const productList = await contract.methods
+      .getProductsByCustomer(customerEmail)
+      .call({ from: accountAddress });
+
+    console.log(productList);
+    return productList;
   } catch (error) {
     console.error(error);
   }
@@ -187,6 +255,22 @@ const sellToFirstCustomer = async (productID, retailerEmail, customerEmail) => {
   try {
     return await contract.methods
       .sellToFirstCustomer(productID, retailerEmail, customerEmail)
+      .send({
+        from: accountAddress,
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const changeCustomer = async (
+  productID,
+  oldCustomerEmail,
+  newCustomerEmail
+) => {
+  try {
+    return await contract.methods
+      .changeCustomer(productID, oldCustomerEmail, newCustomerEmail)
       .send({
         from: accountAddress,
       });
