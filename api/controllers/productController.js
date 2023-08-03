@@ -166,15 +166,16 @@ const productController = {
         },
       });
       console.log("oldCustomer", oldCustomer.email);
+      if (oldCustomer.email === newCustomerEmail) {
+        return res
+          .status(400)
+          .json({ message: "Product cannot be exchanged for yourself." });
+      }
 
       const productListOfOldCustomer = await getProductsByCustomer(
         oldCustomer.email
       );
       if (!productListOfOldCustomer.includes(productID)) {
-        console.log(
-          "productListOfOldCustomer.includes(productID)",
-          productListOfOldCustomer.includes(productID)
-        );
         return res.status(400).json({ message: "You don't own this product." });
       }
 
@@ -182,6 +183,11 @@ const productController = {
         productID,
         oldCustomer.email,
         newCustomerEmail
+      );
+
+      console.log(
+        "exchangeProductToAnotherCustomer isSavedToBlockchain",
+        isSavedToBlockchain
       );
 
       if (isSavedToBlockchain) {
