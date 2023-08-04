@@ -82,7 +82,7 @@ const abi = [
         type: "string",
       },
     ],
-    name: "createManufactor",
+    name: "createManufactory",
     outputs: [
       {
         internalType: "bool",

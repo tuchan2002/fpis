@@ -1,11 +1,12 @@
-const web3Api = require("../configs/web3Config");
 const db = require("../models");
-const { web3, contract } = web3Api;
-
-let accountAddress = "";
-web3.eth.getAccounts().then((accounts) => {
-  accountAddress = accounts[0];
-});
+const {
+  createProductOnBlockchain,
+  getProductDetail,
+  moveToRetailer,
+  sellToFirstCustomer,
+  getProductsByCustomer,
+  changeCustomer,
+} = require("../web3/product");
 
 const productController = {
   createProduct: async (req, res) => {
@@ -25,7 +26,7 @@ const productController = {
         description,
         user.email
       );
-      console.log("isSavedToBlockchain", isSavedToBlockchain);
+
       if (isSavedToBlockchain) {
         return res
           .status(201)
@@ -43,7 +44,6 @@ const productController = {
 
     try {
       const productDetail = await getProductDetail(productID);
-      console.log(productDetail);
 
       return res.status(201).json({
         success: true,
@@ -56,6 +56,37 @@ const productController = {
             customerEmail: productDetail[3],
           },
         },
+      });
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  },
+
+  getProductsByCustomer: async (req, res) => {
+    const { customerEmail } = req.body;
+
+    try {
+      const productIdList = await getProductsByCustomer(customerEmail);
+
+      const productDetailListPromise = [];
+      productIdList.forEach((productId) => {
+        const productDetail = getProductDetail(productId);
+        productDetailListPromise.push(productDetail);
+      });
+
+      Promise.all(productDetailListPromise).then((productDetailList) => {
+        return res.status(201).json({
+          success: true,
+          data: {
+            products: productDetailList.map((productDetail, index) => ({
+              productID: productIdList[index],
+              model: productDetail[0],
+              description: productDetail[1],
+              retailerEmail: productDetail[2],
+              customerEmail: productDetail[3],
+            })),
+          },
+        });
       });
     } catch (err) {
       return res.status(500).json({ message: err.message });
@@ -127,8 +158,6 @@ const productController = {
         customerEmail
       );
 
-      console.log("is Saved To Blockchain", isSavedToBlockchain);
-
       if (isSavedToBlockchain) {
         return res
           .status(201)
@@ -165,7 +194,7 @@ const productController = {
           id: req.userId,
         },
       });
-      console.log("oldCustomer", oldCustomer.email);
+
       if (oldCustomer.email === newCustomerEmail) {
         return res
           .status(400)
@@ -185,11 +214,6 @@ const productController = {
         newCustomerEmail
       );
 
-      console.log(
-        "exchangeProductToAnotherCustomer isSavedToBlockchain",
-        isSavedToBlockchain
-      );
-
       if (isSavedToBlockchain) {
         return res
           .status(201)
@@ -201,88 +225,6 @@ const productController = {
       return res.status(500).json({ message: err.message });
     }
   },
-};
-
-const createProductOnBlockchain = async (
-  productID,
-  model,
-  description,
-  manufactoryEmail
-) => {
-  try {
-    return await contract.methods
-      .createProduct(productID, model, description, manufactoryEmail)
-      .send({
-        from: accountAddress,
-      });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const getProductDetail = async (productID) => {
-  try {
-    const productDetail = await contract.methods
-      .getProductDetail(productID)
-      .call({ from: accountAddress });
-
-    return productDetail;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const getProductsByCustomer = async (customerEmail) => {
-  try {
-    const productList = await contract.methods
-      .getProductsByCustomer(customerEmail)
-      .call({ from: accountAddress });
-
-    console.log(productList);
-    return productList;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const moveToRetailer = async (productID, retailerEmail) => {
-  try {
-    return await contract.methods
-      .moveToRetailer(productID, retailerEmail)
-      .send({
-        from: accountAddress,
-      });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const sellToFirstCustomer = async (productID, retailerEmail, customerEmail) => {
-  try {
-    return await contract.methods
-      .sellToFirstCustomer(productID, retailerEmail, customerEmail)
-      .send({
-        from: accountAddress,
-      });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const changeCustomer = async (
-  productID,
-  oldCustomerEmail,
-  newCustomerEmail
-) => {
-  try {
-    return await contract.methods
-      .changeCustomer(productID, oldCustomerEmail, newCustomerEmail)
-      .send({
-        from: accountAddress,
-      });
-  } catch (error) {
-    console.error(error);
-  }
 };
 
 module.exports = productController;

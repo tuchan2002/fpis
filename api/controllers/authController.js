@@ -1,13 +1,11 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../models");
-const web3Api = require("../configs/web3Config");
-const { web3, contract } = web3Api;
-
-let accountAddress = "";
-web3.eth.getAccounts().then((accounts) => {
-  accountAddress = accounts[0];
-});
+const {
+  createManufactory,
+  createRetailer,
+  createCustomer,
+} = require("../web3/auth");
 
 const authController = {
   register: async (req, res) => {
@@ -141,38 +139,6 @@ const createAccessToken = (payload) => {
   return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "1d",
   });
-};
-
-const createManufactory = async (email, name, location) => {
-  try {
-    return await contract.methods.createManufactor(email, name, location).send({
-      from: accountAddress,
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const createRetailer = async (email, name, location) => {
-  try {
-    return await contract.methods.createRetailer(email, name, location).send({
-      from: accountAddress,
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const createCustomer = async (email, name, location, phone_number) => {
-  try {
-    return await contract.methods
-      .createCustomer(email, name, location, phone_number)
-      .send({
-        from: accountAddress,
-      });
-  } catch (error) {
-    console.error(error);
-  }
 };
 
 module.exports = authController;
