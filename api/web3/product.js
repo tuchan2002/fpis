@@ -1,5 +1,10 @@
 const web3Api = require("../configs/web3Config");
-const { contract, accountAddress } = web3Api;
+const { contract, web3 } = web3Api;
+
+let accountAddress = "";
+web3.eth.getAccounts().then((accounts) => {
+  accountAddress = accounts[0];
+});
 
 const createProductOnBlockchain = async (
   productID,
@@ -36,7 +41,6 @@ const getProductsByCustomer = async (customerEmail) => {
       .getProductsByCustomer(customerEmail)
       .call({ from: accountAddress });
 
-    console.log(productList);
     return productList;
   } catch (error) {
     console.error(error);

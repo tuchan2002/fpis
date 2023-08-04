@@ -1,5 +1,10 @@
 const web3Api = require("../configs/web3Config");
-const { contract, accountAddress } = web3Api;
+const { contract, web3 } = web3Api;
+
+let accountAddress = "";
+web3.eth.getAccounts().then((accounts) => {
+  accountAddress = accounts[0];
+});
 
 const createManufactory = async (email, name, location) => {
   try {

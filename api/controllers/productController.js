@@ -26,7 +26,7 @@ const productController = {
         description,
         user.email
       );
-      console.log("isSavedToBlockchain", isSavedToBlockchain);
+
       if (isSavedToBlockchain) {
         return res
           .status(201)
@@ -44,7 +44,6 @@ const productController = {
 
     try {
       const productDetail = await getProductDetail(productID);
-      console.log(productDetail);
 
       return res.status(201).json({
         success: true,
@@ -57,6 +56,37 @@ const productController = {
             customerEmail: productDetail[3],
           },
         },
+      });
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  },
+
+  getProductsByCustomer: async (req, res) => {
+    const { customerEmail } = req.body;
+
+    try {
+      const productIdList = await getProductsByCustomer(customerEmail);
+
+      const productDetailListPromise = [];
+      productIdList.forEach((productId) => {
+        const productDetail = getProductDetail(productId);
+        productDetailListPromise.push(productDetail);
+      });
+
+      Promise.all(productDetailListPromise).then((productDetailList) => {
+        return res.status(201).json({
+          success: true,
+          data: {
+            products: productDetailList.map((productDetail, index) => ({
+              productID: productIdList[index],
+              model: productDetail[0],
+              description: productDetail[1],
+              retailerEmail: productDetail[2],
+              customerEmail: productDetail[3],
+            })),
+          },
+        });
       });
     } catch (err) {
       return res.status(500).json({ message: err.message });
@@ -128,8 +158,6 @@ const productController = {
         customerEmail
       );
 
-      console.log("is Saved To Blockchain", isSavedToBlockchain);
-
       if (isSavedToBlockchain) {
         return res
           .status(201)
@@ -166,7 +194,7 @@ const productController = {
           id: req.userId,
         },
       });
-      console.log("oldCustomer", oldCustomer.email);
+
       if (oldCustomer.email === newCustomerEmail) {
         return res
           .status(400)
@@ -184,11 +212,6 @@ const productController = {
         productID,
         oldCustomer.email,
         newCustomerEmail
-      );
-
-      console.log(
-        "exchangeProductToAnotherCustomer isSavedToBlockchain",
-        isSavedToBlockchain
       );
 
       if (isSavedToBlockchain) {
