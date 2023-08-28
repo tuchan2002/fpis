@@ -1,16 +1,35 @@
 version: 2.1
 
+orbs:
+  node: circleci/node@5.1.0
+  docker: circleci/docker@2.2.0
+
 jobs:
-  say-hello:
-    docker:
-      - image: cimg/base:stable
+  eslint-api:
+    working_directory: ~/fpis/api
+    executor: node/default
     steps:
-      - checkout
+      - checkout:
+          path: ~/fpis
+      - node/install-packages:
+          pkg-manager: npm
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          command: npm run lint
+          name: Run Lint
+  eslint-web:
+    working_directory: ~/fpis/web
+    executor: node/default
+    steps:
+      - checkout:
+          path: ~/fpis
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run lint
+          name: Run Lint 
 
 workflows:
-  say-hello-workflow:
+  test-build-deploy:
     jobs:
-      - say-hello
+      - eslint-api
+      - eslint-web
