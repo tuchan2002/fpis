@@ -1,16 +1,107 @@
 version: 2.1
 
+orbs:
+  node: circleci/node@5.1.0
+  docker: circleci/docker@2.2.0
+
 jobs:
-  say-hello:
-    docker:
-      - image: cimg/base:stable
+  eslint-api:
+    working_directory: ~/fpis/api
+    executor: node/default
     steps:
-      - checkout
+      - checkout:
+          path: ~/fpis
+      - node/install-packages:
+          pkg-manager: npm
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          command: npm run lint
+          name: Run Lint
+  eslint-web:
+    working_directory: ~/fpis/web
+    executor: node/default
+    steps:
+      - checkout:
+          path: ~/fpis
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run lint
+          name: Run Lint
+  build-and-push-api:
+    working_directory: ~/fpis/api
+    environment:
+      DOCKER_IMAGE: tuchan17/fpis_express
+      DOCKER_TAG: latest
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout:
+          path: ~/fpis
+      - docker/check:
+          docker-username: DOCKER_USERNAME
+          docker-password: DOCKER_PASSWORD
+      - docker/build:
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
+      - run:
+          command: |
+            previous_commit=$(git rev-parse HEAD^)
+            if git diff $previous_commit -- api/contracts; then
+              echo "Không có thay đổi trong mã thông minh."
+              exit 1
+            else
+              echo "Có sự thay đổi trong mã thông minh. Tiến hành triển khai..."
+              # Thực hiện quá trình triển khai ở đây
+            fi
+  build-and-push-web:
+    working_directory: ~/fpis/web
+    environment:
+      DOCKER_IMAGE: tuchan17/fpis_next
+      DOCKER_TAG: latest
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout:
+          path: ~/fpis
+      - docker/check:
+          docker-username: DOCKER_USERNAME
+          docker-password: DOCKER_PASSWORD
+      - docker/build:
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
 
 workflows:
-  say-hello-workflow:
+  test-build-deploy:
     jobs:
-      - say-hello
+      - eslint-api
+      - eslint-web
+      - build-and-push-api:
+          requires:
+            - eslint-api
+            - eslint-web
+          filters:
+            branches:
+              only:
+                - develop
+      - build-and-push-web:
+          requires:
+            - eslint-api
+            - eslint-web
+          filters:
+            branches:
+              only:
+                - develop
