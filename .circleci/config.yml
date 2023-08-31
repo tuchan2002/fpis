@@ -16,6 +16,7 @@ jobs:
       - run:
           command: npm run lint
           name: Run Lint
+
   eslint-web:
     working_directory: ~/fpis/web
     executor: node/default
@@ -27,6 +28,7 @@ jobs:
       - run:
           command: npm run lint
           name: Run Lint
+
   build-and-push-api:
     working_directory: ~/fpis/api
     environment:
@@ -60,6 +62,7 @@ jobs:
               echo "Có sự thay đổi trong mã thông minh. Tiến hành triển khai..."
               # Thực hiện quá trình triển khai ở đây
             fi
+
   build-and-push-web:
     working_directory: ~/fpis/web
     environment:
