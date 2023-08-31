@@ -51,11 +51,11 @@ jobs:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
       - run:
+          name: Kiểm tra sự thay đổi
           command: |
             previous_commit=$(git rev-parse HEAD^)
             if git diff $previous_commit -- api/contracts; then
               echo "Không có thay đổi trong mã thông minh."
-              exit 1
             else
               echo "Có sự thay đổi trong mã thông minh. Tiến hành triển khai..."
               # Thực hiện quá trình triển khai ở đây
