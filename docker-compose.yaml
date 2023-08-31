@@ -18,41 +18,64 @@ services:
     networks:
       - api-network
 
-  # api:
-  #   container_name: fpis_api
-  #   depends_on:
-  #     - mysqldb
-  #   build:
-  #     context: ./api
-  #   restart: always
-  #   env_file: ./.env
-  #   ports:
-  #     - 8000:8000
-  #   environment:
-  #     - DB_HOST=mysqldb
-  #     - DB_USER=$MYSQLDB_USER
-  #     - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
-  #     - DB_NAME=$MYSQLDB_DATABASE
-  #     - DB_PORT=$MYSQLDB_CONTAINER_PORT
-  #   volumes:
-  #     - ./api:/api
-  #   expose:
-  #     - 8000
-  #   networks:
-  #     - api-network
-  #     - web-network
+  solidity-app:
+    container_name: fpis_solidity
+    build:
+      context: ./smart-contract
+    restart: always
+    env_file: ./.env
+    environment:
+      - DB_HOST=mysqldb
+      - DB_USER=$MYSQLDB_USER
+      - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - DB_NAME=$MYSQLDB_DATABASE
+      - DB_PORT=$MYSQLDB_CONTAINER_PORT
+    volumes:
+      - ./smart-contract:/app
+      - ./shared_folder:/shared_folder
+    networks:
+      - api-network
+      - web-network
 
-  # web:
-  #   container_name: fpis_web
-  #   depends_on:
-  #     - api
-  #   restart: always
-  #   build:
-  #     context: ./web
-  #   ports:
-  #     - 5000:3000
-  #   networks:
-  #     - web-network
+  express-app:
+    container_name: fpis_express
+    depends_on:
+      - mysqldb
+      - solidity-app
+    build:
+      context: ./api
+    restart: always
+    env_file: ./.env
+    ports:
+      - 8000:8000
+    environment:
+      - DB_HOST=mysqldb
+      - DB_USER=$MYSQLDB_USER
+      - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - DB_NAME=$MYSQLDB_DATABASE
+      - DB_PORT=$MYSQLDB_CONTAINER_PORT
+    volumes:
+      - ./api:/app
+      - ./shared_folder:/shared_folder
+    expose:
+      - 8000
+    networks:
+      - api-network
+      - web-network
+
+  next-app:
+    container_name: fpis_next
+    depends_on:
+      - express-app
+    restart: always
+    build:
+      context: ./web
+    volumes:
+      - ./web:/app
+    ports:
+      - 5000:3000
+    networks:
+      - web-network
 
 volumes:
   fpis-db:

@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 async function main() {
   const [deployer] = await ethers.getSigners();
 
@@ -5,7 +8,13 @@ async function main() {
 
   const contracts = await ethers.deployContract("FPIS");
 
-  console.log("Contracts address:", await contracts.getAddress());
+  const contractAddress = await contracts.getAddress();
+  console.log("Contracts address:", contractAddress);
+  fs.writeFileSync(path.join(__dirname, '..', "shared_folder/contract-address.txt"), contractAddress);
+
+  const data = fs.readFileSync(path.join(__dirname, '..', "artifacts/contracts/fpis.sol/FPIS.json"), 'utf8');
+  const contractABI = JSON.parse(data).abi
+  fs.writeFileSync(path.join(__dirname, '..', "shared_folder/contract-abi.json"), JSON.stringify(contractABI));
 }
 
 main()
