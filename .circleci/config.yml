@@ -56,7 +56,8 @@ jobs:
           name: Kiểm tra sự thay đổi
           command: |
             previous_commit=$(git rev-parse HEAD^)
-            if git diff $previous_commit -- api/contracts/; then
+            if git diff $previous_commit -- api/contracts/;
+            then
               echo $previous_commit
               echo "Không có thay đổi trong mã thông minh."
             else
