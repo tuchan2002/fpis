@@ -12,6 +12,7 @@ app.use(cors());
 app.use('/api/v1', appRoute);
 
 const port = process.env.PORT || 8080;
+
 app.listen(port, () => {
     console.log(`Sever is listening on port: ${port}`);
 });
