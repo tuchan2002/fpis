@@ -78,7 +78,8 @@ jobs:
             echo "Digest is: $(</tmp/digest.txt)"
 
   deploy-contract: 
-    executor: node/default
+    machine:
+      image: ubuntu-2004:current
     steps:
       - checkout
       - node/install-packages:
