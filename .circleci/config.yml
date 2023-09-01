@@ -82,6 +82,8 @@ jobs:
       image: ubuntu-2004:current
     steps:
       - checkout
+      - node/install-packages:
+          pkg-manager: npm
       - run:
           name: Checking the change in smart contract code
           command: |
