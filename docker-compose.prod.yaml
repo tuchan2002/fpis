@@ -33,6 +33,7 @@ services:
       - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
       - DB_NAME=$MYSQLDB_DATABASE
       - DB_PORT=$MYSQLDB_CONTAINER_PORT
+      - NODE_ENV=$NODE_ENV
     expose:
       - 8000
     networks:
