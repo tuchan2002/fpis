@@ -8,7 +8,7 @@ module.exports = {
     networks: {
         bscTestnet: {
             url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
-            accounts: [process.env.PRIVATE_KEY]
+            accounts: ['571P86E2GPFENQPKRXDC3CT2SPRV65SF5J']
         }
     },
     etherscan: {
