@@ -78,8 +78,6 @@ jobs:
             echo "Digest is: $(</tmp/digest.txt)"
 
   deploy-contract: 
-    machine:
-      image: ubuntu-2004:current
     executor: node/default
     steps:
       - checkout
@@ -96,7 +94,7 @@ jobs:
             else
               echo "There are no changes in the smart contract code."
               cd api/
-              ls
+              npm install
               npm run deploy-contract:testnet
             fi
 
