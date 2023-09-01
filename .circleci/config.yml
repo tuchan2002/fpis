@@ -29,7 +29,7 @@ jobs:
           command: npm run lint
           name: Run Lint
 
-  build-and-push-api:
+  build-push-backend:
     working_directory: ~/fpis/api
     environment:
       DOCKER_IMAGE: tuchan17/fpis_express
@@ -53,7 +53,7 @@ jobs:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
 
-  build-and-push-web:
+  build-push-frontend:
     working_directory: ~/fpis/web
     environment:
       DOCKER_IMAGE: tuchan17/fpis_next
@@ -77,7 +77,7 @@ jobs:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
 
-  deploy: 
+  deploy-contract: 
     working_directory: ~/fpis/api
     executor: node/default
     steps:
@@ -107,12 +107,20 @@ jobs:
               npm run deploy-contract:testnet
             fi
 
+  deploy-backend-frontend: 
+      machine:
+      image: ubuntu-2004:current
+    steps:
+      - run:
+          name: Deploy Over SSH
+          command: ls
+
 workflows:
   test-build-deploy:
     jobs:
       - eslint-api
       - eslint-web
-      - build-and-push-api:
+      - build-push-backend:
           requires:
             - eslint-api
             - eslint-web
@@ -120,7 +128,7 @@ workflows:
             branches:
               only:
                 - develop
-      - build-and-push-web:
+      - build-push-frontend:
           requires:
             - eslint-api
             - eslint-web
@@ -128,10 +136,17 @@ workflows:
             branches:
               only:
                 - develop
-      - deploy:
+      - deploy-contract:
           requires:
-            - eslint-api
-            - eslint-web
+            - build-push-backend
+            - build-push-frontend
+          filters:
+            branches:
+              only:
+                - develop
+      - deploy-backend-frontend:
+          requires:
+            - deploy-contract
           filters:
             branches:
               only:
