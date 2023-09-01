@@ -118,8 +118,8 @@ jobs:
 workflows:
   test-build-deploy:
     jobs:
-      - eslint-api
-      - eslint-web
+      - eslint-backend
+      - eslint-frontend
       - build-push-backend:
           requires:
             - eslint-backend
