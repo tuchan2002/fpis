@@ -5,7 +5,6 @@ import "hardhat/console.sol";
 
 contract FPIS {
 
-  
   struct Product {
     string model;
     string description;
