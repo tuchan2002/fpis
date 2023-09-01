@@ -88,7 +88,7 @@ jobs:
       - run:
           name: Create .env file
           command: |
-            cat .env
+            ls
             echo "PRIVATE_KEY=$METAMASK_PRIVATE_KEY" > ~/fpis/api/.env
             cat .env
       - run:
@@ -99,7 +99,6 @@ jobs:
             changes=$(git diff $previous_commit -- api/contracts/)
 
             git diff $previous_commit -- api/contracts/
-            echo $previous_commit
             if [ -z "$changes" ]; then
               echo "There are no changes in the smart contract code."
             else
