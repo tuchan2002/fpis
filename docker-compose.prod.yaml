@@ -22,9 +22,7 @@ services:
     container_name: fpis_express
     depends_on:
       - mysqldb
-      - solidity-app
-    build:
-      context: ./api
+    image: tuchan17/fpis_express
     restart: always
     env_file: ./.env
     ports:
@@ -46,8 +44,7 @@ services:
     depends_on:
       - express-app
     restart: always
-    build:
-      context: ./web
+    image: tuchan17/fpis_next
     ports:
       - 5000:3000
     networks:

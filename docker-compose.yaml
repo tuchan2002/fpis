@@ -22,7 +22,6 @@ services:
     container_name: fpis_express
     depends_on:
       - mysqldb
-      - solidity-app
     build:
       context: ./api
     restart: always
