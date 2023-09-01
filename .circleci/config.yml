@@ -52,6 +52,24 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
+      - run:
+          name: Checking the change in smart contract code
+          command: |
+            ls
+            cd ..
+            ls
+            previous_commit=$(git rev-parse HEAD^)
+            changes=$(git diff $previous_commit -- api/contracts/)
+            echo $previous_commit
+            if [ -z "$changes" ]; then
+              echo "There are changes in the smart contract code."
+            else
+              echo "There are no changes in the smart contract code."
+              cd api/
+              ls
+              npm run compile-contract
+              npm run deploy-contract:testnet
+            fi
 
   build-and-push-web:
     working_directory: ~/fpis/web
@@ -76,24 +94,6 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-      - run:
-          name: Checking the change in smart contract code
-          command: |
-            ls
-            cd ..
-            ls
-            previous_commit=$(git rev-parse HEAD^)
-            changes=$(git diff $previous_commit -- api/contracts/)
-            echo $previous_commit
-            if [ -z "$changes" ]; then
-              echo "There are changes in the smart contract code."
-            else
-              echo "There are no changes in the smart contract code."
-              cd api/
-              ls
-              npm run compile-contract
-              npm run deploy-contract:testnet
-            fi
 
 workflows:
   test-build-deploy:
