@@ -1,7 +1,8 @@
 #!/bin/bash
 
-previous_commit=$(git rev-parse HEAD^)
+            previous_commit=$(git rev-parse HEAD^)
             changes=$(git diff $previous_commit -- api/contracts/)
+            echo $previous_commit
             if [ -z "$changes" ]; then
               echo "Không có thay đổi trong mã thông minh."
             else
