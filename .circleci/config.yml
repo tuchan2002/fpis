@@ -108,7 +108,7 @@ jobs:
             fi
 
   deploy-backend-frontend: 
-      machine:
+    machine:
       image: ubuntu-2004:current
     steps:
       - run:
