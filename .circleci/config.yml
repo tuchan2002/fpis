@@ -88,6 +88,7 @@ jobs:
       - run:
           name: Create .env file
           command: |
+            cat .env
             echo "PRIVATE_KEY=$METAMASK_PRIVATE_KEY" > ~/fpis/api/.env
             cat .env
       - run:
