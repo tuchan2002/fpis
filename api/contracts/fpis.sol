@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 contract FPIS {
-
   struct Product {
     string model;
     string description;
@@ -166,6 +165,4 @@ contract FPIS {
     delete array[array.length-1];
     return true;
   }
-
-
 }
