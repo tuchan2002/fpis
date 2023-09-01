@@ -5,7 +5,7 @@ orbs:
   docker: circleci/docker@2.2.0
 
 jobs:
-  eslint-api:
+  eslint-backend:
     working_directory: ~/fpis/api
     executor: node/default
     steps:
@@ -17,7 +17,7 @@ jobs:
           command: npm run lint
           name: Run Lint
 
-  eslint-web:
+  eslint-frontend:
     working_directory: ~/fpis/web
     executor: node/default
     steps:
@@ -122,16 +122,16 @@ workflows:
       - eslint-web
       - build-push-backend:
           requires:
-            - eslint-api
-            - eslint-web
+            - eslint-backend
+            - eslint-frontend
           filters:
             branches:
               only:
                 - develop
       - build-push-frontend:
           requires:
-            - eslint-api
-            - eslint-web
+            - eslint-backend
+            - eslint-frontend
           filters:
             branches:
               only:
