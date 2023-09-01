@@ -10,13 +10,13 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/v1', appRoute);
-app.get('/test', (res) => {
+app.get('*', (req, res) => {
     res.status(200).json({
         message: 'Hello World.'
     });
 });
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8000;
 
 app.listen(port, () => {
     console.log(`Sever is listening on port: ${port}`);
