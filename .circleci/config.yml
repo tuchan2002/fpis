@@ -103,6 +103,14 @@ workflows:
     jobs:
       - eslint-api
       - eslint-web
+      - deploy-contract: 
+          requires:
+            - eslint-api
+            - eslint-web
+          filters:
+            branches:
+              only:
+                - develop
       - build-and-push-api:
           requires:
             - eslint-api
