@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    container_name: fpis_mysql
+    image: mysql:8.0
+    restart: always
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQLDB_DATABASE
+    ports:
+      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_CONTAINER_PORT
+    expose:
+      - $MYSQLDB_CONTAINER_PORT
+    volumes:
+      - fpis-db:/var/lib/mysql
+    networks:
+      - api-network
+
+  express-app:
+    container_name: fpis_express
+    depends_on:
+      - mysqldb
+    image: tuchan17/fpis_express
+    restart: always
+    env_file: ./.env
+    ports:
+      - 8000:8000
+    environment:
+      - DB_HOST=mysqldb
+      - DB_USER=$MYSQLDB_USER
+      - DB_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - DB_NAME=$MYSQLDB_DATABASE
+      - DB_PORT=$MYSQLDB_CONTAINER_PORT
+    expose:
+      - 8000
+    networks:
+      - api-network
+      - web-network
+
+  next-app:
+    container_name: fpis_next
+    depends_on:
+      - express-app
+    restart: always
+    image: tuchan17/fpis_next
+    ports:
+      - 5000:3000
+    networks:
+      - web-network
+
+volumes:
+  fpis-db:
+
+networks:
+  api-network:
+  web-network:
