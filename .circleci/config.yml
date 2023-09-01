@@ -55,6 +55,7 @@ jobs:
       - run:
           name: Kiểm tra sự thay đổi
           command: |
+            git fetch origin
             previous_commit=$(git rev-parse HEAD^)
             changes=$(git diff $previous_commit -- api/contracts/)
             echo $previous_commit
