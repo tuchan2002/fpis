@@ -83,19 +83,18 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Kiểm tra sự thay đổi
+          name: Checking the change in smart contract code
           command: |
             previous_commit=$(git rev-parse HEAD^)
             changes=$(git diff $previous_commit -- api/contracts/)
-            git diff $previous_commit -- api/contracts/
             echo $previous_commit
             if [ -z "$changes" ]; then
-              echo "Không có thay đổi trong mã thông minh."
+              echo "There are changes in the smart contract code."
             else
-              echo "Có sự thay đổi trong mã thông minh. Tiến hành triển khai..."
-              # Thực hiện quá trình triển khai ở đây
+              echo "There are no changes in the smart contract code."
               cd api/
               ls
+              npm run deploy-contract:testnet
             fi
 
 workflows:
@@ -103,14 +102,6 @@ workflows:
     jobs:
       - eslint-api
       - eslint-web
-      - deploy-contract: 
-          requires:
-            - eslint-api
-            - eslint-web
-          filters:
-            branches:
-              only:
-                - develop
       - build-and-push-api:
           requires:
             - eslint-api
@@ -120,6 +111,14 @@ workflows:
               only:
                 - develop
       - build-and-push-web:
+          requires:
+            - eslint-api
+            - eslint-web
+          filters:
+            branches:
+              only:
+                - develop
+      - deploy-contract: 
           requires:
             - eslint-api
             - eslint-web
