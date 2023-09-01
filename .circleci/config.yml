@@ -89,6 +89,7 @@ jobs:
       - run:
           name: Checking the change in smart contract code
           command: |
+            ls
             cd ..
             previous_commit=$(git rev-parse HEAD^)
             changes=$(git diff $previous_commit -- api/contracts/)
@@ -98,7 +99,8 @@ jobs:
             else
               echo "There are no changes in the smart contract code."
               cd api/
-              npm install
+              ls
+              npm run compile-contract
               npm run deploy-contract:testnet
             fi
 
