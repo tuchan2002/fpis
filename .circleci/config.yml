@@ -111,9 +111,13 @@ jobs:
     machine:
       image: ubuntu-2004:current
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "ac:7d:dc:82:e4:b6:c8:ef:ef:80:9e:d9:2e:92:e2:0d"
       - run:
           name: Deploy Over SSH
-          command: ls
+          command: |
+            ssh -oStrictHostKeyChecking=no -vv 'tuchanvnu-testgitpod-gb0khs8e87p@tuchanvnu-testgitpod-gb0khs8e87p.ssh.ws-us104.gitpod.io' "./deploy.sh"
 
 workflows:
   test-build-deploy:
@@ -127,7 +131,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - develop
       - build-push-frontend:
           requires:
             - eslint-backend
@@ -135,7 +139,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - develop
       - deploy-contract:
           requires:
             - build-push-backend
@@ -143,11 +147,11 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - develop
       - deploy-backend-frontend:
           requires:
             - deploy-contract
           filters:
             branches:
               only:
-                - master
+                - develop

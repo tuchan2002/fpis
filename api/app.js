@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/v1', appRoute);
-app.get("/test", (req, res) => {
+app.get("/test", (res) => {
     res.status(200).json({
         message: "Hello World.",
     });
