@@ -76,16 +76,6 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-
-  deploy-contract: 
-    working_directory: ~/fpis/api
-    machine:
-      image: ubuntu-2004:current
-    steps:
-      - checkout:
-          path: ~/fpis
-      - node/install-packages:
-          pkg-manager: npm
       - run:
           name: Checking the change in smart contract code
           command: |
@@ -119,14 +109,6 @@ workflows:
               only:
                 - develop
       - build-and-push-web:
-          requires:
-            - eslint-api
-            - eslint-web
-          filters:
-            branches:
-              only:
-                - develop
-      - deploy-contract: 
           requires:
             - eslint-api
             - eslint-web
