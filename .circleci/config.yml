@@ -80,6 +80,7 @@ jobs:
   deploy-contract: 
     machine:
       image: ubuntu-2004:current
+    executor: node/default
     steps:
       - checkout
       - node/install-packages:
