@@ -127,7 +127,7 @@ workflows:
           filters:
             branches:
               only:
-                - develop
+                - master
       - build-push-frontend:
           requires:
             - eslint-backend
@@ -135,7 +135,7 @@ workflows:
           filters:
             branches:
               only:
-                - develop
+                - master
       - deploy-contract:
           requires:
             - build-push-backend
@@ -143,11 +143,11 @@ workflows:
           filters:
             branches:
               only:
-                - develop
+                - master
       - deploy-backend-frontend:
           requires:
             - deploy-contract
           filters:
             branches:
               only:
-                - develop
+                - master
