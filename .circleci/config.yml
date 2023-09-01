@@ -1,0 +1,153 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.1.0
+  docker: circleci/docker@2.2.0
+
+jobs:
+  eslint-backend:
+    working_directory: ~/fpis/api
+    executor: node/default
+    steps:
+      - checkout:
+          path: ~/fpis
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run lint
+          name: Run Lint
+
+  eslint-frontend:
+    working_directory: ~/fpis/web
+    executor: node/default
+    steps:
+      - checkout:
+          path: ~/fpis
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run lint
+          name: Run Lint
+
+  build-push-backend:
+    working_directory: ~/fpis/api
+    environment:
+      DOCKER_IMAGE: tuchan17/fpis_express
+      DOCKER_TAG: latest
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout:
+          path: ~/fpis
+      - docker/check:
+          docker-username: DOCKER_USERNAME
+          docker-password: DOCKER_PASSWORD
+      - docker/build:
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
+
+  build-push-frontend:
+    working_directory: ~/fpis/web
+    environment:
+      DOCKER_IMAGE: tuchan17/fpis_next
+      DOCKER_TAG: latest
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout:
+          path: ~/fpis
+      - docker/check:
+          docker-username: DOCKER_USERNAME
+          docker-password: DOCKER_PASSWORD
+      - docker/build:
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
+
+  deploy-contract: 
+    working_directory: ~/fpis/api
+    executor: node/default
+    steps:
+      - checkout:
+          path: ~/fpis
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Create .env file
+          command: |
+            echo "PRIVATE_KEY=$METAMASK_PRIVATE_KEY" > ~/fpis/api/.env
+            cat .env
+      - run:
+          name: Checking the change in smart contract code
+          command: |
+            cd ..
+            previous_commit=$(git rev-parse HEAD^)
+            changes=$(git diff $previous_commit -- api/contracts/)
+
+            git diff $previous_commit -- api/contracts/
+            if [ -z "$changes" ]; then
+              echo "There are no changes in the smart contract code."
+            else
+              echo "There are changes in the smart contract code."
+              cd api/
+              npm run compile-contract
+              npm run deploy-contract:testnet
+            fi
+
+  deploy-backend-frontend: 
+    machine:
+      image: ubuntu-2004:current
+    steps:
+      - run:
+          name: Deploy Over SSH
+          command: ls
+
+workflows:
+  test-build-deploy:
+    jobs:
+      - eslint-backend
+      - eslint-frontend
+      - build-push-backend:
+          requires:
+            - eslint-backend
+            - eslint-frontend
+          filters:
+            branches:
+              only:
+                - master
+      - build-push-frontend:
+          requires:
+            - eslint-backend
+            - eslint-frontend
+          filters:
+            branches:
+              only:
+                - master
+      - deploy-contract:
+          requires:
+            - build-push-backend
+            - build-push-frontend
+          filters:
+            branches:
+              only:
+                - master
+      - deploy-backend-frontend:
+          requires:
+            - deploy-contract
+          filters:
+            branches:
+              only:
+                - master

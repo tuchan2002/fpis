@@ -1,0 +1,36 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "lint": "npx eslint .",
+    "lint-fix": "npx eslint . --fix",
+    "local-network": "npx hardhat node",
+    "compile-contract": "npx hardhat compile",
+    "deploy-contract:local": "npx hardhat run --network localhost scripts/deploy.js",
+    "deploy-contract:testnet": "npx hardhat run --network bscTestnet scripts/deploy.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1",
+    "mysql2": "^3.5.2",
+    "sequelize": "^6.32.1",
+    "web3": "^4.0.3"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "eslint": "^8.48.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.28.1",
+    "hardhat": "^2.17.2",
+    "nodemon": "^3.0.1"
+  }
+}
