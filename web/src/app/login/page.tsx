@@ -4,14 +4,13 @@ import { Avatar, Box, Button, TextField, Typography } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useDispatch, useSelector } from 'react-redux'
-import { authSelector, login } from '@/redux/reducers/authSlice'
+import { useDispatch } from 'react-redux'
+import { login } from '@/redux/reducers/authSlice'
 import { AppDispatch } from '@/redux'
 
 const initialState = { email: '', password: '' }
 const Login = () => {
     const router = useRouter()
-    const auth = useSelector(authSelector)
 
     const dispatch = useDispatch<AppDispatch>()
 
@@ -19,10 +18,10 @@ const Login = () => {
     const { email, password } = userInputData
 
     useEffect(() => {
-        if (auth.token) {
-            router.push('/')
+        if (localStorage.getItem('accessToken')) {
+            router.back()
         }
-    }, [auth.token, router])
+    }, [])
 
     const onChangeUserInputData = (e: ChangeEvent<HTMLInputElement>) => {
         setUserInputData({ ...userInputData, [e.target.name]: e.target.value })

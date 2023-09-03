@@ -57,6 +57,7 @@ const authSlice = createSlice({
                 'accessToken',
                 action.payload.data.access_token
             )
+            window.location.href = '/'
 
             console.log('fulfilled')
         })

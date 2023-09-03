@@ -19,10 +19,11 @@ const WrapperContainer = ({ children }: { children: React.ReactNode }) => {
     }, [dispatch])
 
     useEffect(() => {
-        if (!auth.token) {
+        const accessToken = localStorage.getItem('accessToken')
+        if (!accessToken) {
             router.push('/login')
         }
-    }, [auth.token, router])
+    }, [router])
 
     return <>{children}</>
 }
