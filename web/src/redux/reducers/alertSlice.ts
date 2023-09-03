@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { RootState } from '..'
+import { createSlice } from '@reduxjs/toolkit'
 
 interface AlertState {
     loading: boolean

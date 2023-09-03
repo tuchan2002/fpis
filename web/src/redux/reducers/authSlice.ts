@@ -32,7 +32,7 @@ export const getAuth = createAsyncThunk('auth/getAuth', async () => {
         const response = await axios.get(
             `http://localhost:8000/api/v1/auth/get-auth`,
             {
-                headers: { Authorization: `Bearer ${accessToken}` },
+                headers: { Authorization: `Bearer ${accessToken}` }
             }
         )
         return response.data
@@ -44,6 +44,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         builder.addCase(login.pending, (state, action) => {
             console.log('pending')
         })
@@ -59,6 +60,7 @@ const authSlice = createSlice({
 
             console.log('fulfilled')
         })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         builder.addCase(login.rejected, (state, action) => {
             console.log('rejected')
         })

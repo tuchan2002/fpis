@@ -19,10 +19,10 @@ const Login = () => {
     const { email, password } = userInputData
 
     useEffect(() => {
-        if(auth.token) {
-            router.push("/")
+        if (auth.token) {
+            router.push('/')
         }
-    },[auth.token])
+    }, [auth.token, router])
 
     const onChangeUserInputData = (e: ChangeEvent<HTMLInputElement>) => {
         setUserInputData({ ...userInputData, [e.target.name]: e.target.value })
