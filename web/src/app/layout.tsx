@@ -7,6 +7,8 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import ReduxProvider from '@/redux/provider'
 import WrapperContainer from '@/components/wrapper-container'
+import { CssBaseline } from '@mui/material'
+import NavbarMenu from '@/components/navbar-menu'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,6 +26,8 @@ export default function RootLayout({
         <html lang='en'>
             <body className={inter.className}>
                 <ReduxProvider>
+                    <CssBaseline />
+                    <NavbarMenu />
                     <WrapperContainer>{children}</WrapperContainer>
                 </ReduxProvider>
             </body>
