@@ -1,6 +1,14 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
+import ReduxProvider from '@/redux/provider'
+import WrapperContainer from '@/components/wrapper-container'
+import { CssBaseline } from '@mui/material'
+import NavbarMenu from '@/components/navbar-menu'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +24,13 @@ export default function RootLayout({
 }) {
     return (
         <html lang='en'>
-            <body className={inter.className}>{children}</body>
+            <body className={inter.className}>
+                <ReduxProvider>
+                    <CssBaseline />
+                    <NavbarMenu />
+                    <WrapperContainer>{children}</WrapperContainer>
+                </ReduxProvider>
+            </body>
         </html>
     )
 }
