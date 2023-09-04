@@ -2,9 +2,17 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
 import axios from 'axios'
 
+interface IUser {
+    id: number
+    email: string
+    location: string
+    name: string
+    phone_number: string
+    role: number
+}
 interface AuthState {
     token: string
-    user: object | null
+    user: IUser | null
 }
 const initialState: AuthState = {
     token: '',
