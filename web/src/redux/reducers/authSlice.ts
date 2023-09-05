@@ -19,13 +19,13 @@ const initialState: AuthState = {
     user: null
 }
 
-interface LoginParams {
+interface ILoginParams {
     email: string
     password: string
 }
 export const login = createAsyncThunk(
     'auth/login',
-    async (data: LoginParams) => {
+    async (data: ILoginParams) => {
         const response = await axios.post(
             `http://localhost:8000/api/v1/auth/login`,
             data

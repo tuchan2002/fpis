@@ -2,15 +2,26 @@
 
 import { authSelector } from '@/redux/reducers/authSlice'
 import { Box, Button, Paper, TextField, Typography } from '@mui/material'
-import { notFound } from 'next/navigation'
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { notFound, useRouter } from 'next/navigation'
+import React, {
+    ChangeEvent,
+    FormEvent,
+    useEffect,
+    useRef,
+    useState
+} from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import QRCode from 'qrcode.react'
 import { v4 as uuidv4 } from 'uuid'
 import html2canvas from 'html2canvas'
-import DownloadIcon from '@mui/icons-material/Download';
+import DownloadIcon from '@mui/icons-material/Download'
+import { createProduct } from '@/redux/reducers/productSlice'
+import { AppDispatch } from '@/redux'
 
 const CreateProduct = () => {
+    const dispatch = useDispatch<AppDispatch>()
+    const router = useRouter()
+
     const auth = useSelector(authSelector)
 
     useEffect(() => {
@@ -50,11 +61,19 @@ const CreateProduct = () => {
         })
     }
 
-    const handleSubmit = () => {}
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        dispatch(
+            createProduct({ body: productInputData, accessToken: auth.token })
+        )
+
+        // reset data
+        router.push('/products')
+    }
 
     return (
-        <Box sx={{ p: 3, display: 'flex', justifyContent:"center"}}>
-            <Paper sx={{ p: 3, maxWidth: 720, width: "100%" }}>
+        <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+            <Paper sx={{ p: 3, maxWidth: 720, width: '100%' }}>
                 <Box
                     component='form'
                     onSubmit={handleSubmit}
@@ -98,21 +117,39 @@ const CreateProduct = () => {
                     </Button>
 
                     {showQRcode && (
-                        <Box sx={{display: 'flex', flexDirection: "column", alignItems: "center",gap: 1}}>
-                        <div ref={qrCodeRef} style={{width: 180, height: 180, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                            <QRCode value={JSON.stringify(productInputData)} size={160} />
-                        </div>
-
-                        <Button
-                            variant='contained'
-                            onClick={downloadQRcode}
-                            startIcon={<DownloadIcon />}
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: 1
+                            }}
                         >
-                            Download
-                        </Button>
+                            <div
+                                ref={qrCodeRef}
+                                style={{
+                                    width: 180,
+                                    height: 180,
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <QRCode
+                                    value={JSON.stringify(productInputData)}
+                                    size={160}
+                                />
+                            </div>
+
+                            <Button
+                                variant='contained'
+                                onClick={downloadQRcode}
+                                startIcon={<DownloadIcon />}
+                            >
+                                Download
+                            </Button>
                         </Box>
                     )}
-
 
                     {showQRcode && (
                         <Button
