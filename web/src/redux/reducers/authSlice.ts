@@ -57,8 +57,6 @@ const authSlice = createSlice({
             console.log('pending')
         })
         builder.addCase(login.fulfilled, (state, action) => {
-            console.log(state, state.token, action)
-
             state.token = action.payload.data.access_token
             state.user = action.payload.data.user
             localStorage.setItem(

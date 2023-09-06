@@ -15,30 +15,25 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { IconButton } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch } from '@/redux'
+import {
+    getAllOfProducts,
+    productSelector
+} from '@/redux/reducers/productSlice'
+import { authSelector } from '@/redux/reducers/authSlice'
 
-const rows = [
-    {
-        id: 1,
-        model: 'Sneaker 1',
-        description: 'This is Sneaker 1',
-        manufactoryEmail: 'trananhtu@gmail.com'
-    },
-    {
-        id: 2,
-        model: 'Sneaker 2',
-        description: 'This is Sneaker 2',
-        manufactoryEmail: 'trananhtu@gmail.com'
-    },
-    {
-        id: 3,
-        model: 'Sneaker 3',
-        description: 'This is Sneaker 3',
-        manufactoryEmail: 'trananhtu@gmail.com'
-    }
-]
 const ProductsPage = () => {
+    const dispatch = useDispatch<AppDispatch>()
+    const authReducer = useSelector(authSelector)
+    const productReducer = useSelector(productSelector)
+
     const router = useRouter()
+
+    useEffect(() => {
+        dispatch(getAllOfProducts({ accessToken: authReducer.token }))
+    }, [authReducer.token])
 
     return (
         <Box
@@ -70,9 +65,9 @@ const ProductsPage = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
+                        {productReducer.products.map((product) => (
                             <TableRow
-                                key={row.id}
+                                key={product.productID}
                                 sx={{
                                     '&:last-child td, &:last-child th': {
                                         border: 0
@@ -80,17 +75,21 @@ const ProductsPage = () => {
                                 }}
                             >
                                 <TableCell component='th' scope='row'>
-                                    {row.id}
-                                </TableCell>
-                                <TableCell align='left'>{row.model}</TableCell>
-                                <TableCell align='left'>
-                                    {row.description}
+                                    {product.productID}
                                 </TableCell>
                                 <TableCell align='left'>
-                                    {row.manufactoryEmail}
+                                    {product.model}
                                 </TableCell>
                                 <TableCell align='left'>
-                                    <Link href={`/products/${row.id}`}>
+                                    {product.description}
+                                </TableCell>
+                                <TableCell align='left'>
+                                    {product.manufactoryEmail}
+                                </TableCell>
+                                <TableCell align='left'>
+                                    <Link
+                                        href={`/products/${product.productID}`}
+                                    >
                                         <IconButton>
                                             <VisibilityIcon />
                                         </IconButton>
