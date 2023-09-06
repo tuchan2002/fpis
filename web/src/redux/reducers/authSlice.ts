@@ -19,13 +19,13 @@ const initialState: AuthState = {
     user: null
 }
 
-interface LoginParams {
+interface ILoginParams {
     email: string
     password: string
 }
 export const login = createAsyncThunk(
     'auth/login',
-    async (data: LoginParams) => {
+    async (data: ILoginParams) => {
         const response = await axios.post(
             `http://localhost:8000/api/v1/auth/login`,
             data
@@ -57,8 +57,6 @@ const authSlice = createSlice({
             console.log('pending')
         })
         builder.addCase(login.fulfilled, (state, action) => {
-            console.log(state, state.token, action)
-
             state.token = action.payload.data.access_token
             state.user = action.payload.data.user
             localStorage.setItem(
