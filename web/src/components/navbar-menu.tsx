@@ -7,7 +7,8 @@ import React from 'react'
 const navItems = [
     { label: 'Home', to: '/' },
     { label: 'Products', to: '/products' },
-    { label: 'Move Product', to: '/move-product' }
+    { label: 'Move Product', to: '/move-product' },
+    { label: 'Verify', to: '/verify-product' }
 ]
 const NavbarMenu = () => {
     const router = useRouter()
@@ -27,7 +28,7 @@ const NavbarMenu = () => {
                 >
                     FPIS
                 </Typography>
-                <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     {navItems.map((item, index) => (
                         <Button
                             key={index}
