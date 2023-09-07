@@ -65,6 +65,26 @@ const ProductDetails = ({ params }: { params: { id: string } }) => {
                             secondary={productReducer.product?.manufactoryEmail}
                         />
                     </ListItem>
+                    <ListItem>
+                        <ListItemText
+                            primary='Retailer Email'
+                            secondary={
+                                productReducer.product?.retailerEmail
+                                    ? productReducer.product?.retailerEmail
+                                    : 'None'
+                            }
+                        />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText
+                            primary='Customer Email'
+                            secondary={
+                                productReducer.product?.customerEmail
+                                    ? productReducer.product?.customerEmail
+                                    : 'None'
+                            }
+                        />
+                    </ListItem>
                 </List>
             </Paper>
         </Box>
