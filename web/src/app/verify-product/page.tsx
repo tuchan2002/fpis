@@ -93,14 +93,6 @@ const VerifyProduct = () => {
                 <Typography variant='h5'>Product Information</Typography>
                 {productScannerData && (
                     <>
-                        <TextField
-                            label='Customer Email'
-                            variant='standard'
-                            value={customerEmailInputData}
-                            onChange={(e) =>
-                                setCustomerEmailInputData(e.target.value)
-                            }
-                        />
                         <List
                             sx={{
                                 width: '100%',
@@ -134,7 +126,15 @@ const VerifyProduct = () => {
                                 />
                             </ListItem>
                         </List>
-
+                        <TextField
+                            sx={{ width: '50%' }}
+                            label='Customer Email'
+                            variant='standard'
+                            value={customerEmailInputData}
+                            onChange={(e) =>
+                                setCustomerEmailInputData(e.target.value)
+                            }
+                        />
                         <Button
                             variant='contained'
                             disabled={

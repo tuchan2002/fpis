@@ -26,7 +26,11 @@ const NavbarMenu = () => {
                 <Typography
                     variant='h6'
                     component='div'
-                    sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, fontStyle: "italic" }}
+                    sx={{
+                        flexGrow: 1,
+                        display: { xs: 'none', sm: 'block' },
+                        fontStyle: 'italic'
+                    }}
                 >
                     <Link href='/'>FPISystem</Link>
                 </Typography>
