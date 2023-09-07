@@ -26,9 +26,9 @@ const NavbarMenu = () => {
                 <Typography
                     variant='h6'
                     component='div'
-                    sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                    sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' }, fontStyle: "italic" }}
                 >
-                    <Link href='/'>FPI System</Link>
+                    <Link href='/'>FPISystem</Link>
                 </Typography>
 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
