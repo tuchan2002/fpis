@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react'
 import { Html5QrcodeScanType, Html5QrcodeScanner } from 'html5-qrcode'
 
-interface IProduct {
+interface Map {
+    [key: string]: string | undefined
+}
+interface IProduct extends Map {
     productID: string
     model: string
     description: string

@@ -1,11 +1,11 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-    title: 'Verify',
-    description: 'Verify'
+    title: 'Verify Product',
+    description: 'Verify Product'
 }
 
-export default function VerifyLayout({
+export default function VerifyProductLayout({
     children
 }: {
     children: React.ReactNode
