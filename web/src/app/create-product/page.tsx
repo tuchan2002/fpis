@@ -2,14 +2,8 @@
 
 import { authSelector } from '@/redux/reducers/authSlice'
 import { Box, Button, Paper, TextField, Typography } from '@mui/material'
-import { notFound, useRouter } from 'next/navigation'
-import React, {
-    ChangeEvent,
-    FormEvent,
-    useEffect,
-    useRef,
-    useState
-} from 'react'
+import { useRouter } from 'next/navigation'
+import React, { ChangeEvent, FormEvent, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import QRCode from 'qrcode.react'
 import { v4 as uuidv4 } from 'uuid'
@@ -23,14 +17,6 @@ const CreateProduct = () => {
     const router = useRouter()
 
     const auth = useSelector(authSelector)
-
-    useEffect(() => {
-        console.log(auth.user?.role)
-
-        if (auth.user?.role !== undefined && auth.user?.role !== 0) {
-            return notFound()
-        }
-    }, [auth.user?.role])
 
     const qrCodeRef = useRef<HTMLDivElement | null>(null)
     const [productInputData, setProductInputData] = useState({

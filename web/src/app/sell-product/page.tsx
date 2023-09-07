@@ -1,18 +1,13 @@
 'use client'
 
 import { authSelector } from '@/redux/reducers/authSlice'
-import { notFound } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 
 const SellProduct = () => {
     const auth = useSelector(authSelector)
 
-    useEffect(() => {
-        if (auth.user?.role !== undefined && auth.user?.role !== 1) {
-            return notFound()
-        }
-    }, [auth.user?.role])
+    console.log(auth)
 
     return <div>SellProduct</div>
 }
