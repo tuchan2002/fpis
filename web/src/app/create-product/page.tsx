@@ -36,7 +36,8 @@ const CreateProduct = () => {
     const [productInputData, setProductInputData] = useState({
         productID: uuidv4(),
         model: '',
-        description: ''
+        description: '',
+        manufactoryEmail: auth.user?.email
     })
     console.log('productInputData', productInputData)
 

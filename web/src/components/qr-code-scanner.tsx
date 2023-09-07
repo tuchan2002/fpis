@@ -1,20 +1,26 @@
 import React, { useEffect } from 'react'
 import { Html5QrcodeScanType, Html5QrcodeScanner } from 'html5-qrcode'
 
+interface IProduct {
+    productID: string
+    model: string
+    description: string
+    manufactoryEmail: string
+    retailerEmail: string
+    customerEmail: string
+}
 const QRCodeScanner = ({
-    result,
     setResult
 }: {
-    result: string | null
-    setResult: React.Dispatch<React.SetStateAction<string | null>>
+    setResult: React.Dispatch<React.SetStateAction<IProduct | null>>
 }) => {
     useEffect(() => {
         const scanner = new Html5QrcodeScanner(
             'reader',
             {
                 qrbox: {
-                    width: 256,
-                    height: 256
+                    width: 200,
+                    height: 200
                 },
                 fps: 10,
                 rememberLastUsedCamera: true,
@@ -28,16 +34,18 @@ const QRCodeScanner = ({
 
         const onScanSuccess = (scanData: string) => {
             // scanner.clear()
-            setResult(scanData)
+            if (scanData) {
+                setResult(JSON.parse(scanData))
+            }
         }
 
-        const onScanError = (err: any) => {
+        const onScanError = (err: object | string) => {
             console.error(err)
         }
         scanner.render(onScanSuccess, onScanError)
     }, [])
 
-    return <div id='reader'></div>
+    return <div id='reader' style={{ width: 375 }}></div>
 }
 
 export default QRCodeScanner
