@@ -1,14 +1,16 @@
 'use client'
 
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
 const navItems = [
-    { label: 'Home', to: '/' },
     { label: 'Products', to: '/products' },
     { label: 'Move Product', to: '/move-product' },
-    { label: 'Verify', to: '/verify-product' }
+    { label: 'Sell Product', to: '/sell-product' },
+    { label: 'Change Ownership', to: '/change-ownership' },
+    { label: 'Verify Product', to: '/verify-product' }
 ]
 const NavbarMenu = () => {
     const router = useRouter()
@@ -26,8 +28,9 @@ const NavbarMenu = () => {
                     component='div'
                     sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
                 >
-                    FPIS
+                    <Link href='/'>FPI System</Link>
                 </Typography>
+
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                     {navItems.map((item, index) => (
                         <Button
