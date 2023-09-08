@@ -10,9 +10,44 @@ interface IUser {
     phone_number: string
     role: number
 }
-const initialState: { users: IUser[] } = {
-    users: []
+
+interface UserState {
+    users: IUser[]
+    user: IUser | null
 }
+const initialState: UserState = {
+    users: [],
+    user: null
+}
+
+export const getAllOfUsers = createAsyncThunk(
+    'user/getAllOfUsers',
+    async ({ accessToken }: { accessToken: string }) => {
+        const response = await axios.get(`http://localhost:8000/api/v1/user`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+        })
+        return response.data
+    }
+)
+
+export const getUserById = createAsyncThunk(
+    'user/getUserById',
+    async ({
+        userId,
+        accessToken
+    }: {
+        userId: string
+        accessToken: string
+    }) => {
+        const response = await axios.get(
+            `http://localhost:8000/api/v1/user/${userId}`,
+            {
+                headers: { Authorization: `Bearer ${accessToken}` }
+            }
+        )
+        return response.data
+    }
+)
 
 export const getUsersByRole = createAsyncThunk(
     'user/getUsersByRole',
@@ -32,6 +67,26 @@ const userSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        builder.addCase(getAllOfUsers.pending, (state, action) => {
+            console.log('pending')
+        })
+        builder.addCase(getAllOfUsers.fulfilled, (state, action) => {
+            console.log('fulfilled', action)
+
+            state.users = action.payload.data.users
+        })
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        builder.addCase(getUserById.pending, (state, action) => {
+            console.log('pending')
+        })
+        builder.addCase(getUserById.fulfilled, (state, action) => {
+            console.log('fulfilled', action)
+
+            state.user = action.payload.data.user
+        })
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         builder.addCase(getUsersByRole.pending, (state, action) => {
             console.log('pending')
         })
@@ -39,10 +94,6 @@ const userSlice = createSlice({
             console.log('fulfilled', action)
 
             state.users = action.payload.data.users
-        })
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        builder.addCase(getUsersByRole.rejected, (state, action) => {
-            console.log('rejected')
         })
     }
 })
