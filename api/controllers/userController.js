@@ -19,8 +19,31 @@ const userController = {
         }
     },
 
+    getUserById: async (req, res) => {
+        const { id } = req.params;
+
+        try {
+            const user = await db.User.findOne({
+                where: {
+                    id
+                },
+                attributes: { exclude: ['password'] }
+            });
+
+            res.status(200).json({
+                message: 'Get user successfully.',
+                success: true,
+                data: {
+                    user
+                }
+            });
+        } catch (err) {
+            return res.status(500).json({ message: err.message });
+        }
+    },
+
     getUsersByRole: async (req, res) => {
-        const {role} = req.params;
+        const { role } = req.params;
 
         try {
             const users = await db.User.findAll({
