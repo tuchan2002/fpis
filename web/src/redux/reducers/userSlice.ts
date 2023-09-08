@@ -36,7 +36,7 @@ export const getUserById = createAsyncThunk(
         userId,
         accessToken
     }: {
-        userId: number
+        userId: string
         accessToken: string
     }) => {
         const response = await axios.get(

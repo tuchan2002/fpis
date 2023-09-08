@@ -18,11 +18,10 @@ import { IconButton } from '@mui/material'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '@/redux'
-import { getAllOfProducts } from '@/redux/reducers/productSlice'
 import { authSelector } from '@/redux/reducers/authSlice'
 import { getAllOfUsers, userSelector } from '@/redux/reducers/userSlice'
 
-const ProductsPage = () => {
+const AccountsPage = () => {
     const dispatch = useDispatch<AppDispatch>()
     const authReducer = useSelector(authSelector)
     const userReducer = useSelector(userSelector)
@@ -113,4 +112,4 @@ const ProductsPage = () => {
     )
 }
 
-export default ProductsPage
+export default AccountsPage

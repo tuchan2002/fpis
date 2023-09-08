@@ -11,7 +11,7 @@ const navItems = [
     { label: 'Sell Product', to: '/sell-product' },
     { label: 'Change Ownership', to: '/change-ownership' },
     { label: 'Verify Product', to: '/verify-product' },
-    { label: 'Accounts', to: '/accounts' },
+    { label: 'Accounts', to: '/accounts' }
 ]
 const NavbarMenu = () => {
     const router = useRouter()
