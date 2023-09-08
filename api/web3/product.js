@@ -7,6 +7,17 @@ web3.eth.getAccounts().then((accounts) => {
     accountAddress = accounts[0];
 });
 
+const getAllProducts = async () => {
+    try {
+        const data = await contract.methods
+            .getAllProducts()
+            .call({ from: accountAddress });
+
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
 const createProductOnBlockchain = async (
     productID,
     model,
@@ -94,5 +105,6 @@ module.exports = {
     getProductsByCustomer,
     moveToRetailer,
     sellToFirstCustomer,
-    changeCustomer
+    changeCustomer,
+    getAllProducts
 };

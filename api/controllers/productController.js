@@ -5,10 +5,35 @@ const {
     moveToRetailer,
     sellToFirstCustomer,
     getProductsByCustomer,
-    changeCustomer
+    changeCustomer,
+    getAllProducts
 } = require('../web3/product');
 
 const productController = {
+    getAllOfProducts: async (req, res) => {
+        try {
+            const data = await getAllProducts();
+            const productsResult = data[0].map((product, index) => ({
+                productID: data[1][index],
+                model: product[0],
+                description: product[1],
+                manufactoryEmail: product[2],
+                retailerEmail: product[3],
+                customerEmail: product[4]
+            }));
+            console.log('products', productsResult);
+
+            return res.status(200).json({
+                success: true,
+                data: {
+                    products: productsResult
+                }
+            });
+        } catch (err) {
+            console.log(err.message);
+            return res.status(500).json({ message: err.message });
+        }
+    },
     createProduct: async (req, res) => {
         const { productID, model, description } = req.body;
 
@@ -51,8 +76,9 @@ const productController = {
                         productID,
                         model: productDetail[0],
                         description: productDetail[1],
-                        retailerEmail: productDetail[2],
-                        customerEmail: productDetail[3]
+                        manufactoryEmail: productDetail[2],
+                        retailerEmail: productDetail[3],
+                        customerEmail: productDetail[4]
                     }
                 }
             });

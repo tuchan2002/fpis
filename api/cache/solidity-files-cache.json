@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/trananhtu/Workspaces/fpis/api/contracts/fpis.sol": {
-      "lastModificationDate": 1693551624789,
-      "contentHash": "4bfbf3ad08e845ed73687393f8e9145f",
+      "lastModificationDate": 1693971269102,
+      "contentHash": "93c7b428f37b4223437c34e296733d51",
       "sourceName": "contracts/fpis.sol",
       "solcConfig": {
         "version": "0.8.19",

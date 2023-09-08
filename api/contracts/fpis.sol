@@ -39,6 +39,8 @@ contract FPIS {
   mapping (string => Retailer) private retailerList;
   mapping (string => Customer) private customerList;
 
+  string[] private productIds;
+
   function createManufactory(string memory _manufactorEmail, string memory _manufactorName, string memory _manufactorLocation) public payable returns (bool) {
     Retailer memory newManufactor;
     newManufactor.name = _manufactorName;
@@ -75,6 +77,9 @@ contract FPIS {
     newProduct.description = _description;
     newProduct.manufactoryEmail = _manufactoryEmail;
     productList[_productID] = newProduct;
+
+    productIds.push(_productID);
+
     return true;
   }
 
@@ -129,8 +134,20 @@ contract FPIS {
     return false;
   }
 
-  function getProductDetail(string memory _productID) public view returns (string memory, string memory, string memory, string memory) {
-    return (productList[_productID].model, productList[_productID].description, productList[_productID].retailerEmail, productList[_productID].customerEmail);
+  function getAllProducts() public view returns (Product[] memory, string[] memory) {
+    uint256 numOfProducts = productIds.length;
+
+    Product[] memory products = new Product[](numOfProducts);
+
+    for (uint256 i = 0; i < numOfProducts; i++) {
+      products[i] = productList[productIds[i]];
+    }
+
+    return (products, productIds);
+  }
+
+  function getProductDetail(string memory _productID) public view returns (string memory, string memory, string memory, string memory, string memory) {
+    return (productList[_productID].model, productList[_productID].description, productList[_productID].manufactoryEmail, productList[_productID].retailerEmail, productList[_productID].customerEmail);
   }
 
   function getCustomerDetail(string memory _customerEmail) public view returns (string memory, string memory, string memory) {
