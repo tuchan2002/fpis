@@ -1,6 +1,6 @@
 'use client'
 
-import { authSelector, register } from '@/redux/reducers/authSlice'
+import { register } from '@/redux/reducers/authSlice'
 import {
     Box,
     Button,
@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { AppDispatch } from '@/redux'
 
 const roleData = [
@@ -23,8 +23,6 @@ const CreateProduct = () => {
     const dispatch = useDispatch<AppDispatch>()
     const router = useRouter()
 
-    const authReducer = useSelector(authSelector)
-
     const [userDataInput, setUserInputData] = useState({
         name: '',
         email: '',
@@ -34,6 +32,7 @@ const CreateProduct = () => {
         role: 2
     })
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { name, email, password, phone_number, location, role } =
         userDataInput
 
