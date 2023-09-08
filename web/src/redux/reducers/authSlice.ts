@@ -19,6 +19,15 @@ const initialState: AuthState = {
     user: null
 }
 
+interface IRegisterParams {
+    name: string
+    email: string
+    password: string
+    phone_number: string
+    location: string
+    role: number
+}
+
 interface ILoginParams {
     email: string
     password: string
@@ -47,6 +56,17 @@ export const getAuth = createAsyncThunk('auth/getAuth', async () => {
     }
 })
 
+export const register = createAsyncThunk(
+    'auth/register',
+    async (data: IRegisterParams) => {
+        const response = await axios.post(
+            `http://localhost:8000/api/v1/auth/register`,
+            data
+        )
+        return response.data
+    }
+)
+
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -67,6 +87,7 @@ const authSlice = createSlice({
 
             console.log('fulfilled')
         })
+
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         builder.addCase(login.rejected, (state, action) => {
             console.log('rejected')
@@ -79,6 +100,19 @@ const authSlice = createSlice({
                 state.token = accessToken
                 state.user = action.payload.data.user
             }
+        })
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        builder.addCase(register.pending, (state, action) => {
+            console.log('pending')
+        })
+        builder.addCase(register.fulfilled, (state, action) => {
+            console.log('fulfilled')
+        })
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        builder.addCase(register.rejected, (state, action) => {
+            console.log('rejected')
         })
     }
 })
