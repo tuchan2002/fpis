@@ -106,6 +106,7 @@ const authSlice = createSlice({
         builder.addCase(register.pending, (state, action) => {
             console.log('pending')
         })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         builder.addCase(register.fulfilled, (state, action) => {
             console.log('fulfilled')
         })
