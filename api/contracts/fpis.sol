@@ -57,7 +57,7 @@ contract FPIS {
     HistoryItem memory historyItem;
     historyItem.timestamp = block.timestamp;
     historyItem.action = "Manufactured";
-    historyItem.details = string(abi.encodePacked("Production Date: ", _productionDate, ", Manufactory Location: ", _manufactoryLocation));
+    historyItem.details = string(abi.encodePacked("Manufactory Location: ", _manufactoryLocation, ", Production Date: ", _productionDate));
     newProduct.history.push(historyItem);
 
     productList[_productID] = newProduct;
@@ -143,8 +143,8 @@ contract FPIS {
     return (products, productIds);
   }
 
-  function getProductDetail(string memory _productID) public view returns (string memory, string memory, string memory, string memory, string memory) {
-    return (productList[_productID].model, productList[_productID].description, productList[_productID].manufactoryEmail, productList[_productID].retailerEmail, productList[_productID].customerEmail);
+  function getProductDetail(string memory _productID) public view returns (string memory, string memory, string memory, string memory, string memory,  HistoryItem[] memory) {
+    return (productList[_productID].model, productList[_productID].description, productList[_productID].manufactoryEmail, productList[_productID].retailerEmail, productList[_productID].customerEmail, productList[_productID].history);
   }
 
   function getCustomerDetail(string memory _customerEmail) public view returns (string memory, string memory, string memory) {

@@ -64,9 +64,8 @@ const authController = {
                         user: createdUser
                     }
                 });
-            } else {
-                return res.status(500).json({ message: 'Account registration failed.'});
             }
+            return res.status(500).json({ message: 'Account registration failed.'});
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }

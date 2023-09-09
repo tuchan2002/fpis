@@ -13,14 +13,23 @@ const productController = {
     getAllOfProducts: async (req, res) => {
         try {
             const data = await getAllProducts();
-            const productsResult = data[0].map((product, index) => ({
-                productID: data[1][index],
-                model: product[0],
-                description: product[1],
-                manufactoryEmail: product[2],
-                retailerEmail: product[3],
-                customerEmail: product[4]
-            }));
+            const productsResult = data[0].map((product, index) => {
+                const productHistory = product.history.map((item) => ({
+                    timestamp: item.timestamp.toString(),
+                    action: item.action,
+                    details: item.details
+                }));
+
+                return ({
+                    productID: data[1][index],
+                    model: product[0],
+                    description: product[1],
+                    manufactoryEmail: product[2],
+                    retailerEmail: product[3],
+                    customerEmail: product[4],
+                    history: productHistory
+                });
+            });
 
             return res.status(200).json({
                 success: true,
@@ -40,7 +49,7 @@ const productController = {
 
         try {
             const user = await db.User.findOne({
-                attributes: ['email'],
+                attributes: ['email', 'location'],
                 where: {
                     id: req.userId
                 }
@@ -54,6 +63,7 @@ const productController = {
                 user.location,
                 productionDate
             );
+            console.log(result);
 
             if (result.status === 1n) {
                 return res
@@ -81,7 +91,12 @@ const productController = {
                         description: productDetail[1],
                         manufactoryEmail: productDetail[2],
                         retailerEmail: productDetail[3],
-                        customerEmail: productDetail[4]
+                        customerEmail: productDetail[4],
+                        history: productDetail[5].map((item) => ({
+                            timestamp: item.timestamp.toString(),
+                            action: item.action,
+                            details: item.details
+                        }))
                     }
                 },
                 message: 'Successfully retrieved product information.'
@@ -111,7 +126,12 @@ const productController = {
                         model: productDetail[0],
                         description: productDetail[1],
                         retailerEmail: productDetail[2],
-                        customerEmail: productDetail[3]
+                        customerEmail: productDetail[3],
+                        history: productDetail[4].map((item) => ({
+                            timestamp: item.timestamp.toString(),
+                            action: item.action,
+                            details: item.details
+                        }))
                     }))
                 },
                 message: 'Successfully retrieved customer\'s product information.'
@@ -122,7 +142,7 @@ const productController = {
     },
 
     moveProductToRetailer: async (req, res) => {
-        const { productID, retailerEmail, retailLocation } = req.body;
+        const { productID, retailerEmail } = req.body;
 
         try {
             const user = await db.User.findOne({
@@ -143,7 +163,7 @@ const productController = {
             const result = await moveToRetailer(
                 productID,
                 retailerEmail,
-                retailLocation
+                user.location
             );
             if (result.status === 1n) {
                 return res
@@ -222,6 +242,8 @@ const productController = {
                     id: req.userId
                 }
             });
+
+            console.log(oldCustomer);
 
             if (oldCustomer.email === newCustomerEmail) {
                 return res
