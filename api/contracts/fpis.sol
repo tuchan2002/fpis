@@ -56,7 +56,7 @@ contract FPIS {
     return true;
   }
 
-  function createProduct(string memory _productID, string memory _model, string memory _description, string memory _manufactoryEmail, string memory _productionDate, string memory _retailLocation) public payable returns (bool) {
+  function createProduct(string memory _productID, string memory _model, string memory _description, string memory _manufactoryEmail, string memory _manufactoryLocation, string memory _productionDate) public payable returns (bool) {
     Product storage newProduct = productList[_productID];
     newProduct.model = _model;
     newProduct.description = _description;
@@ -65,7 +65,7 @@ contract FPIS {
     HistoryItem memory historyItem;
     historyItem.timestamp = block.timestamp;
     historyItem.action = "Manufactured";
-    historyItem.details = string(abi.encodePacked("Production Date: ", _productionDate, ", Retail Location: ", _retailLocation));
+    historyItem.details = string(abi.encodePacked("Production Date: ", _productionDate, ", Manufactory Location: ", _manufactoryLocation));
     newProduct.history.push(historyItem);
 
     productList[_productID] = newProduct;

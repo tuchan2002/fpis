@@ -34,7 +34,9 @@ const productController = {
         }
     },
     createProduct: async (req, res) => {
-        const { productID, model, description } = req.body;
+        const {
+            productID, model, description, productionDate
+        } = req.body;
 
         try {
             const user = await db.User.findOne({
@@ -48,7 +50,9 @@ const productController = {
                 productID,
                 model,
                 description,
-                user.email
+                user.email,
+                user.location,
+                productionDate
             );
 
             if (result === 1n) {
@@ -118,7 +122,7 @@ const productController = {
     },
 
     moveProductToRetailer: async (req, res) => {
-        const { productID, retailerEmail } = req.body;
+        const { productID, retailerEmail, retailLocation } = req.body;
 
         try {
             const user = await db.User.findOne({
@@ -138,7 +142,8 @@ const productController = {
 
             const result = await moveToRetailer(
                 productID,
-                retailerEmail
+                retailerEmail,
+                retailLocation
             );
             if (result === 1n) {
                 return res
@@ -152,7 +157,7 @@ const productController = {
     },
 
     sellProductToCustomer: async (req, res) => {
-        const { productID, customerEmail } = req.body;
+        const { productID, customerEmail, saleDate } = req.body;
 
         try {
             const customerUser = await db.User.findOne({
@@ -178,7 +183,8 @@ const productController = {
             const result = await sellToFirstCustomer(
                 productID,
                 retailerUser.email,
-                customerEmail
+                customerEmail,
+                saleDate
             );
 
             if (result === 1n) {
@@ -193,7 +199,7 @@ const productController = {
     },
 
     exchangeProductToAnotherCustomer: async (req, res) => {
-        const { productID, newCustomerEmail } = req.body;
+        const { productID, newCustomerEmail, changeDate } = req.body;
 
         try {
             const newCustomer = await db.User.findOne({
@@ -233,7 +239,8 @@ const productController = {
             const result = await changeCustomer(
                 productID,
                 oldCustomer.email,
-                newCustomerEmail
+                newCustomerEmail,
+                changeDate
             );
 
             if (result === 1n) {

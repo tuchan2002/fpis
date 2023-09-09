@@ -22,11 +22,13 @@ const createProductOnBlockchain = async (
     productID,
     model,
     description,
-    manufactoryEmail
+    manufactoryEmail,
+    manufactoryLocation,
+    productionDate,
 ) => {
     try {
         return await contract.methods
-            .createProduct(productID, model, description, manufactoryEmail)
+            .createProduct(productID, model, description, manufactoryEmail, manufactoryLocation, productionDate)
             .send({
                 from: accountAddress
             });
@@ -59,10 +61,10 @@ const getProductsByCustomer = async (customerEmail) => {
     }
 };
 
-const moveToRetailer = async (productID, retailerEmail) => {
+const moveToRetailer = async (productID, retailerEmail, retailLocation) => {
     try {
         return await contract.methods
-            .moveToRetailer(productID, retailerEmail)
+            .moveToRetailer(productID, retailerEmail, retailLocation)
             .send({
                 from: accountAddress
             });
@@ -71,10 +73,10 @@ const moveToRetailer = async (productID, retailerEmail) => {
     }
 };
 
-const sellToFirstCustomer = async (productID, retailerEmail, customerEmail) => {
+const sellToFirstCustomer = async (productID, retailerEmail, customerEmail, saleDate) => {
     try {
         return await contract.methods
-            .sellToFirstCustomer(productID, retailerEmail, customerEmail)
+            .sellToFirstCustomer(productID, retailerEmail, customerEmail, saleDate)
             .send({
                 from: accountAddress
             });
@@ -86,11 +88,12 @@ const sellToFirstCustomer = async (productID, retailerEmail, customerEmail) => {
 const changeCustomer = async (
     productID,
     oldCustomerEmail,
-    newCustomerEmail
+    newCustomerEmail,
+    changeDate
 ) => {
     try {
         return await contract.methods
-            .changeCustomer(productID, oldCustomerEmail, newCustomerEmail)
+            .changeCustomer(productID, oldCustomerEmail, newCustomerEmail, changeDate)
             .send({
                 from: accountAddress
             });
