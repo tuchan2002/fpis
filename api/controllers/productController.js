@@ -21,16 +21,15 @@ const productController = {
                 retailerEmail: product[3],
                 customerEmail: product[4]
             }));
-            console.log('products', productsResult);
 
             return res.status(200).json({
                 success: true,
                 data: {
                     products: productsResult
-                }
+                },
+                message: 'Successfully retrieved product information.'
             });
         } catch (err) {
-            console.log(err.message);
             return res.status(500).json({ message: err.message });
         }
     },
@@ -45,19 +44,19 @@ const productController = {
                 }
             });
 
-            const isSavedToBlockchain = await createProductOnBlockchain(
+            const result = await createProductOnBlockchain(
                 productID,
                 model,
                 description,
                 user.email
             );
 
-            if (isSavedToBlockchain) {
+            if (result === 1n) {
                 return res
                     .status(201)
-                    .json({ success: true, message: 'Save to blockchain success.' });
+                    .json({ success: true, message: 'Successfully saved product to the blockchain.'});
             }
-            return res.status(500).json({ message: 'Save to blockchain failed.' });
+            return res.status(500).json({ message: 'Failed to save product to the blockchain.' });
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }
@@ -80,7 +79,8 @@ const productController = {
                         retailerEmail: productDetail[3],
                         customerEmail: productDetail[4]
                     }
-                }
+                },
+                message: 'Successfully retrieved product information.'
             });
         } catch (err) {
             return res.status(500).json({ message: err.message });
@@ -109,7 +109,8 @@ const productController = {
                         retailerEmail: productDetail[2],
                         customerEmail: productDetail[3]
                     }))
-                }
+                },
+                message: 'Successfully retrieved customer\'s product information.'
             }));
         } catch (err) {
             return res.status(500).json({ message: err.message });
@@ -135,16 +136,16 @@ const productController = {
                 return res.status(400).json({ message: 'Email is not retailer.' });
             }
 
-            const isSavedToBlockchain = await moveToRetailer(
+            const result = await moveToRetailer(
                 productID,
                 retailerEmail
             );
-            if (isSavedToBlockchain) {
+            if (result === 1n) {
                 return res
                     .status(201)
-                    .json({ success: true, message: 'Save to blockchain success.' });
+                    .json({ success: true, message: 'Successfully moved the product to the retailer.' });
             }
-            return res.status(500).json({ message: 'Save to blockchain failed.' });
+            return res.status(500).json({ message: 'Failed to move the product to the retailer.' });
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }
@@ -174,18 +175,18 @@ const productController = {
                     id: req.userId
                 }
             });
-            const isSavedToBlockchain = await sellToFirstCustomer(
+            const result = await sellToFirstCustomer(
                 productID,
                 retailerUser.email,
                 customerEmail
             );
 
-            if (isSavedToBlockchain) {
+            if (result === 1n) {
                 return res
                     .status(201)
-                    .json({ success: true, message: 'Save to blockchain success.' });
+                    .json({ success: true, message: 'Successfully sold the product to the customer.' });
             }
-            return res.status(500).json({ message: 'Save to blockchain failed.' });
+            return res.status(500).json({ message: 'Failed to sell the product to the customer.' });
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }
@@ -229,18 +230,18 @@ const productController = {
                 return res.status(400).json({ message: 'You don\'t own this product.' });
             }
 
-            const isSavedToBlockchain = await changeCustomer(
+            const result = await changeCustomer(
                 productID,
                 oldCustomer.email,
                 newCustomerEmail
             );
 
-            if (isSavedToBlockchain) {
+            if (result === 1n) {
                 return res
                     .status(201)
-                    .json({ success: true, message: 'Save to blockchain success.' });
+                    .json({ success: true, message: 'Successfully exchanged the product to another customer.' });
             }
-            return res.status(500).json({ message: 'Save to blockchain failed.' });
+            return res.status(500).json({ message: 'Failed to exchange the product.'});
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }
