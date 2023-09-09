@@ -11,6 +11,13 @@ contract FPIS {
     string retailerEmail;
     string customerEmail;
     uint status;
+    HistoryItem[] history;
+  }
+
+  struct HistoryItem {
+    uint timestamp;
+    string action;
+    string details;
   }
 
   struct Manufactory {
@@ -49,33 +56,18 @@ contract FPIS {
     return true;
   }
 
-  function createRetailer(string memory _retailerEmail, string memory _retailerName, string memory _retailerLocation) public payable returns (bool) {
-    Retailer memory newRetailer;
-    newRetailer.name = _retailerName;
-    newRetailer.location = _retailerLocation;
-    retailerList[_retailerEmail] = newRetailer;
-    return true;
-  }
-
-  function createCustomer(string memory _customerEmail, string memory _name, string memory _location, string memory _phone_number) public payable returns (bool) {
-    if (customerList[_customerEmail].isExist) {
-      return false;
-    }
-
-    Customer memory newCustomer;
-    newCustomer.name = _name;
-    newCustomer.location = _location;
-    newCustomer.phone_number = _phone_number;
-    newCustomer.isExist = true;
-    customerList[_customerEmail] = newCustomer;
-    return true;
-  }
-
-  function createProduct(string memory _productID, string memory _model, string memory _description, string memory _manufactoryEmail) public payable returns (bool) {
-    Product memory newProduct;
+  function createProduct(string memory _productID, string memory _model, string memory _description, string memory _manufactoryEmail, string memory _productionDate, string memory _retailLocation) public payable returns (bool) {
+    Product storage newProduct = productList[_productID];
     newProduct.model = _model;
     newProduct.description = _description;
     newProduct.manufactoryEmail = _manufactoryEmail;
+
+    HistoryItem memory historyItem;
+    historyItem.timestamp = block.timestamp;
+    historyItem.action = "Manufactured";
+    historyItem.details = string(abi.encodePacked("Production Date: ", _productionDate, ", Retail Location: ", _retailLocation));
+    newProduct.history.push(historyItem);
+
     productList[_productID] = newProduct;
 
     productIds.push(_productID);
@@ -83,51 +75,64 @@ contract FPIS {
     return true;
   }
 
-  function moveToRetailer(string memory _productID, string memory _retailerEmail) public payable returns (bool) {
-    productList[_productID].retailerEmail = _retailerEmail;
+  function moveToRetailer(string memory _productID, string memory _retailerEmail, string memory _retailLocation) public payable returns (bool) {
+    Product storage product = productList[_productID];
+    product.retailerEmail = _retailerEmail;
+
+    HistoryItem memory historyItem;
+    historyItem.timestamp = block.timestamp;
+    historyItem.action = "Moved to Retailer";
+    historyItem.details = string(abi.encodePacked("Retail Location: ", _retailLocation));
+    product.history.push(historyItem);
+
     return true;
   }
 
-  function sellToFirstCustomer(string memory _productID, string memory _retailerEmail, string memory _customerEmail) public payable returns(bool) {
-    if (compareTwoStrings(productList[_productID].retailerEmail, _retailerEmail)) {
-      if (customerList[_customerEmail].isExist) {
-        productList[_productID].customerEmail = _customerEmail;
-        productList[_productID].status = 1;
-        customerList[_customerEmail].products.push(_productID);
+  function sellToFirstCustomer(string memory _productID, string memory _retailerEmail, string memory _customerEmail, string memory _saleDate) public payable returns(bool) {
+    Product storage product = productList[_productID];
+    if (compareTwoStrings(product.retailerEmail, _retailerEmail)) {
+      if (compareTwoStrings(product.customerEmail, "")) {
+        if (customerList[_customerEmail].isExist) {
+          product.customerEmail = _customerEmail;
+          product.status = 1;
+          customerList[_customerEmail].products.push(_productID);
 
-        return true;
+          HistoryItem memory historyItem;
+          historyItem.timestamp = block.timestamp;
+          historyItem.action = "Sold to Customer";
+          historyItem.details = string(abi.encodePacked("Customer Email: ", _customerEmail, ", Sale Date: ", _saleDate));
+          product.history.push(historyItem);
+
+          return true;
+        }
       }
     }
     return false;
   }
 
-  function changeCustomer(string memory _productID, string memory _oldCustomerEmail, string memory _newCustomerEmail) public payable returns (bool) {
-    console.log(_productID, _oldCustomerEmail, _newCustomerEmail);
-    
-    Product memory product = productList[_productID];
+  function changeCustomer(string memory _productID, string memory _oldCustomerEmail, string memory _newCustomerEmail, string memory _changeDate) public payable returns (bool) {
+    Product storage product = productList[_productID];
 
-    Customer memory oldCustomer = customerList[_oldCustomerEmail];
-    uint numOfProductsOldCustomer = customerList[_oldCustomerEmail].products.length;
+    Customer storage oldCustomer = customerList[_oldCustomerEmail];
+    Customer storage newCustomer = customerList[_newCustomerEmail];
 
-    Customer memory newCustomer = customerList[_newCustomerEmail];
-
-    if (oldCustomer.isExist && newCustomer.isExist) {
-      for (uint i = 0; i < numOfProductsOldCustomer; i++) {
+    if (product.status == 1 && oldCustomer.isExist && newCustomer.isExist) {
+      for (uint i = 0; i < oldCustomer.products.length; i++) {
         if (compareTwoStrings(oldCustomer.products[i], _productID)) {
           if (compareTwoStrings(product.customerEmail, _oldCustomerEmail)) {
-            productList[_productID].customerEmail = _newCustomerEmail;
+            product.customerEmail = _newCustomerEmail;
           }
 
-          for (uint j = 0; j < numOfProductsOldCustomer; j++) {
-            if (compareTwoStrings(customerList[_oldCustomerEmail].products[j], _productID)) {
-              removeElement(j, customerList[_oldCustomerEmail].products);
-              customerList[_newCustomerEmail].products.push(_productID);
+          HistoryItem memory historyItem;
+          historyItem.timestamp = block.timestamp;
+          historyItem.action = "Changed Customer";
+          historyItem.details = string(abi.encodePacked("Old Customer: ", _oldCustomerEmail, ", New Customer: ", _newCustomerEmail, ", Change Date: ", _changeDate));
+          product.history.push(historyItem);
 
-              return true;
-            }
-          }
+          removeElement(i, oldCustomer.products);
+          newCustomer.products.push(_productID);
 
-          break;
+          return true;
         }
       }
     }
@@ -164,6 +169,28 @@ contract FPIS {
 
   function getProductsByCustomer(string memory _customerEmail) public view returns(string[] memory) {
     return customerList[_customerEmail].products;
+  }
+
+  function createRetailer(string memory _retailerEmail, string memory _retailerName, string memory _retailerLocation) public payable returns (bool) {
+    Retailer memory newRetailer;
+    newRetailer.name = _retailerName;
+    newRetailer.location = _retailerLocation;
+    retailerList[_retailerEmail] = newRetailer;
+    return true;
+  }
+
+  function createCustomer(string memory _customerEmail, string memory _name, string memory _location, string memory _phone_number) public payable returns (bool) {
+    if (customerList[_customerEmail].isExist) {
+      return false;
+    }
+
+    Customer memory newCustomer;
+    newCustomer.name = _name;
+    newCustomer.location = _location;
+    newCustomer.phone_number = _phone_number;
+    newCustomer.isExist = true;
+    customerList[_customerEmail] = newCustomer;
+    return true;
   }
 
   function compareTwoStrings(string memory str1, string memory str2) internal pure returns (bool) {
