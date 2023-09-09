@@ -48,14 +48,6 @@ contract FPIS {
 
   string[] private productIds;
 
-  function createManufactory(string memory _manufactorEmail, string memory _manufactorName, string memory _manufactorLocation) public payable returns (bool) {
-    Retailer memory newManufactor;
-    newManufactor.name = _manufactorName;
-    newManufactor.location = _manufactorLocation;
-    retailerList[_manufactorEmail] = newManufactor;
-    return true;
-  }
-
   function createProduct(string memory _productID, string memory _model, string memory _description, string memory _manufactoryEmail, string memory _manufactoryLocation, string memory _productionDate) public payable returns (bool) {
     Product storage newProduct = productList[_productID];
     newProduct.model = _model;
@@ -169,6 +161,14 @@ contract FPIS {
 
   function getProductsByCustomer(string memory _customerEmail) public view returns(string[] memory) {
     return customerList[_customerEmail].products;
+  }
+
+  function createManufactory(string memory _manufactorEmail, string memory _manufactorName, string memory _manufactorLocation) public payable returns (bool) {
+    Retailer memory newManufactor;
+    newManufactor.name = _manufactorName;
+    newManufactor.location = _manufactorLocation;
+    retailerList[_manufactorEmail] = newManufactor;
+    return true;
   }
 
   function createRetailer(string memory _retailerEmail, string memory _retailerName, string memory _retailerLocation) public payable returns (bool) {

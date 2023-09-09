@@ -55,7 +55,7 @@ const productController = {
                 productionDate
             );
 
-            if (result === 1n) {
+            if (result.status === 1n) {
                 return res
                     .status(201)
                     .json({ success: true, message: 'Successfully saved product to the blockchain.'});
@@ -145,7 +145,7 @@ const productController = {
                 retailerEmail,
                 retailLocation
             );
-            if (result === 1n) {
+            if (result.status === 1n) {
                 return res
                     .status(201)
                     .json({ success: true, message: 'Successfully moved the product to the retailer.' });
@@ -187,7 +187,7 @@ const productController = {
                 saleDate
             );
 
-            if (result === 1n) {
+            if (result.status === 1n) {
                 return res
                     .status(201)
                     .json({ success: true, message: 'Successfully sold the product to the customer.' });
@@ -243,7 +243,7 @@ const productController = {
                 changeDate
             );
 
-            if (result === 1n) {
+            if (result.status === 1n) {
                 return res
                     .status(201)
                     .json({ success: true, message: 'Successfully exchanged the product to another customer.' });

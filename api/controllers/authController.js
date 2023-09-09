@@ -29,16 +29,6 @@ const authController = {
                     .json({ message: 'Email address already exists.' });
             }
 
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const newUser = {
-                name,
-                email,
-                location,
-                phone_number,
-                password: hashedPassword,
-                role
-            };
-
             let result;
             if (role === 0) {
                 result = await createManufactory(email, name, location);
@@ -53,7 +43,17 @@ const authController = {
                 );
             }
 
-            if (result === 1n) {
+            if (result.status === 1n) {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                const newUser = {
+                    name,
+                    email,
+                    location,
+                    phone_number,
+                    password: hashedPassword,
+                    role
+                };
+
                 const createdUser = await db.User.create(newUser);
                 createdUser.password = '';
 
@@ -64,8 +64,9 @@ const authController = {
                         user: createdUser
                     }
                 });
+            } else {
+                return res.status(500).json({ message: 'Account registration failed.'});
             }
-            return res.status(500).json({ message: 'Account registration failed.'});
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }
