@@ -61,10 +61,10 @@ const getProductsByCustomer = async (customerEmail) => {
     }
 };
 
-const moveToRetailer = async (productID, retailerEmail, retailLocation) => {
+const moveToRetailer = async (productID, retailerEmail, retailLocation, movingDate) => {
     try {
         return await contract.methods
-            .moveToRetailer(productID, retailerEmail, retailLocation)
+            .moveToRetailer(productID, retailerEmail, retailLocation, movingDate)
             .send({
                 from: accountAddress
             });

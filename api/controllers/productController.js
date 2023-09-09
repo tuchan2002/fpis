@@ -1,3 +1,4 @@
+const moment = require('moment');
 const db = require('../models');
 const {
     createProductOnBlockchain,
@@ -44,8 +45,9 @@ const productController = {
     },
     createProduct: async (req, res) => {
         const {
-            productID, model, description, productionDate
+            productID, model, description
         } = req.body;
+        const productionDate = moment().format('LLL');
 
         try {
             const user = await db.User.findOne({
@@ -143,6 +145,7 @@ const productController = {
 
     moveProductToRetailer: async (req, res) => {
         const { productID, retailerEmail } = req.body;
+        const movingDate = moment().format('LLL');
 
         try {
             const user = await db.User.findOne({
@@ -163,7 +166,8 @@ const productController = {
             const result = await moveToRetailer(
                 productID,
                 retailerEmail,
-                user.location
+                user.location,
+                movingDate
             );
             if (result.status === 1n) {
                 return res
@@ -177,7 +181,8 @@ const productController = {
     },
 
     sellProductToCustomer: async (req, res) => {
-        const { productID, customerEmail, saleDate } = req.body;
+        const { productID, customerEmail } = req.body;
+        const saleDate = moment().format('LLL');
 
         try {
             const customerUser = await db.User.findOne({
@@ -219,7 +224,8 @@ const productController = {
     },
 
     exchangeProductToAnotherCustomer: async (req, res) => {
-        const { productID, newCustomerEmail, changeDate } = req.body;
+        const { productID, newCustomerEmail } = req.body;
+        const changeDate = moment().format('LLL');
 
         try {
             const newCustomer = await db.User.findOne({

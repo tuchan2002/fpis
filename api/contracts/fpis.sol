@@ -67,14 +67,14 @@ contract FPIS {
     return true;
   }
 
-  function moveToRetailer(string memory _productID, string memory _retailerEmail, string memory _retailLocation) public payable returns (bool) {
+  function moveToRetailer(string memory _productID, string memory _retailerEmail, string memory _retailLocation, string memory _movingDate) public payable returns (bool) {
     Product storage product = productList[_productID];
     product.retailerEmail = _retailerEmail;
 
     HistoryItem memory historyItem;
     historyItem.timestamp = block.timestamp;
     historyItem.action = "Moved to Retailer";
-    historyItem.details = string(abi.encodePacked("Retail Location: ", _retailLocation));
+    historyItem.details = string(abi.encodePacked("Retail Location: ", _retailLocation, ", Moving Date: ", _movingDate));
     product.history.push(historyItem);
 
     return true;
