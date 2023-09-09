@@ -39,9 +39,6 @@ const authController = {
                 role
             };
 
-            const createdUser = await db.User.create(newUser);
-            createdUser.password = '';
-
             let result;
             if (role === 0) {
                 result = await createManufactory(email, name, location);
@@ -57,6 +54,9 @@ const authController = {
             }
 
             if (result === 1n) {
+                const createdUser = await db.User.create(newUser);
+                createdUser.password = '';
+
                 return res.status(201).json({
                     message: 'Account registration successful.',
                     success: true,
