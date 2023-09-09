@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import ProductTimeline from '@/components/product-timeline'
 
 const ProductDetails = ({ params }: { params: { id: string } }) => {
     const dispatch = useDispatch<AppDispatch>()
@@ -86,6 +87,14 @@ const ProductDetails = ({ params }: { params: { id: string } }) => {
                         />
                     </ListItem>
                 </List>
+
+                <ProductTimeline
+                    productHistory={
+                        productReducer.product?.history
+                            ? productReducer.product?.history
+                            : []
+                    }
+                />
             </Paper>
         </Box>
     )
