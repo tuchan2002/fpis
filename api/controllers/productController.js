@@ -273,7 +273,7 @@ const productController = {
                 newCustomerEmail,
                 changeDate
             );
-
+            
             if (result.status === 1n) {
                 return res
                     .status(201)

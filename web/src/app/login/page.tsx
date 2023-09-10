@@ -30,7 +30,6 @@ const Login = () => {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         dispatch(login(userInputData))
-        router.push('/')
     }
 
     return (

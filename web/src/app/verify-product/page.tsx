@@ -53,12 +53,17 @@ const VerifyProduct = () => {
             )
 
             const productInfo: IProduct = response.data.data.product
+            console.log('productInfo', productInfo)
 
             let isReal = true
             Object.keys(productInfo).forEach((key) => {
-                if (productInfo[key] !== productScannerData[key]) {
-                    isReal = false
-                    return
+                if (key !== 'retailerEmail' && key !== 'history') {
+                    console.log(productInfo[key] , productScannerData[key]);
+                    
+                    if (productInfo[key] !== {...productScannerData,customerEmail: customerEmailInputData}[key]) {
+                        isReal = false
+                        return
+                    }
                 }
             })
 

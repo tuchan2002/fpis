@@ -3,6 +3,7 @@
 import ProductTimeline from '@/components/product-timeline'
 import QRCodeScanner from '@/components/qr-code-scanner'
 import { AppDispatch } from '@/redux'
+import { showAlert } from '@/redux/reducers/alertSlice'
 import { authSelector } from '@/redux/reducers/authSlice'
 import { getProductById, productSelector } from '@/redux/reducers/productSlice'
 import { getUsersByRole, userSelector } from '@/redux/reducers/userSlice'
@@ -74,6 +75,8 @@ const ChangeOwnership = () => {
         )
 
         try {
+            dispatch(showAlert({ loading: true }))
+
             const response = await axios.post(
                 `http://localhost:8000/api/v1/product/exchange-another-customer`,
                 { productID: productID, newCustomerEmail: selectedUser?.email },
@@ -82,12 +85,9 @@ const ChangeOwnership = () => {
                 }
             )
 
-            await Swal.fire({
-                icon: 'success',
-                text: `${response.data.message}`
-            })
-        } catch (error) {
-            console.log(error)
+            dispatch(showAlert({ success: response.data.message }))
+        } catch (error: any) {
+            dispatch(showAlert({ error: error.response.data.message }))
         }
     }
 

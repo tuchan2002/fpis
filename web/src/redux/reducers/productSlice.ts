@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
 import axios from 'axios'
+import { showAlert } from './alertSlice'
 
 interface ICreateProductParams {
     body: {
@@ -34,15 +35,24 @@ const initialState: { products: IProduct[]; product: IProduct | null } = {
 
 export const createProduct = createAsyncThunk(
     'product/createProduct',
-    async (data: ICreateProductParams) => {
-        const response = await axios.post(
-            `http://localhost:8000/api/v1/product`,
-            data.body,
-            {
-                headers: { Authorization: `Bearer ${data.accessToken}` }
-            }
-        )
-        return response.data
+    async (data: ICreateProductParams, { dispatch }) => {
+        try {
+            dispatch(showAlert({ loading: true }))
+
+            const response = await axios.post(
+                `http://localhost:8000/api/v1/product`,
+                data.body,
+                {
+                    headers: { Authorization: `Bearer ${data.accessToken}` }
+                }
+            )
+
+            dispatch(showAlert({ success: response.data.message }))
+
+            return response.data
+        } catch (error: any) {
+            dispatch(showAlert({ error: error.response.data.message }))
+        }
     }
 )
 
