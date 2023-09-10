@@ -18,6 +18,7 @@ contract FPIS {
     uint timestamp;
     string action;
     string details;
+    string date;
   }
 
   struct Manufactory {
@@ -57,7 +58,8 @@ contract FPIS {
     HistoryItem memory historyItem;
     historyItem.timestamp = block.timestamp;
     historyItem.action = "Manufactured";
-    historyItem.details = string(abi.encodePacked("Manufactory Location: ", _manufactoryLocation, ", Production Date: ", _productionDate));
+    historyItem.details = string(abi.encodePacked("Manufactory Email: ", _manufactoryEmail, ", Manufactory Location: ", _manufactoryLocation));
+    historyItem.date = _productionDate;
     newProduct.history.push(historyItem);
 
     productList[_productID] = newProduct;
@@ -74,7 +76,8 @@ contract FPIS {
     HistoryItem memory historyItem;
     historyItem.timestamp = block.timestamp;
     historyItem.action = "Moved to Retailer";
-    historyItem.details = string(abi.encodePacked("Retail Location: ", _retailLocation, ", Moving Date: ", _movingDate));
+    historyItem.details = string(abi.encodePacked("Retail Email: ", _retailerEmail, ", Retail Location: ", _retailLocation));
+    historyItem.date = _movingDate;
     product.history.push(historyItem);
 
     return true;
@@ -92,7 +95,8 @@ contract FPIS {
           HistoryItem memory historyItem;
           historyItem.timestamp = block.timestamp;
           historyItem.action = "Sold to Customer";
-          historyItem.details = string(abi.encodePacked("Customer Email: ", _customerEmail, ", Sale Date: ", _saleDate));
+          historyItem.details = string(abi.encodePacked("Customer Email: ", _customerEmail));
+          historyItem.date = _saleDate;
           product.history.push(historyItem);
 
           return true;
@@ -118,7 +122,8 @@ contract FPIS {
           HistoryItem memory historyItem;
           historyItem.timestamp = block.timestamp;
           historyItem.action = "Changed Customer";
-          historyItem.details = string(abi.encodePacked("Old Customer: ", _oldCustomerEmail, ", New Customer: ", _newCustomerEmail, ", Change Date: ", _changeDate));
+          historyItem.details = string(abi.encodePacked("Old Customer: ", _oldCustomerEmail, ", New Customer: ", _newCustomerEmail));
+          historyItem.date = _changeDate;
           product.history.push(historyItem);
 
           removeElement(i, oldCustomer.products);

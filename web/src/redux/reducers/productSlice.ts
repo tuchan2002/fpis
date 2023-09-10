@@ -15,6 +15,7 @@ interface IHistoryItem {
     timestamp: string
     action: string
     details: string
+    date: string
 }
 interface IProduct {
     productID: string

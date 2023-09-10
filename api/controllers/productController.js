@@ -18,7 +18,8 @@ const productController = {
                 const productHistory = product.history.map((item) => ({
                     timestamp: item.timestamp.toString(),
                     action: item.action,
-                    details: item.details
+                    details: item.details,
+                    date: item.date
                 }));
 
                 return ({
@@ -97,7 +98,8 @@ const productController = {
                         history: productDetail[5].map((item) => ({
                             timestamp: item.timestamp.toString(),
                             action: item.action,
-                            details: item.details
+                            details: item.details,
+                            date: item.date
                         }))
                     }
                 },
@@ -132,7 +134,8 @@ const productController = {
                         history: productDetail[4].map((item) => ({
                             timestamp: item.timestamp.toString(),
                             action: item.action,
-                            details: item.details
+                            details: item.details,
+                            date: item.date
                         }))
                     }))
                 },
