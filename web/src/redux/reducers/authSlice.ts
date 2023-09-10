@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
 import axios from 'axios'
+import { showAlert } from './alertSlice'
 
 interface IUser {
     id: number
@@ -20,12 +21,15 @@ const initialState: AuthState = {
 }
 
 interface IRegisterParams {
-    name: string
-    email: string
-    password: string
-    phone_number: string
-    location: string
-    role: number
+    userData: {
+        name: string
+        email: string
+        password: string
+        phone_number: string
+        location: string
+        role: number
+    }
+    accessToken: string
 }
 
 interface ILoginParams {
@@ -34,12 +38,21 @@ interface ILoginParams {
 }
 export const login = createAsyncThunk(
     'auth/login',
-    async (data: ILoginParams) => {
-        const response = await axios.post(
-            `http://localhost:8000/api/v1/auth/login`,
-            data
-        )
-        return response.data
+    async (data: ILoginParams, { dispatch }) => {
+        try {
+            dispatch(showAlert({ loading: true }))
+
+            const response = await axios.post(
+                `http://localhost:8000/api/v1/auth/login`,
+                data
+            )
+
+            dispatch(showAlert({ success: response.data.message }))
+
+            return response.data
+        } catch (error: any) {
+            dispatch(showAlert({ error: error.response.data.message }))
+        }
     }
 )
 
@@ -58,12 +71,23 @@ export const getAuth = createAsyncThunk('auth/getAuth', async () => {
 
 export const register = createAsyncThunk(
     'auth/register',
-    async (data: IRegisterParams) => {
-        const response = await axios.post(
-            `http://localhost:8000/api/v1/auth/register`,
-            data
-        )
-        return response.data
+    async (data: IRegisterParams, { dispatch }) => {
+        try {
+            dispatch(showAlert({ loading: true }))
+
+            const response = await axios.post(
+                `http://localhost:8000/api/v1/auth/register`,
+                data.userData,
+                {
+                    headers: { Authorization: `Bearer ${data.accessToken}` }
+                }
+            )
+            dispatch(showAlert({ success: response.data.message }))
+
+            return response.data
+        } catch (error: any) {
+            dispatch(showAlert({ error: error.response.data.message }))
+        }
     }
 )
 
@@ -77,13 +101,14 @@ const authSlice = createSlice({
             console.log('pending')
         })
         builder.addCase(login.fulfilled, (state, action) => {
+            console.log('action.payload auth', action.payload)
+
             state.token = action.payload.data.access_token
             state.user = action.payload.data.user
             localStorage.setItem(
                 'accessToken',
                 action.payload.data.access_token
             )
-            window.location.href = '/'
 
             console.log('fulfilled')
         })

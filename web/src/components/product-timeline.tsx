@@ -12,7 +12,7 @@ import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing'
 import SellIcon from '@mui/icons-material/Sell'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
-import { Dialog, DialogTitle, Typography } from '@mui/material'
+import { Dialog, Typography } from '@mui/material'
 
 interface IHistoryItem {
     timestamp: string
@@ -72,7 +72,7 @@ const ProductTimeline = ({
         >
             <Timeline position='alternate'>
                 {productHistory.map((item, index) => (
-                    <TimelineItem>
+                    <TimelineItem key={index}>
                         <TimelineOppositeContent
                             sx={{ m: 'auto 0' }}
                             align='right'

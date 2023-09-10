@@ -1,6 +1,6 @@
 'use client'
 
-import { register } from '@/redux/reducers/authSlice'
+import { authSelector, register } from '@/redux/reducers/authSlice'
 import {
     Box,
     Button,
@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '@/redux'
 
 const roleData = [
@@ -22,6 +22,8 @@ const roleData = [
 const CreateProduct = () => {
     const dispatch = useDispatch<AppDispatch>()
     const router = useRouter()
+
+    const authReducer = useSelector(authSelector)
 
     const [userDataInput, setUserInputData] = useState({
         name: '',
@@ -45,7 +47,12 @@ const CreateProduct = () => {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        dispatch(register(userDataInput))
+        dispatch(
+            register({
+                userData: userDataInput,
+                accessToken: authReducer.token
+            })
+        )
 
         // reset data
         router.push('/accounts')
