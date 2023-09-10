@@ -11,6 +11,12 @@ interface ICreateProductParams {
     accessToken: string
 }
 
+interface IHistoryItem {
+    timestamp: string
+    action: string
+    details: string
+    date: string
+}
 interface IProduct {
     productID: string
     model: string
@@ -18,6 +24,7 @@ interface IProduct {
     manufactoryEmail: string
     retailerEmail: string
     customerEmail: string
+    history: IHistoryItem[]
 }
 
 const initialState: { products: IProduct[]; product: IProduct | null } = {

@@ -29,26 +29,13 @@ const authController = {
                     .json({ message: 'Email address already exists.' });
             }
 
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const newUser = {
-                name,
-                email,
-                location,
-                phone_number,
-                password: hashedPassword,
-                role
-            };
-
-            const createdUser = await db.User.create(newUser);
-            createdUser.password = '';
-
-            let isSavedToBlockchain;
+            let result;
             if (role === 0) {
-                isSavedToBlockchain = await createManufactory(email, name, location);
+                result = await createManufactory(email, name, location);
             } else if (role === 1) {
-                isSavedToBlockchain = await createRetailer(email, name, location);
+                result = await createRetailer(email, name, location);
             } else if (role === 2) {
-                isSavedToBlockchain = await createCustomer(
+                result = await createCustomer(
                     email,
                     name,
                     location,
@@ -56,19 +43,29 @@ const authController = {
                 );
             }
 
-            if (isSavedToBlockchain) {
-                console.log('Register account successful.');
+            if (result.status === 1n) {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                const newUser = {
+                    name,
+                    email,
+                    location,
+                    phone_number,
+                    password: hashedPassword,
+                    role
+                };
+
+                const createdUser = await db.User.create(newUser);
+                createdUser.password = '';
 
                 return res.status(201).json({
-                    message: 'Register account successful.',
+                    message: 'Account registration successful.',
                     success: true,
                     data: {
                         user: createdUser
                     }
                 });
             }
-            console.log('Register account failed.');
-            return res.status(500).json({ message: 'Save to blockchain failed.' });
+            return res.status(500).json({ message: 'Account registration failed.'});
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }

@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => sequelize.define('user', {
      * 0 manufactory
      * 1 retailer
      * 2 customer
+     * 3 admin
      */
     role: {
         type: DataTypes.INTEGER,
