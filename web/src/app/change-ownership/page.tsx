@@ -1,16 +1,20 @@
 'use client'
 
+import ProductTimeline from '@/components/product-timeline'
 import QRCodeScanner from '@/components/qr-code-scanner'
 import { AppDispatch } from '@/redux'
 import { authSelector } from '@/redux/reducers/authSlice'
+import { getProductById, productSelector } from '@/redux/reducers/productSlice'
 import { getUsersByRole, userSelector } from '@/redux/reducers/userSlice'
 import {
     Box,
     Paper,
     Typography,
-    List,
-    ListItem,
-    ListItemText,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
     TextField,
     MenuItem,
     Button
@@ -36,15 +40,28 @@ const ChangeOwnership = () => {
 
     const authReducer = useSelector(authSelector)
     const userReducer = useSelector(userSelector)
+    const productReducer = useSelector(productSelector)
 
     const [productScannerData, setProductScannerData] =
         useState<IProduct | null>(null)
 
     const [selectedUserId, setSelectedUserId] = useState<string>('')
+    const [openModalTimeline, setOpenModalTimeline] = useState(false)
 
     useEffect(() => {
         dispatch(getUsersByRole({ role: 2, accessToken: authReducer.token }))
     }, [authReducer.token])
+
+    useEffect(() => {
+        if (productScannerData && productScannerData.productID) {
+            dispatch(
+                getProductById({
+                    productID: productScannerData.productID,
+                    accessToken: authReducer.token
+                })
+            )
+        }
+    }, [authReducer.token, productScannerData?.productID])
 
     const handleChangeOwnership = async () => {
         if (!productScannerData) {
@@ -75,84 +92,161 @@ const ChangeOwnership = () => {
     }
 
     return (
-        <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-            <Paper
-                sx={{
-                    p: 3,
-                    maxWidth: 720,
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: 3
-                }}
-            >
-                <QRCodeScanner setResult={setProductScannerData} />
-                <Typography variant='h5'>Product Information</Typography>
-                {productScannerData && (
-                    <>
-                        <List
-                            sx={{
-                                width: '100%',
-                                bgcolor: 'background.paper'
-                            }}
-                        >
-                            <ListItem>
-                                <ListItemText
-                                    primary='ID'
-                                    secondary={productScannerData.productID}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary='Model'
-                                    secondary={productScannerData.model}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary='Description'
-                                    secondary={productScannerData.description}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary='Manufactory Email'
-                                    secondary={
-                                        productScannerData.manufactoryEmail
-                                    }
-                                />
-                            </ListItem>
-                        </List>
+        <>
+            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+                <Paper
+                    sx={{
+                        p: 3,
+                        maxWidth: 720,
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: 3
+                    }}
+                >
+                    <QRCodeScanner setResult={setProductScannerData} />
+                    <Typography variant='h5'>Product Information</Typography>
+                    {productScannerData && (
+                        <>
+                            <TableContainer>
+                                <Table
+                                    sx={{ minWidth: 650 }}
+                                    aria-label='simple table'
+                                >
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell
+                                                component='th'
+                                                scope='row'
+                                            >
+                                                ID
+                                            </TableCell>
+                                            <TableCell align='right'>
+                                                {
+                                                    productReducer.product
+                                                        ?.productID
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell
+                                                component='th'
+                                                scope='row'
+                                            >
+                                                Model
+                                            </TableCell>
+                                            <TableCell align='right'>
+                                                {productReducer.product?.model}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell
+                                                component='th'
+                                                scope='row'
+                                            >
+                                                Description
+                                            </TableCell>
+                                            <TableCell align='right'>
+                                                {
+                                                    productReducer.product
+                                                        ?.description
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell
+                                                component='th'
+                                                scope='row'
+                                            >
+                                                Manufactory Email
+                                            </TableCell>
+                                            <TableCell align='right'>
+                                                {
+                                                    productReducer.product
+                                                        ?.manufactoryEmail
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell
+                                                component='th'
+                                                scope='row'
+                                            >
+                                                Retailer Email
+                                            </TableCell>
+                                            <TableCell align='right'>
+                                                {
+                                                    productReducer.product
+                                                        ?.retailerEmail
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell
+                                                component='th'
+                                                scope='row'
+                                            >
+                                                Customer Email
+                                            </TableCell>
+                                            <TableCell align='right'>
+                                                {
+                                                    productReducer.product
+                                                        ?.customerEmail
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
 
-                        <TextField
-                            sx={{ width: '50%' }}
-                            id='userId'
-                            select
-                            label='Customer'
-                            variant='standard'
-                            value={selectedUserId}
-                            onChange={(e) => setSelectedUserId(e.target.value)}
-                        >
-                            {userReducer.users.map((user) => (
-                                <MenuItem key={user.id} value={user.id}>
-                                    {`${user.name} - ${user.email}`}
-                                </MenuItem>
-                            ))}
-                        </TextField>
+                            <Button
+                                variant='text'
+                                onClick={() => setOpenModalTimeline(true)}
+                            >
+                                Show Product History
+                            </Button>
 
-                        <Button
-                            variant='contained'
-                            disabled={selectedUserId ? false : true}
-                            onClick={handleChangeOwnership}
-                        >
-                            Change
-                        </Button>
-                    </>
-                )}
-            </Paper>
-        </Box>
+                            <TextField
+                                sx={{ width: '50%' }}
+                                id='userId'
+                                select
+                                label='Customer'
+                                variant='standard'
+                                value={selectedUserId}
+                                onChange={(e) =>
+                                    setSelectedUserId(e.target.value)
+                                }
+                            >
+                                {userReducer.users.map((user) => (
+                                    <MenuItem key={user.id} value={user.id}>
+                                        {`${user.name} - ${user.email}`}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+
+                            <Button
+                                variant='contained'
+                                disabled={selectedUserId ? false : true}
+                                onClick={handleChangeOwnership}
+                            >
+                                Change
+                            </Button>
+                        </>
+                    )}
+                </Paper>
+            </Box>
+            <ProductTimeline
+                productHistory={
+                    productReducer.product?.history
+                        ? productReducer.product?.history
+                        : []
+                }
+                open={openModalTimeline}
+                onClose={() => setOpenModalTimeline(false)}
+            />
+        </>
     )
 }
 

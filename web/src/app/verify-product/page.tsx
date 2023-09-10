@@ -5,9 +5,11 @@ import { authSelector } from '@/redux/reducers/authSlice'
 import {
     Box,
     Button,
-    List,
-    ListItem,
-    ListItemText,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
     Paper,
     TextField,
     Typography
@@ -54,11 +56,9 @@ const VerifyProduct = () => {
 
             let isReal = true
             Object.keys(productInfo).forEach((key) => {
-                if (key !== 'retailerEmail') {
-                    if (productInfo[key] !== productScannerData[key]) {
-                        isReal = false
-                        return
-                    }
+                if (productInfo[key] !== productScannerData[key]) {
+                    isReal = false
+                    return
                 }
             })
 
@@ -90,45 +90,57 @@ const VerifyProduct = () => {
                 }}
             >
                 <QRCodeScanner setResult={setProductScannerData} />
-                <Typography variant='h5'>Product Information</Typography>
+                <Typography variant='h5'>
+                    Product Information from QR code
+                </Typography>
                 {productScannerData && (
                     <>
-                        <List
-                            sx={{
-                                width: '100%',
-                                bgcolor: 'background.paper'
-                            }}
-                        >
-                            <ListItem>
-                                <ListItemText
-                                    primary='ID'
-                                    secondary={productScannerData.productID}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary='Model'
-                                    secondary={productScannerData.model}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary='Description'
-                                    secondary={productScannerData.description}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary='Manufactory Email'
-                                    secondary={
-                                        productScannerData.manufactoryEmail
-                                    }
-                                />
-                            </ListItem>
-                        </List>
+                        <TableContainer>
+                            <Table
+                                sx={{ minWidth: 650 }}
+                                aria-label='simple table'
+                            >
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell component='th' scope='row'>
+                                            ID
+                                        </TableCell>
+                                        <TableCell align='right'>
+                                            {productScannerData.productID}
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell component='th' scope='row'>
+                                            Model
+                                        </TableCell>
+                                        <TableCell align='right'>
+                                            {productScannerData.model}
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell component='th' scope='row'>
+                                            Description
+                                        </TableCell>
+                                        <TableCell align='right'>
+                                            {productScannerData.description}
+                                        </TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell component='th' scope='row'>
+                                            Manufactory Email
+                                        </TableCell>
+                                        <TableCell align='right'>
+                                            {
+                                                productScannerData.manufactoryEmail
+                                            }
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                         <TextField
                             sx={{ width: '50%' }}
-                            label='Customer Email'
+                            label='Owned customer email'
                             variant='standard'
                             value={customerEmailInputData}
                             onChange={(e) =>

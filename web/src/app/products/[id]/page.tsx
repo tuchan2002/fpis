@@ -6,15 +6,11 @@ import { getProductById, productSelector } from '@/redux/reducers/productSlice'
 import {
     Box,
     Button,
-    List,
-    ListItem,
-    ListItemText,
     Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
-    TableHead,
     TableRow
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
@@ -56,13 +52,7 @@ const ProductDetails = ({ params }: { params: { id: string } }) => {
                     <TableContainer component={Paper}>
                         <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                             <TableBody>
-                                <TableRow
-                                    sx={{
-                                        '&:last-child td, &:last-child th': {
-                                            border: 0
-                                        }
-                                    }}
-                                >
+                                <TableRow>
                                     <TableCell component='th' scope='row'>
                                         ID
                                     </TableCell>
@@ -70,13 +60,7 @@ const ProductDetails = ({ params }: { params: { id: string } }) => {
                                         {productReducer.product?.productID}
                                     </TableCell>
                                 </TableRow>
-                                <TableRow
-                                    sx={{
-                                        '&:last-child td, &:last-child th': {
-                                            border: 0
-                                        }
-                                    }}
-                                >
+                                <TableRow>
                                     <TableCell component='th' scope='row'>
                                         Model
                                     </TableCell>
@@ -84,13 +68,7 @@ const ProductDetails = ({ params }: { params: { id: string } }) => {
                                         {productReducer.product?.model}
                                     </TableCell>
                                 </TableRow>
-                                <TableRow
-                                    sx={{
-                                        '&:last-child td, &:last-child th': {
-                                            border: 0
-                                        }
-                                    }}
-                                >
+                                <TableRow>
                                     <TableCell component='th' scope='row'>
                                         Description
                                     </TableCell>
@@ -98,13 +76,7 @@ const ProductDetails = ({ params }: { params: { id: string } }) => {
                                         {productReducer.product?.description}
                                     </TableCell>
                                 </TableRow>
-                                <TableRow
-                                    sx={{
-                                        '&:last-child td, &:last-child th': {
-                                            border: 0
-                                        }
-                                    }}
-                                >
+                                <TableRow>
                                     <TableCell component='th' scope='row'>
                                         Manufactory Email
                                     </TableCell>
@@ -115,13 +87,7 @@ const ProductDetails = ({ params }: { params: { id: string } }) => {
                                         }
                                     </TableCell>
                                 </TableRow>
-                                <TableRow
-                                    sx={{
-                                        '&:last-child td, &:last-child th': {
-                                            border: 0
-                                        }
-                                    }}
-                                >
+                                <TableRow>
                                     <TableCell component='th' scope='row'>
                                         Retailer Email
                                     </TableCell>
@@ -129,13 +95,7 @@ const ProductDetails = ({ params }: { params: { id: string } }) => {
                                         {productReducer.product?.retailerEmail}
                                     </TableCell>
                                 </TableRow>
-                                <TableRow
-                                    sx={{
-                                        '&:last-child td, &:last-child th': {
-                                            border: 0
-                                        }
-                                    }}
-                                >
+                                <TableRow>
                                     <TableCell component='th' scope='row'>
                                         Customer Email
                                     </TableCell>
