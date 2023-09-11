@@ -1,5 +1,5 @@
 const isRetailer = async (req, res, next) => {
-    if (req.role === 1) {
+    if (req.userRole === 1) {
         next();
     } else {
         return res

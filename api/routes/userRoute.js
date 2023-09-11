@@ -5,6 +5,6 @@ const isAdmin = require('../middlewares/isAdmin');
 
 router.get('/', isAuth, isAdmin, userController.getUsers);
 router.get('/:id', isAuth, isAdmin, userController.getUserById);
-router.get('/role/:role', isAuth, isAdmin, userController.getUsersByRole);
+router.get('/role/:role', isAuth, userController.getUsersByRole);
 
 module.exports = router;

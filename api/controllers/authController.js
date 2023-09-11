@@ -95,7 +95,7 @@ const authController = {
             user.password = '';
             const access_token = createAccessToken({
                 userId: user.id,
-                role: user.role
+                userRole: user.role
             });
             return res.json({
                 message: 'Login successfully.',

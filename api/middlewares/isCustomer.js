@@ -1,5 +1,5 @@
 const isCustomer = async (req, res, next) => {
-    if (req.role === 2) {
+    if (req.userRole === 2) {
         next();
     } else {
         return res

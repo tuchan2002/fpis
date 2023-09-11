@@ -29,6 +29,8 @@ const AccountsPage = () => {
     const router = useRouter()
 
     useEffect(() => {
+        console.log("authReducer.tokenauthReducer.token",authReducer.token);
+        
         dispatch(getAllOfUsers({ accessToken: authReducer.token }))
     }, [authReducer.token])
 

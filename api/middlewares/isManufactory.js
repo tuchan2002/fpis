@@ -1,5 +1,5 @@
 const isManufactory = async (req, res, next) => {
-    if (req.role === 0) {
+    if (req.userRole === 0) {
         next();
     } else {
         return res

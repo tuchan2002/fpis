@@ -8,7 +8,8 @@ const {
     getProductsByCustomer,
     changeCustomer,
     getAllProducts,
-    getProductsByRetailer
+    getProductsByRetailer,
+    getProductsByManufactory
 } = require('../web3/product');
 
 const productController = {
@@ -61,6 +62,7 @@ const productController = {
             } else if (req.userRole === 1) {
                 data = await getProductsByRetailer(user.email);
             }
+            console.log("OsswwwgggggOOsOOOOOOOOOOOO");
 
             const productsResult = data[0].map((product, index) => {
                 const productHistory = product.history.map((item) => ({

@@ -4,10 +4,11 @@ const isAuth = require('../middlewares/auth');
 const isManufactory = require('../middlewares/isManufactory');
 const isRetailer = require('../middlewares/isRetailer');
 const isCustomer = require('../middlewares/isCustomer');
+const isManufactoryAndRetailer = require('../middlewares/isManufactoryAndRetailer');
 
 router.get('/', isAuth, productController.getAllOfProducts);
 router.post('/', isAuth, isManufactory, productController.createProduct);
-router.get('/owned', isAuth, productController.getOwnedProducts);
+router.get('/owned', isAuth,isManufactoryAndRetailer, productController.getOwnedProducts);
 router.get('/customer', isAuth, productController.getProductsByCustomer);
 router.get('/:productID', isAuth, productController.getProductById);
 router.post(

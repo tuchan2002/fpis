@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '@/redux'
 import {
     getAllOfProducts,
+    getOwnedProducts,
     productSelector
 } from '@/redux/reducers/productSlice'
 import { authSelector } from '@/redux/reducers/authSlice'
@@ -32,8 +33,12 @@ const ProductsPage = () => {
     const router = useRouter()
 
     useEffect(() => {
-        dispatch(getAllOfProducts({ accessToken: authReducer.token }))
-    }, [authReducer.token])
+        if(authReducer.user?.role === 3) {
+            dispatch(getAllOfProducts({ accessToken: authReducer.token }))
+        } else if(authReducer.user?.role === 0 || authReducer.user?.role === 1 ) {
+            dispatch(getOwnedProducts({ accessToken: authReducer.token }))
+        }
+    }, [authReducer.token, authReducer.user?.role])
 
     return (
         <Box
