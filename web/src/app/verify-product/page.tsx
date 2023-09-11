@@ -1,6 +1,7 @@
 'use client'
 
 import QRCodeScanner from '@/components/qr-code-scanner'
+import useAuthEffect from '@/customHook/useAuthEffect'
 import { authSelector } from '@/redux/reducers/authSlice'
 import {
     Box,
@@ -32,6 +33,9 @@ interface IProduct extends Map {
 }
 const VerifyProduct = () => {
     const authReducer = useSelector(authSelector)
+    const currentUserRole = authReducer.user && authReducer.user?.role
+    const allowedRolesList = [0, 1, 2, 3]
+    useAuthEffect(currentUserRole, allowedRolesList)
 
     const [productScannerData, setProductScannerData] =
         useState<IProduct | null>(null)
@@ -53,14 +57,19 @@ const VerifyProduct = () => {
             )
 
             const productInfo: IProduct = response.data.data.product
-            console.log('productInfo', productInfo)
 
             let isReal = true
             Object.keys(productInfo).forEach((key) => {
                 if (key !== 'retailerEmail' && key !== 'history') {
-                    console.log(productInfo[key] , productScannerData[key]);
-                    
-                    if (productInfo[key] !== {...productScannerData,customerEmail: customerEmailInputData}[key]) {
+                    console.log(productInfo[key], productScannerData[key])
+
+                    if (
+                        productInfo[key] !==
+                        {
+                            ...productScannerData,
+                            customerEmail: customerEmailInputData
+                        }[key]
+                    ) {
                         isReal = false
                         return
                     }
@@ -81,90 +90,105 @@ const VerifyProduct = () => {
     }
 
     return (
-        <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-            <Paper
-                sx={{
-                    p: 3,
-                    maxWidth: 720,
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: 3
-                }}
-            >
-                <QRCodeScanner setResult={setProductScannerData} />
-                <Typography variant='h5'>
-                    Product Information from QR code
-                </Typography>
-                {productScannerData && (
-                    <>
-                        <TableContainer>
-                            <Table
-                                sx={{ minWidth: 650 }}
-                                aria-label='simple table'
+        currentUserRole !== null &&
+        allowedRolesList.includes(currentUserRole) && (
+            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+                <Paper
+                    sx={{
+                        p: 3,
+                        maxWidth: 720,
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: 3
+                    }}
+                >
+                    <QRCodeScanner setResult={setProductScannerData} />
+                    <Typography variant='h5'>
+                        Product Information from QR code
+                    </Typography>
+                    {productScannerData && (
+                        <>
+                            <TableContainer>
+                                <Table
+                                    sx={{ minWidth: 650 }}
+                                    aria-label='simple table'
+                                >
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell
+                                                component='th'
+                                                scope='row'
+                                            >
+                                                ID
+                                            </TableCell>
+                                            <TableCell align='right'>
+                                                {productScannerData.productID}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell
+                                                component='th'
+                                                scope='row'
+                                            >
+                                                Model
+                                            </TableCell>
+                                            <TableCell align='right'>
+                                                {productScannerData.model}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell
+                                                component='th'
+                                                scope='row'
+                                            >
+                                                Description
+                                            </TableCell>
+                                            <TableCell align='right'>
+                                                {productScannerData.description}
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell
+                                                component='th'
+                                                scope='row'
+                                            >
+                                                Manufactory Email
+                                            </TableCell>
+                                            <TableCell align='right'>
+                                                {
+                                                    productScannerData.manufactoryEmail
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TextField
+                                sx={{ width: '50%' }}
+                                label='Owned customer email'
+                                variant='standard'
+                                value={customerEmailInputData}
+                                onChange={(e) =>
+                                    setCustomerEmailInputData(e.target.value)
+                                }
+                            />
+                            <Button
+                                variant='contained'
+                                disabled={
+                                    customerEmailInputData.trim() ? false : true
+                                }
+                                onClick={handleVerify}
                             >
-                                <TableBody>
-                                    <TableRow>
-                                        <TableCell component='th' scope='row'>
-                                            ID
-                                        </TableCell>
-                                        <TableCell align='right'>
-                                            {productScannerData.productID}
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell component='th' scope='row'>
-                                            Model
-                                        </TableCell>
-                                        <TableCell align='right'>
-                                            {productScannerData.model}
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell component='th' scope='row'>
-                                            Description
-                                        </TableCell>
-                                        <TableCell align='right'>
-                                            {productScannerData.description}
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell component='th' scope='row'>
-                                            Manufactory Email
-                                        </TableCell>
-                                        <TableCell align='right'>
-                                            {
-                                                productScannerData.manufactoryEmail
-                                            }
-                                        </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <TextField
-                            sx={{ width: '50%' }}
-                            label='Owned customer email'
-                            variant='standard'
-                            value={customerEmailInputData}
-                            onChange={(e) =>
-                                setCustomerEmailInputData(e.target.value)
-                            }
-                        />
-                        <Button
-                            variant='contained'
-                            disabled={
-                                customerEmailInputData.trim() ? false : true
-                            }
-                            onClick={handleVerify}
-                        >
-                            Verify
-                        </Button>
-                    </>
-                )}
-            </Paper>
-        </Box>
+                                Verify
+                            </Button>
+                        </>
+                    )}
+                </Paper>
+            </Box>
+        )
     )
 }
 

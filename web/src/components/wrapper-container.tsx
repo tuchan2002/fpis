@@ -12,19 +12,18 @@ const WrapperContainer = ({ children }: { children: React.ReactNode }) => {
 
     const dispatch = useDispatch<AppDispatch>()
 
-    const auth = useSelector(authSelector)
-    console.log('auth', auth)
+    const authReducer = useSelector(authSelector)
+    console.log('authReducer', authReducer)
 
     useEffect(() => {
         dispatch(getAuth())
     }, [dispatch])
 
     useEffect(() => {
-        const accessToken = localStorage.getItem('accessToken')
-        if (!accessToken) {
+        if (!authReducer.token) {
             router.push('/login')
         }
-    }, [router])
+    }, [authReducer.token])
 
     return (
         <>

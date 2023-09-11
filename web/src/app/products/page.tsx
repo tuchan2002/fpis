@@ -24,88 +24,99 @@ import {
     productSelector
 } from '@/redux/reducers/productSlice'
 import { authSelector } from '@/redux/reducers/authSlice'
+import useAuthEffect from '@/customHook/useAuthEffect'
 
 const ProductsPage = () => {
     const dispatch = useDispatch<AppDispatch>()
-    const authReducer = useSelector(authSelector)
-    const productReducer = useSelector(productSelector)
-
     const router = useRouter()
 
+    const productReducer = useSelector(productSelector)
+
+    const authReducer = useSelector(authSelector)
+    const currentUserRole = authReducer.user && authReducer.user?.role
+    const allowedRolesList = [0, 1, 2, 3]
+    useAuthEffect(currentUserRole, allowedRolesList)
+
     useEffect(() => {
-        if(authReducer.user?.role === 3) {
+        if (authReducer.user?.role === 3) {
             dispatch(getAllOfProducts({ accessToken: authReducer.token }))
-        } else if(authReducer.user?.role === 0 || authReducer.user?.role === 1 ) {
+        } else if (
+            authReducer.user?.role === 0 ||
+            authReducer.user?.role === 1
+        ) {
             dispatch(getOwnedProducts({ accessToken: authReducer.token }))
         }
     }, [authReducer.token, authReducer.user?.role])
 
     return (
-        <Box
-            sx={{
-                p: 3,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 3,
-                alignItems: 'flex-end'
-            }}
-        >
-            <Button
-                variant='contained'
-                onClick={() => router.push('/create-product')}
+        currentUserRole !== null &&
+        allowedRolesList.includes(currentUserRole) && (
+            <Box
+                sx={{
+                    p: 3,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 3,
+                    alignItems: 'flex-end'
+                }}
             >
-                Create Product
-            </Button>
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell align='left'>Model</TableCell>
-                            <TableCell align='left'>Description</TableCell>
-                            <TableCell align='left'>
-                                Manufactory Email
-                            </TableCell>
-                            <TableCell align='left'>Detail</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {productReducer.products.map((product) => (
-                            <TableRow
-                                key={product.productID}
-                                sx={{
-                                    '&:last-child td, &:last-child th': {
-                                        border: 0
-                                    }
-                                }}
-                            >
-                                <TableCell component='th' scope='row'>
-                                    {product.productID}
-                                </TableCell>
+                <Button
+                    variant='contained'
+                    onClick={() => router.push('/create-product')}
+                >
+                    Create Product
+                </Button>
+                <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell align='left'>Model</TableCell>
+                                <TableCell align='left'>Description</TableCell>
                                 <TableCell align='left'>
-                                    {product.model}
+                                    Manufactory Email
                                 </TableCell>
-                                <TableCell align='left'>
-                                    {product.description}
-                                </TableCell>
-                                <TableCell align='left'>
-                                    {product.manufactoryEmail}
-                                </TableCell>
-                                <TableCell align='left'>
-                                    <Link
-                                        href={`/products/${product.productID}`}
-                                    >
-                                        <IconButton>
-                                            <VisibilityIcon />
-                                        </IconButton>
-                                    </Link>
-                                </TableCell>
+                                <TableCell align='left'>Detail</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Box>
+                        </TableHead>
+                        <TableBody>
+                            {productReducer.products.map((product) => (
+                                <TableRow
+                                    key={product.productID}
+                                    sx={{
+                                        '&:last-child td, &:last-child th': {
+                                            border: 0
+                                        }
+                                    }}
+                                >
+                                    <TableCell component='th' scope='row'>
+                                        {product.productID}
+                                    </TableCell>
+                                    <TableCell align='left'>
+                                        {product.model}
+                                    </TableCell>
+                                    <TableCell align='left'>
+                                        {product.description}
+                                    </TableCell>
+                                    <TableCell align='left'>
+                                        {product.manufactoryEmail}
+                                    </TableCell>
+                                    <TableCell align='left'>
+                                        <Link
+                                            href={`/products/${product.productID}`}
+                                        >
+                                            <IconButton>
+                                                <VisibilityIcon />
+                                            </IconButton>
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
+        )
     )
 }
 

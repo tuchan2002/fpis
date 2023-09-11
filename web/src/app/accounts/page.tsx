@@ -20,17 +20,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '@/redux'
 import { authSelector } from '@/redux/reducers/authSlice'
 import { getAllOfUsers, userSelector } from '@/redux/reducers/userSlice'
+import useAuthEffect from '@/customHook/useAuthEffect'
 
 const AccountsPage = () => {
     const dispatch = useDispatch<AppDispatch>()
-    const authReducer = useSelector(authSelector)
-    const userReducer = useSelector(userSelector)
-
     const router = useRouter()
 
+    const userReducer = useSelector(userSelector)
+
+    const authReducer = useSelector(authSelector)
+    const currentUserRole = authReducer.user && authReducer.user?.role
+    const allowedRolesList = [3]
+    useAuthEffect(currentUserRole, allowedRolesList)
+
     useEffect(() => {
-        console.log("authReducer.tokenauthReducer.token",authReducer.token);
-        
         dispatch(getAllOfUsers({ accessToken: authReducer.token }))
     }, [authReducer.token])
 
@@ -48,69 +51,74 @@ const AccountsPage = () => {
     }
 
     return (
-        <Box
-            sx={{
-                p: 3,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 3,
-                alignItems: 'flex-end'
-            }}
-        >
-            <Button
-                variant='contained'
-                onClick={() => router.push('/create-account')}
+        currentUserRole !== null &&
+        allowedRolesList.includes(currentUserRole) && (
+            <Box
+                sx={{
+                    p: 3,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 3,
+                    alignItems: 'flex-end'
+                }}
             >
-                Create Account
-            </Button>
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Email</TableCell>
-                            <TableCell align='left'>Name</TableCell>
-                            <TableCell align='left'>Location</TableCell>
-                            <TableCell align='left'>Phone Number</TableCell>
-                            <TableCell align='left'>Role</TableCell>
-                            <TableCell align='left'>Detail</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {userReducer.users.map((user) => (
-                            <TableRow
-                                key={user.id}
-                                sx={{
-                                    '&:last-child td, &:last-child th': {
-                                        border: 0
-                                    }
-                                }}
-                            >
-                                <TableCell component='th' scope='row'>
-                                    {user.email}
-                                </TableCell>
-                                <TableCell align='left'>{user.name}</TableCell>
-                                <TableCell align='left'>
-                                    {user.location}
-                                </TableCell>
-                                <TableCell align='left'>
-                                    {user.phone_number}
-                                </TableCell>
-                                <TableCell align='left'>
-                                    {convertRoleToText(user.role)}
-                                </TableCell>
-                                <TableCell align='left'>
-                                    <Link href={`/accounts/${user.id}`}>
-                                        <IconButton>
-                                            <VisibilityIcon />
-                                        </IconButton>
-                                    </Link>
-                                </TableCell>
+                <Button
+                    variant='contained'
+                    onClick={() => router.push('/create-account')}
+                >
+                    Create Account
+                </Button>
+                <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Email</TableCell>
+                                <TableCell align='left'>Name</TableCell>
+                                <TableCell align='left'>Location</TableCell>
+                                <TableCell align='left'>Phone Number</TableCell>
+                                <TableCell align='left'>Role</TableCell>
+                                <TableCell align='left'>Detail</TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Box>
+                        </TableHead>
+                        <TableBody>
+                            {userReducer.users.map((user) => (
+                                <TableRow
+                                    key={user.id}
+                                    sx={{
+                                        '&:last-child td, &:last-child th': {
+                                            border: 0
+                                        }
+                                    }}
+                                >
+                                    <TableCell component='th' scope='row'>
+                                        {user.email}
+                                    </TableCell>
+                                    <TableCell align='left'>
+                                        {user.name}
+                                    </TableCell>
+                                    <TableCell align='left'>
+                                        {user.location}
+                                    </TableCell>
+                                    <TableCell align='left'>
+                                        {user.phone_number}
+                                    </TableCell>
+                                    <TableCell align='left'>
+                                        {convertRoleToText(user.role)}
+                                    </TableCell>
+                                    <TableCell align='left'>
+                                        <Link href={`/accounts/${user.id}`}>
+                                            <IconButton>
+                                                <VisibilityIcon />
+                                            </IconButton>
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
+        )
     )
 }
 

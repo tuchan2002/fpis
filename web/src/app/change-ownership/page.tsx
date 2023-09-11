@@ -2,6 +2,7 @@
 
 import ProductTimeline from '@/components/product-timeline'
 import QRCodeScanner from '@/components/qr-code-scanner'
+import useAuthEffect from '@/customHook/useAuthEffect'
 import { AppDispatch } from '@/redux'
 import { showAlert } from '@/redux/reducers/alertSlice'
 import { authSelector } from '@/redux/reducers/authSlice'
@@ -39,9 +40,13 @@ interface IProduct extends Map {
 const ChangeOwnership = () => {
     const dispatch = useDispatch<AppDispatch>()
 
-    const authReducer = useSelector(authSelector)
     const userReducer = useSelector(userSelector)
     const productReducer = useSelector(productSelector)
+
+    const authReducer = useSelector(authSelector)
+    const currentUserRole = authReducer.user && authReducer.user?.role
+    const allowedRolesList = [2]
+    useAuthEffect(currentUserRole, allowedRolesList)
 
     const [productScannerData, setProductScannerData] =
         useState<IProduct | null>(null)
@@ -92,161 +97,169 @@ const ChangeOwnership = () => {
     }
 
     return (
-        <>
-            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-                <Paper
-                    sx={{
-                        p: 3,
-                        maxWidth: 720,
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: 3
-                    }}
-                >
-                    <QRCodeScanner setResult={setProductScannerData} />
-                    <Typography variant='h5'>Product Information</Typography>
-                    {productScannerData && (
-                        <>
-                            <TableContainer>
-                                <Table
-                                    sx={{ minWidth: 650 }}
-                                    aria-label='simple table'
+        currentUserRole !== null &&
+        allowedRolesList.includes(currentUserRole) && (
+            <>
+                <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+                    <Paper
+                        sx={{
+                            p: 3,
+                            maxWidth: 720,
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            gap: 3
+                        }}
+                    >
+                        <QRCodeScanner setResult={setProductScannerData} />
+                        <Typography variant='h5'>
+                            Product Information
+                        </Typography>
+                        {productScannerData && (
+                            <>
+                                <TableContainer>
+                                    <Table
+                                        sx={{ minWidth: 650 }}
+                                        aria-label='simple table'
+                                    >
+                                        <TableBody>
+                                            <TableRow>
+                                                <TableCell
+                                                    component='th'
+                                                    scope='row'
+                                                >
+                                                    ID
+                                                </TableCell>
+                                                <TableCell align='right'>
+                                                    {
+                                                        productReducer.product
+                                                            ?.productID
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell
+                                                    component='th'
+                                                    scope='row'
+                                                >
+                                                    Model
+                                                </TableCell>
+                                                <TableCell align='right'>
+                                                    {
+                                                        productReducer.product
+                                                            ?.model
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell
+                                                    component='th'
+                                                    scope='row'
+                                                >
+                                                    Description
+                                                </TableCell>
+                                                <TableCell align='right'>
+                                                    {
+                                                        productReducer.product
+                                                            ?.description
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell
+                                                    component='th'
+                                                    scope='row'
+                                                >
+                                                    Manufactory Email
+                                                </TableCell>
+                                                <TableCell align='right'>
+                                                    {
+                                                        productReducer.product
+                                                            ?.manufactoryEmail
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell
+                                                    component='th'
+                                                    scope='row'
+                                                >
+                                                    Retailer Email
+                                                </TableCell>
+                                                <TableCell align='right'>
+                                                    {
+                                                        productReducer.product
+                                                            ?.retailerEmail
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell
+                                                    component='th'
+                                                    scope='row'
+                                                >
+                                                    Customer Email
+                                                </TableCell>
+                                                <TableCell align='right'>
+                                                    {
+                                                        productReducer.product
+                                                            ?.customerEmail
+                                                    }
+                                                </TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                </TableContainer>
+
+                                <Button
+                                    variant='text'
+                                    onClick={() => setOpenModalTimeline(true)}
                                 >
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell
-                                                component='th'
-                                                scope='row'
-                                            >
-                                                ID
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {
-                                                    productReducer.product
-                                                        ?.productID
-                                                }
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell
-                                                component='th'
-                                                scope='row'
-                                            >
-                                                Model
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {productReducer.product?.model}
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell
-                                                component='th'
-                                                scope='row'
-                                            >
-                                                Description
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {
-                                                    productReducer.product
-                                                        ?.description
-                                                }
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell
-                                                component='th'
-                                                scope='row'
-                                            >
-                                                Manufactory Email
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {
-                                                    productReducer.product
-                                                        ?.manufactoryEmail
-                                                }
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell
-                                                component='th'
-                                                scope='row'
-                                            >
-                                                Retailer Email
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {
-                                                    productReducer.product
-                                                        ?.retailerEmail
-                                                }
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell
-                                                component='th'
-                                                scope='row'
-                                            >
-                                                Customer Email
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {
-                                                    productReducer.product
-                                                        ?.customerEmail
-                                                }
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                                    Show Product History
+                                </Button>
 
-                            <Button
-                                variant='text'
-                                onClick={() => setOpenModalTimeline(true)}
-                            >
-                                Show Product History
-                            </Button>
+                                <TextField
+                                    sx={{ width: '50%' }}
+                                    id='userId'
+                                    select
+                                    label='Customer'
+                                    variant='standard'
+                                    value={selectedUserId}
+                                    onChange={(e) =>
+                                        setSelectedUserId(e.target.value)
+                                    }
+                                >
+                                    {userReducer.users.map((user) => (
+                                        <MenuItem key={user.id} value={user.id}>
+                                            {`${user.name} - ${user.email}`}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
 
-                            <TextField
-                                sx={{ width: '50%' }}
-                                id='userId'
-                                select
-                                label='Customer'
-                                variant='standard'
-                                value={selectedUserId}
-                                onChange={(e) =>
-                                    setSelectedUserId(e.target.value)
-                                }
-                            >
-                                {userReducer.users.map((user) => (
-                                    <MenuItem key={user.id} value={user.id}>
-                                        {`${user.name} - ${user.email}`}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-
-                            <Button
-                                variant='contained'
-                                disabled={selectedUserId ? false : true}
-                                onClick={handleChangeOwnership}
-                            >
-                                Change
-                            </Button>
-                        </>
-                    )}
-                </Paper>
-            </Box>
-            <ProductTimeline
-                productHistory={
-                    productReducer.product?.history
-                        ? productReducer.product?.history
-                        : []
-                }
-                open={openModalTimeline}
-                onClose={() => setOpenModalTimeline(false)}
-            />
-        </>
+                                <Button
+                                    variant='contained'
+                                    disabled={selectedUserId ? false : true}
+                                    onClick={handleChangeOwnership}
+                                >
+                                    Change
+                                </Button>
+                            </>
+                        )}
+                    </Paper>
+                </Box>
+                <ProductTimeline
+                    productHistory={
+                        productReducer.product?.history
+                            ? productReducer.product?.history
+                            : []
+                    }
+                    open={openModalTimeline}
+                    onClose={() => setOpenModalTimeline(false)}
+                />
+            </>
+        )
     )
 }
 
