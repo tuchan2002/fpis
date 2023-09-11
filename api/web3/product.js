@@ -61,6 +61,30 @@ const getProductsByCustomer = async (customerEmail) => {
     }
 };
 
+const getProductsByManufactory = async (manufactoryEmail) => {
+    try {
+        const productList = await contract.methods
+            .getProductsByManufactory(manufactoryEmail)
+            .call({ from: accountAddress });
+
+        return productList;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const getProductsByRetailer = async (retailerEmail) => {
+    try {
+        const productList = await contract.methods
+            .getProductsByRetailer(retailerEmail)
+            .call({ from: accountAddress });
+
+        return productList;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 const moveToRetailer = async (productID, retailerEmail, retailLocation, movingDate) => {
     try {
         return await contract.methods
@@ -109,5 +133,7 @@ module.exports = {
     moveToRetailer,
     sellToFirstCustomer,
     changeCustomer,
-    getAllProducts
+    getAllProducts,
+    getProductsByManufactory,
+    getProductsByRetailer
 };

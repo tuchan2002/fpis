@@ -7,7 +7,8 @@ const {
     sellToFirstCustomer,
     getProductsByCustomer,
     changeCustomer,
-    getAllProducts
+    getAllProducts,
+    getProductsByRetailer
 } = require('../web3/product');
 
 const productController = {
@@ -44,36 +45,49 @@ const productController = {
             return res.status(500).json({ message: err.message });
         }
     },
-    createProduct: async (req, res) => {
-        const {
-            productID, model, description
-        } = req.body;
-        const productionDate = moment().format('LLL');
+
+    getOwnedProducts: async (req, res) => {
+        const user = await db.User.findOne({
+            attributes: ['email'],
+            where: {
+                id: req.userId
+            }
+        });
 
         try {
-            const user = await db.User.findOne({
-                attributes: ['email', 'location'],
-                where: {
-                    id: req.userId
-                }
+            let data;
+            if (req.userRole === 0) {
+                data = await getProductsByManufactory(user.email);
+            } else if (req.userRole === 1) {
+                data = await getProductsByRetailer(user.email);
+            }
+
+            const productsResult = data[0].map((product, index) => {
+                const productHistory = product.history.map((item) => ({
+                    timestamp: item.timestamp.toString(),
+                    action: item.action,
+                    details: item.details,
+                    date: item.date
+                }));
+
+                return ({
+                    productID: data[1][index],
+                    model: product[0],
+                    description: product[1],
+                    manufactoryEmail: product[2],
+                    retailerEmail: product[3],
+                    customerEmail: product[4],
+                    history: productHistory
+                });
             });
 
-            const result = await createProductOnBlockchain(
-                productID,
-                model,
-                description,
-                user.email,
-                user.location,
-                productionDate
-            );
-            console.log(result);
-
-            if (result.status === 1n) {
-                return res
-                    .status(201)
-                    .json({ success: true, message: 'Successfully saved product to the blockchain.'});
-            }
-            return res.status(500).json({ message: 'Failed to save product to the blockchain.' });
+            return res.status(200).json({
+                success: true,
+                data: {
+                    products: productsResult
+                },
+                message: 'Successfully retrieved product information.'
+            });
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }
@@ -141,6 +155,41 @@ const productController = {
                 },
                 message: 'Successfully retrieved customer\'s product information.'
             }));
+        } catch (err) {
+            return res.status(500).json({ message: err.message });
+        }
+    },
+
+    createProduct: async (req, res) => {
+        const {
+            productID, model, description
+        } = req.body;
+        const productionDate = moment().format('LLL');
+
+        try {
+            const user = await db.User.findOne({
+                attributes: ['email', 'location'],
+                where: {
+                    id: req.userId
+                }
+            });
+
+            const result = await createProductOnBlockchain(
+                productID,
+                model,
+                description,
+                user.email,
+                user.location,
+                productionDate
+            );
+            console.log(result);
+
+            if (result.status === 1n) {
+                return res
+                    .status(201)
+                    .json({ success: true, message: 'Successfully saved product to the blockchain.'});
+            }
+            return res.status(500).json({ message: 'Failed to save product to the blockchain.' });
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }

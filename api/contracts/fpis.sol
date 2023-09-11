@@ -148,6 +148,58 @@ contract FPIS {
     return (products, productIds);
   }
 
+  function getProductsByManufactory(string memory _manufactoryEmail) public view returns (Product[] memory, string[] memory) {
+    uint256 matchingProductCount = 0;
+    
+    for (uint i = 0; i < productIds.length; i++) {
+      string memory productId = productIds[i];
+      if (compareTwoStrings(productList[productId].manufactoryEmail, _manufactoryEmail)) {
+          matchingProductCount++;
+      }
+    }
+    
+    Product[] memory matchingProducts = new Product[](matchingProductCount);
+    string[] memory matchingProductIds = new string[](matchingProductCount);
+    uint256 currentIndex = 0;
+
+    for (uint i = 0; i < productIds.length; i++) {
+      string memory productId = productIds[i];
+      if (compareTwoStrings(productList[productId].manufactoryEmail, _manufactoryEmail)) {
+        matchingProducts[currentIndex] = productList[productId];
+        matchingProductIds[currentIndex] = productId;
+        currentIndex++;
+      }
+    }
+
+    return (matchingProducts, matchingProductIds);
+  }
+
+  function getProductsByRetailer(string memory _retailerEmail) public view returns (Product[] memory, string[] memory) {
+    uint256 matchingProductCount = 0;
+    
+    for (uint i = 0; i < productIds.length; i++) {
+      string memory productId = productIds[i];
+      if (compareTwoStrings(productList[productId].retailerEmail, _retailerEmail)) {
+          matchingProductCount++;
+      }
+    }
+    
+    Product[] memory matchingProducts = new Product[](matchingProductCount);
+    string[] memory matchingProductIds = new string[](matchingProductCount);
+    uint256 currentIndex = 0;
+
+    for (uint i = 0; i < productIds.length; i++) {
+      string memory productId = productIds[i];
+      if (compareTwoStrings(productList[productId].retailerEmail, _retailerEmail)) {
+        matchingProducts[currentIndex] = productList[productId];
+        matchingProductIds[currentIndex] = productId;
+        currentIndex++;
+      }
+    }
+
+    return (matchingProducts, matchingProductIds);
+  }
+
   function getProductDetail(string memory _productID) public view returns (string memory, string memory, string memory, string memory, string memory,  HistoryItem[] memory) {
     return (productList[_productID].model, productList[_productID].description, productList[_productID].manufactoryEmail, productList[_productID].retailerEmail, productList[_productID].customerEmail, productList[_productID].history);
   }
