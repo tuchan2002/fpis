@@ -9,8 +9,8 @@ const contractABI = contractInfo.contractABI;
 const web3 = new Web3(new Web3.providers.HttpProvider(process.env.NODE_ENV === 'production' ? 'https://data-seed-prebsc-1-s1.binance.org:8545' : 'http://localhost:8545'));
 const contract = new web3.eth.Contract(contractABI, contractAddress);
 
-console.log(process.env.NODE_ENV)
-console.log(contractABI, contractAddress)
+console.log(process.env.NODE_ENV);
+console.log(contractABI, contractAddress);
 
 module.exports = {
     web3,
