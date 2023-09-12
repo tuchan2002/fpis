@@ -10,7 +10,7 @@ const {
     getAllProducts,
     getProductsByRetailer,
     getProductsByManufactory
-} = require('../web3/product');
+} = require('../utils/web3-method/product');
 
 const productController = {
     getAllOfProducts: async (req, res) => {

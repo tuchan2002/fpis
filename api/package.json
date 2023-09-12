@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "nodemon api-source/app.js",
     "lint": "npx eslint .",
     "lint-fix": "npx eslint . --fix",
     "local-network": "npx hardhat node",

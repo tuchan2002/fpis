@@ -5,7 +5,7 @@ const {
     createManufactory,
     createRetailer,
     createCustomer
-} = require('../web3/auth');
+} = require('../utils/web3-method/auth');
 
 const createAccessToken = (payload) => jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
 const authController = {
