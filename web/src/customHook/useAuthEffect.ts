@@ -11,7 +11,6 @@ const useAuthEffect = (
 
     useEffect(() => {
         if (currentUserRole !== null) {
-
             if (!allowedRolesList.includes(currentUserRole)) {
                 router.push('/')
             }

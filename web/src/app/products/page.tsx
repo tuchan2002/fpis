@@ -21,6 +21,7 @@ import { AppDispatch } from '@/redux'
 import {
     getAllOfProducts,
     getOwnedProducts,
+    getProductsByCustomer,
     productSelector
 } from '@/redux/reducers/productSlice'
 import { authSelector } from '@/redux/reducers/authSlice'
@@ -37,16 +38,22 @@ const ProductsPage = () => {
     const allowedRolesList = [0, 1, 2, 3]
     useAuthEffect(currentUserRole, allowedRolesList)
 
+    console.log('products currentUserRole', currentUserRole)
+
     useEffect(() => {
-        if (authReducer.user?.role === 3) {
-            dispatch(getAllOfProducts({ accessToken: authReducer.token }))
-        } else if (
-            authReducer.user?.role === 0 ||
-            authReducer.user?.role === 1
-        ) {
+        if (currentUserRole === 0 || currentUserRole === 1) {
             dispatch(getOwnedProducts({ accessToken: authReducer.token }))
+        } else if (currentUserRole === 2) {
+            dispatch(
+                getProductsByCustomer({
+                    customerId: '' + authReducer.user?.id,
+                    accessToken: authReducer.token
+                })
+            )
+        } else if (currentUserRole === 3) {
+            dispatch(getAllOfProducts({ accessToken: authReducer.token }))
         }
-    }, [authReducer.token, authReducer.user?.role])
+    }, [authReducer.token, currentUserRole])
 
     return (
         currentUserRole !== null &&

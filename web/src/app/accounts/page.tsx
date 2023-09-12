@@ -46,7 +46,7 @@ const AccountsPage = () => {
             case 2:
                 return 'Customer'
             default:
-                return 'Manufactory'
+                return 'Admin'
         }
     }
 
@@ -81,39 +81,38 @@ const AccountsPage = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {userReducer.users.map((user) => (
-                                <TableRow
-                                    key={user.id}
-                                    sx={{
-                                        '&:last-child td, &:last-child th': {
-                                            border: 0
-                                        }
-                                    }}
-                                >
-                                    <TableCell component='th' scope='row'>
-                                        {user.email}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        {user.name}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        {user.location}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        {user.phone_number}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        {convertRoleToText(user.role)}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        <Link href={`/accounts/${user.id}`}>
-                                            <IconButton>
-                                                <VisibilityIcon />
-                                            </IconButton>
-                                        </Link>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {userReducer.users.map((user) => {
+                                if (user.role === 3) {
+                                    return
+                                }
+
+                                return (
+                                    <TableRow key={user.id}>
+                                        <TableCell component='th' scope='row'>
+                                            {user.email}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            {user.name}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            {user.location}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            {user.phone_number}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            {convertRoleToText(user.role)}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            <Link href={`/accounts/${user.id}`}>
+                                                <IconButton>
+                                                    <VisibilityIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            })}
                         </TableBody>
                     </Table>
                 </TableContainer>

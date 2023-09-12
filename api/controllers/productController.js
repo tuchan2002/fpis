@@ -62,7 +62,7 @@ const productController = {
             } else if (req.userRole === 1) {
                 data = await getProductsByRetailer(user.email);
             }
-            console.log("OsswwwgggggOOsOOOOOOOOOOOO");
+            console.log('OsswwwgggggOOsOOOOOOOOOOOO');
 
             const productsResult = data[0].map((product, index) => {
                 const productHistory = product.history.map((item) => ({
@@ -127,10 +127,17 @@ const productController = {
     },
 
     getProductsByCustomer: async (req, res) => {
-        const { customerEmail } = req.body;
+        const { customerId } = req.params;
+        const user = await db.User.findOne({
+            attributes: ['email'],
+            where: {
+                id: customerId
+            }
+        });
 
         try {
-            const productIdList = await getProductsByCustomer(customerEmail);
+            const productIdList = await getProductsByCustomer(user.email);
+            console.log('productIdList', productIdList);
 
             const productDetailListPromise = [];
             productIdList.forEach((productId) => {
@@ -145,9 +152,10 @@ const productController = {
                         productID: productIdList[index],
                         model: productDetail[0],
                         description: productDetail[1],
-                        retailerEmail: productDetail[2],
-                        customerEmail: productDetail[3],
-                        history: productDetail[4].map((item) => ({
+                        manufactoryEmail: productDetail[2],
+                        retailerEmail: productDetail[3],
+                        customerEmail: productDetail[4],
+                        history: productDetail[5].map((item) => ({
                             timestamp: item.timestamp.toString(),
                             action: item.action,
                             details: item.details,

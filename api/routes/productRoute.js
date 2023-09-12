@@ -8,8 +8,8 @@ const isManufactoryAndRetailer = require('../middlewares/isManufactoryAndRetaile
 
 router.get('/', isAuth, productController.getAllOfProducts);
 router.post('/', isAuth, isManufactory, productController.createProduct);
-router.get('/owned', isAuth,isManufactoryAndRetailer, productController.getOwnedProducts);
-router.get('/customer', isAuth, productController.getProductsByCustomer);
+router.get('/owned', isAuth, isManufactoryAndRetailer, productController.getOwnedProducts);
+router.get('/customer/:customerId', isAuth, productController.getProductsByCustomer);
 router.get('/:productID', isAuth, productController.getProductById);
 router.post(
     '/move-to-retailer',

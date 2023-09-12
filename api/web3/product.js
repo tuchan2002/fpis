@@ -51,11 +51,11 @@ const getProductDetail = async (productID) => {
 
 const getProductsByCustomer = async (customerEmail) => {
     try {
-        const productList = await contract.methods
+        const productIdList = await contract.methods
             .getProductsByCustomer(customerEmail)
             .call({ from: accountAddress });
-
-        return productList;
+        console.log('getProductsByCustomer', productIdList);
+        return productIdList;
     } catch (error) {
         console.error(error);
     }

@@ -82,6 +82,25 @@ export const getOwnedProducts = createAsyncThunk(
     }
 )
 
+export const getProductsByCustomer = createAsyncThunk(
+    'product/getProductsByCustomer',
+    async ({
+        customerId,
+        accessToken
+    }: {
+        customerId: string
+        accessToken: string
+    }) => {
+        const response = await axios.get(
+            `http://localhost:8000/api/v1/product/customer/${customerId}`,
+            {
+                headers: { Authorization: `Bearer ${accessToken}` }
+            }
+        )
+        return response.data
+    }
+)
+
 export const getProductById = createAsyncThunk(
     'product/getProductById',
     async ({
@@ -131,6 +150,20 @@ const productSlice = createSlice({
         })
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         builder.addCase(getOwnedProducts.rejected, (state, action) => {
+            console.log('rejected')
+        })
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        builder.addCase(getProductsByCustomer.pending, (state, action) => {
+            console.log('pending')
+        })
+        builder.addCase(getProductsByCustomer.fulfilled, (state, action) => {
+            console.log('fulfilled', action)
+
+            state.products = action.payload.data.products
+        })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        builder.addCase(getProductsByCustomer.rejected, (state, action) => {
             console.log('rejected')
         })
 

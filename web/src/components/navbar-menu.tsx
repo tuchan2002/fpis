@@ -8,6 +8,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 const navItems = [
+    { label: 'Accounts', to: '/accounts', allowedRolesList: [3] },
     { label: 'Products', to: '/products', allowedRolesList: [0, 1, 2, 3] },
     { label: 'Move Product', to: '/move-product', allowedRolesList: [0] },
     { label: 'Sell Product', to: '/sell-product', allowedRolesList: [1] },
@@ -20,8 +21,7 @@ const navItems = [
         label: 'Verify Product',
         to: '/verify-product',
         allowedRolesList: [0, 1, 2, 3]
-    },
-    { label: 'Accounts', to: '/accounts', allowedRolesList: [3] }
+    }
 ]
 const NavbarMenu = () => {
     const router = useRouter()
@@ -71,9 +71,11 @@ const NavbarMenu = () => {
                                 )
                             )
                         })}
-                        <Button sx={{ color: '#fff' }} onClick={logout}>
-                            Logout
-                        </Button>
+                        {currentUserRole !== null && (
+                            <Button sx={{ color: '#fff' }} onClick={logout}>
+                                Logout
+                            </Button>
+                        )}
                     </Box>
                 </Toolbar>
             </AppBar>

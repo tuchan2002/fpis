@@ -7,10 +7,7 @@ const {
     createCustomer
 } = require('../web3/auth');
 
-const createAccessToken = (payload) => jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: '1d'
-});
-
+const createAccessToken = (payload) => jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
 const authController = {
     register: async (req, res) => {
         const {
