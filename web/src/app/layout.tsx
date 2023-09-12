@@ -9,7 +9,6 @@ import ReduxProvider from '@/redux/provider'
 import WrapperContainer from '@/components/wrapper-container'
 import { CssBaseline } from '@mui/material'
 import NavbarMenu from '@/components/navbar-menu'
-import GlobalAlert from '@/components/global-alert'
 
 const inter = Inter({ subsets: ['latin'] })
 

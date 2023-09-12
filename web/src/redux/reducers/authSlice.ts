@@ -23,6 +23,8 @@ export const login = createAsyncThunk(
             dispatch(showAlert({ success: response.data.message }))
 
             return response.data
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             dispatch(showAlert({ error: error.response.data.message }))
         }
@@ -58,6 +60,8 @@ export const register = createAsyncThunk(
             dispatch(showAlert({ success: response.data.message }))
 
             return response.data
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             dispatch(showAlert({ error: error.response.data.message }))
         }

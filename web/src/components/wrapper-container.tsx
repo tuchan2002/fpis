@@ -1,9 +1,9 @@
 'use client'
 
 import { AppDispatch } from '@/redux'
-import { authSelector, getAuth } from '@/redux/reducers/authSlice'
+import { getAuth } from '@/redux/reducers/authSlice'
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import GlobalAlert from './global-alert'
 
