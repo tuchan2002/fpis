@@ -20,7 +20,7 @@ const navItems = [
     {
         label: 'Verify Product',
         to: '/verify-product',
-        allowedRolesList: [0, 1, 2, 3]
+        allowedRolesList: [2]
     }
 ]
 const NavbarMenu = () => {

@@ -14,7 +14,7 @@ import ProductInfoTable from '@/components/product-info-table'
 const VerifyProduct = () => {
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
-    const allowedRolesList = [0, 1, 2, 3]
+    const allowedRolesList = [2]
     useAuthEffect(currentUserRole, allowedRolesList)
 
     const [productScannerData, setProductScannerData] =
