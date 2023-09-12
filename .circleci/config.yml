@@ -102,7 +102,8 @@ jobs:
       - run:
           name: Use Persisted File
           command: |
-            cp ~/fpis/api/contract-info.json .
+            mv ~/fpis/api/contract-info.json ~/fpis/api/contract-info-old.json
+            cp ~/fpis/api/contract-info-old.json ./contract-info.json
             cat contract-info.json
       - docker/check:
           docker-username: DOCKER_USERNAME
