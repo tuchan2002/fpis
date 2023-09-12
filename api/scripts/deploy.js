@@ -15,7 +15,7 @@ async function main() {
 
     const contractABI = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'artifacts/contracts/fpis.sol/FPIS.json'), 'utf8')).abi;
 
-    fs.writeFileSync(path.join(__dirname, '..', 'contract-info.json'), JSON.stringify({"contractAddress": contractAddress, "contractABI": contractABI}));
+    fs.writeFileSync(path.join(__dirname, '..', 'contract-info.json'), JSON.stringify({contractAddress, contractABI}));
 }
 
 main()
