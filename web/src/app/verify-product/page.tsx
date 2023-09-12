@@ -3,38 +3,18 @@
 import QRCodeScanner from '@/components/qr-code-scanner'
 import useAuthEffect from '@/customHook/useAuthEffect'
 import { authSelector } from '@/redux/reducers/authSlice'
-import {
-    Box,
-    Button,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableRow,
-    Paper,
-    TextField,
-    Typography
-} from '@mui/material'
+import { IProduct } from '@/global-types'
+import { Box, Button, Paper, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
+import ProductInfoTable from '@/components/product-info-table'
 
-interface Map {
-    [key: string]: string | undefined
-}
-interface IProduct extends Map {
-    productID: string
-    model: string
-    description: string
-    manufactoryEmail: string
-    retailerEmail: string
-    customerEmail: string
-}
 const VerifyProduct = () => {
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
-    const allowedRolesList = [0, 1, 2, 3]
+    const allowedRolesList = [2]
     useAuthEffect(currentUserRole, allowedRolesList)
 
     const [productScannerData, setProductScannerData] =
@@ -61,8 +41,6 @@ const VerifyProduct = () => {
             let isReal = true
             Object.keys(productInfo).forEach((key) => {
                 if (key !== 'retailerEmail' && key !== 'history') {
-                    console.log(productInfo[key], productScannerData[key])
-
                     if (
                         productInfo[key] !==
                         {
@@ -111,61 +89,9 @@ const VerifyProduct = () => {
                     </Typography>
                     {productScannerData && (
                         <>
-                            <TableContainer>
-                                <Table
-                                    sx={{ minWidth: 650 }}
-                                    aria-label='simple table'
-                                >
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell
-                                                component='th'
-                                                scope='row'
-                                            >
-                                                ID
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {productScannerData.productID}
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell
-                                                component='th'
-                                                scope='row'
-                                            >
-                                                Model
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {productScannerData.model}
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell
-                                                component='th'
-                                                scope='row'
-                                            >
-                                                Description
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {productScannerData.description}
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell
-                                                component='th'
-                                                scope='row'
-                                            >
-                                                Manufactory Email
-                                            </TableCell>
-                                            <TableCell align='right'>
-                                                {
-                                                    productScannerData.manufactoryEmail
-                                                }
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                            <ProductInfoTable
+                                productInfo={productScannerData}
+                            />
                             <TextField
                                 sx={{ width: '50%' }}
                                 label='Owned customer email'

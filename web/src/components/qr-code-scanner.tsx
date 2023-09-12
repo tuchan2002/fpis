@@ -1,17 +1,7 @@
 import React, { useEffect } from 'react'
 import { Html5QrcodeScanType, Html5QrcodeScanner } from 'html5-qrcode'
+import { IProduct } from '@/global-types'
 
-interface Map {
-    [key: string]: string | undefined
-}
-interface IProduct extends Map {
-    productID: string
-    model: string
-    description: string
-    manufactoryEmail: string
-    retailerEmail: string
-    customerEmail: string
-}
 const QRCodeScanner = ({
     setResult
 }: {

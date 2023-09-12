@@ -29,7 +29,6 @@ const CreateProduct = () => {
         description: '',
         manufactoryEmail: authReducer.user?.email
     })
-    console.log('productInputData', productInputData)
 
     const [showQRcode, setShowQRcode] = useState(false)
     const { productID, model, description } = productInputData

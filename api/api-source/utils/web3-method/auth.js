@@ -1,4 +1,4 @@
-const web3Api = require('../configs/web3Config');
+const web3Api = require('../../configs/web3Config');
 
 const { contract, web3 } = web3Api;
 

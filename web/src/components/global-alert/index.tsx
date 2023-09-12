@@ -6,7 +6,6 @@ import { alertSelector } from '@/redux/reducers/alertSlice'
 
 const GlobalAlert = () => {
     const { alert } = useSelector(alertSelector)
-    console.log('alert', alert)
 
     return (
         <div>

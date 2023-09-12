@@ -13,7 +13,9 @@ async function main() {
     const contractAddress = await contracts.getAddress();
     console.log('Contracts address:', contractAddress);
 
-    fs.writeFileSync(path.join(__dirname, '..', 'contract-address.txt'), contractAddress);
+    const contractABI = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'artifacts/contracts/fpis.sol/FPIS.json'), 'utf8')).abi;
+
+    fs.writeFileSync(path.join(__dirname, '..', 'contract-info.json'), JSON.stringify({contractAddress, contractABI}));
 }
 
 main()

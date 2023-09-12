@@ -8,34 +8,20 @@ import { showAlert } from '@/redux/reducers/alertSlice'
 import { authSelector } from '@/redux/reducers/authSlice'
 import { getProductById, productSelector } from '@/redux/reducers/productSlice'
 import { getUsersByRole, userSelector } from '@/redux/reducers/userSlice'
+import { IProduct } from '@/global-types'
 import {
     Box,
     Paper,
     Typography,
     TextField,
     MenuItem,
-    Button,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableRow
+    Button
 } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import ProductInfoTable from '@/components/product-info-table'
 
-interface Map {
-    [key: string]: string | undefined
-}
-interface IProduct extends Map {
-    productID: string
-    model: string
-    description: string
-    manufactoryEmail: string
-    retailerEmail: string
-    customerEmail: string
-}
 const MoveProduct = () => {
     const dispatch = useDispatch<AppDispatch>()
 
@@ -90,6 +76,8 @@ const MoveProduct = () => {
             )
 
             dispatch(showAlert({ success: response.data.message }))
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error: any) {
             dispatch(showAlert({ error: error.response.data.message }))
         }
@@ -118,99 +106,11 @@ const MoveProduct = () => {
                         </Typography>
                         {productScannerData && (
                             <>
-                                <TableContainer component={Paper}>
-                                    <Table
-                                        sx={{ minWidth: 650 }}
-                                        aria-label='simple table'
-                                    >
-                                        <TableBody>
-                                            <TableRow>
-                                                <TableCell
-                                                    component='th'
-                                                    scope='row'
-                                                >
-                                                    ID
-                                                </TableCell>
-                                                <TableCell align='right'>
-                                                    {
-                                                        productReducer.product
-                                                            ?.productID
-                                                    }
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell
-                                                    component='th'
-                                                    scope='row'
-                                                >
-                                                    Model
-                                                </TableCell>
-                                                <TableCell align='right'>
-                                                    {
-                                                        productReducer.product
-                                                            ?.model
-                                                    }
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell
-                                                    component='th'
-                                                    scope='row'
-                                                >
-                                                    Description
-                                                </TableCell>
-                                                <TableCell align='right'>
-                                                    {
-                                                        productReducer.product
-                                                            ?.description
-                                                    }
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell
-                                                    component='th'
-                                                    scope='row'
-                                                >
-                                                    Manufactory Email
-                                                </TableCell>
-                                                <TableCell align='right'>
-                                                    {
-                                                        productReducer.product
-                                                            ?.manufactoryEmail
-                                                    }
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell
-                                                    component='th'
-                                                    scope='row'
-                                                >
-                                                    Retailer Email
-                                                </TableCell>
-                                                <TableCell align='right'>
-                                                    {
-                                                        productReducer.product
-                                                            ?.retailerEmail
-                                                    }
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell
-                                                    component='th'
-                                                    scope='row'
-                                                >
-                                                    Customer Email
-                                                </TableCell>
-                                                <TableCell align='right'>
-                                                    {
-                                                        productReducer.product
-                                                            ?.customerEmail
-                                                    }
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
+                                {productReducer.product && (
+                                    <ProductInfoTable
+                                        productInfo={productReducer.product}
+                                    />
+                                )}
 
                                 <Button
                                     variant='text'

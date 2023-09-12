@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   mysqldb:
-    container_name: fpis_mysql
+    container_name: fpis_mysqldb
     image: mysql:8.0
     restart: always
     env_file: ./.env
