@@ -2,40 +2,13 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
 import axios from 'axios'
 import { showAlert } from './alertSlice'
+import { AuthState, ILoginParams, IRegisterParams } from '../types/auth-types'
 
-interface IUser {
-    id: number
-    email: string
-    location: string
-    name: string
-    phone_number: string
-    role: number
-}
-interface AuthState {
-    token: string
-    user: IUser | null
-}
 const initialState: AuthState = {
     token: '',
     user: null
 }
 
-interface IRegisterParams {
-    userData: {
-        name: string
-        email: string
-        password: string
-        phone_number: string
-        location: string
-        role: number
-    }
-    accessToken: string
-}
-
-interface ILoginParams {
-    email: string
-    password: string
-}
 export const login = createAsyncThunk(
     'auth/login',
     async (data: ILoginParams, { dispatch }) => {
@@ -96,13 +69,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        builder.addCase(login.pending, (state, action) => {
-            console.log('pending')
-        })
         builder.addCase(login.fulfilled, (state, action) => {
-            console.log('action.payload auth', action.payload)
-
             state.token = action.payload.data.access_token
             state.user = action.payload.data.user
             localStorage.setItem(
@@ -120,8 +87,6 @@ const authSlice = createSlice({
             console.log('rejected')
         })
         builder.addCase(getAuth.fulfilled, (state, action) => {
-            console.log('state, action', state, action)
-
             const accessToken = localStorage.getItem('accessToken')
             if (accessToken) {
                 state.token = accessToken
@@ -129,10 +94,6 @@ const authSlice = createSlice({
             }
         })
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        builder.addCase(register.pending, (state, action) => {
-            console.log('pending')
-        })
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         builder.addCase(register.fulfilled, (state, action) => {
             console.log('fulfilled')

@@ -107,7 +107,6 @@ const authController = {
         }
     },
     getAuth: async (req, res) => {
-        console.log(req.userId);
         try {
             const user = await db.User.findOne({
                 attributes: { exclude: ['password'] },

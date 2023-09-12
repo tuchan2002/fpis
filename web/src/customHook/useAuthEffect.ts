@@ -5,8 +5,6 @@ const useAuthEffect = (
     currentUserRole: number | null,
     allowedRolesList: number[]
 ) => {
-    console.log(currentUserRole, allowedRolesList)
-
     const router = useRouter()
 
     useEffect(() => {

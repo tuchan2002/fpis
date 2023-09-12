@@ -1,13 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
+import { AlertState } from '../types/alert-types'
 
-interface AlertState {
-    alert: {
-        loading: boolean
-        error: string
-        success: string
-    }
-}
 const initialState: AlertState = {
     alert: {
         loading: false,
@@ -20,11 +14,6 @@ const alertSlice = createSlice({
     initialState,
     reducers: {
         showAlert(state, action) {
-            console.log(
-                'action.payloadaction.payloadaction.payload',
-                action.payload
-            )
-
             state.alert = action.payload
         }
     }

@@ -29,7 +29,6 @@ const NavbarMenu = () => {
 
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
-    console.log('navbar menu user role', currentUserRole)
 
     const logout = () => {
         localStorage.removeItem('accessToken')

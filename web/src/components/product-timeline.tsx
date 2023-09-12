@@ -13,13 +13,8 @@ import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturi
 import SellIcon from '@mui/icons-material/Sell'
 import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import { Dialog, Typography } from '@mui/material'
+import { IHistoryItem } from '@/global-types'
 
-interface IHistoryItem {
-    timestamp: string
-    action: string
-    details: string
-    date: string
-}
 const ProductTimeline = ({
     productHistory,
     open,

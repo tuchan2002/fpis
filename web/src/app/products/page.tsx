@@ -38,9 +38,6 @@ const ProductsPage = () => {
     const allowedRolesList = [0, 1, 2, 3]
     useAuthEffect(currentUserRole, allowedRolesList)
 
-    console.log('products currentUserRole', currentUserRole)
-    console.log('products productReducer.products', productReducer.products)
-
     useEffect(() => {
         if (currentUserRole === 0 || currentUserRole === 1) {
             dispatch(getOwnedProducts({ accessToken: authReducer.token }))

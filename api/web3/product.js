@@ -54,7 +54,6 @@ const getProductsByCustomer = async (customerEmail) => {
         const productIdList = await contract.methods
             .getProductsByCustomer(customerEmail)
             .call({ from: accountAddress });
-        console.log('getProductsByCustomer', productIdList);
         return productIdList;
     } catch (error) {
         console.error(error);

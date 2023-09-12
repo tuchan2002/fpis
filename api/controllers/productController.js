@@ -62,7 +62,6 @@ const productController = {
             } else if (req.userRole === 1) {
                 data = await getProductsByRetailer(user.email);
             }
-            console.log('OsswwwgggggOOsOOOOOOOOOOOO');
 
             const productsResult = data[0].map((product, index) => {
                 const productHistory = product.history.map((item) => ({
@@ -137,7 +136,6 @@ const productController = {
 
         try {
             const productIdList = await getProductsByCustomer(user.email);
-            console.log('productIdList', productIdList);
 
             const productDetailListPromise = [];
             productIdList.forEach((productId) => {
@@ -192,7 +190,6 @@ const productController = {
                 user.location,
                 productionDate
             );
-            console.log(result);
 
             if (result.status === 1n) {
                 return res
@@ -310,8 +307,6 @@ const productController = {
                     id: req.userId
                 }
             });
-
-            console.log(oldCustomer);
 
             if (oldCustomer.email === newCustomerEmail) {
                 return res

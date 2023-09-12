@@ -8,6 +8,7 @@ import { showAlert } from '@/redux/reducers/alertSlice'
 import { authSelector } from '@/redux/reducers/authSlice'
 import { getProductById, productSelector } from '@/redux/reducers/productSlice'
 import { getUsersByRole, userSelector } from '@/redux/reducers/userSlice'
+import { IProduct } from '@/global-types'
 import {
     Box,
     Paper,
@@ -25,17 +26,6 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-interface Map {
-    [key: string]: string | undefined
-}
-interface IProduct extends Map {
-    productID: string
-    model: string
-    description: string
-    manufactoryEmail: string
-    retailerEmail: string
-    customerEmail: string
-}
 const MoveProduct = () => {
     const dispatch = useDispatch<AppDispatch>()
 

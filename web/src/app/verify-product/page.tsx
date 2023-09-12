@@ -3,6 +3,7 @@
 import QRCodeScanner from '@/components/qr-code-scanner'
 import useAuthEffect from '@/customHook/useAuthEffect'
 import { authSelector } from '@/redux/reducers/authSlice'
+import { IProduct } from '@/global-types'
 import {
     Box,
     Button,
@@ -20,17 +21,6 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
 
-interface Map {
-    [key: string]: string | undefined
-}
-interface IProduct extends Map {
-    productID: string
-    model: string
-    description: string
-    manufactoryEmail: string
-    retailerEmail: string
-    customerEmail: string
-}
 const VerifyProduct = () => {
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
@@ -61,8 +51,6 @@ const VerifyProduct = () => {
             let isReal = true
             Object.keys(productInfo).forEach((key) => {
                 if (key !== 'retailerEmail' && key !== 'history') {
-                    console.log(productInfo[key], productScannerData[key])
-
                     if (
                         productInfo[key] !==
                         {

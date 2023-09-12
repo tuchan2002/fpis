@@ -19,7 +19,7 @@ export default function Home() {
                 <Container>
                     <Paper elevation={3} style={{ padding: '20px' }}>
                         <Typography variant='h4'>{`${roleNameList[currentUserRole]} Home Page`}</Typography>
-                        <Typography variant="h6" color="textSecondary">
+                        <Typography variant='h6' color='textSecondary'>
                             {`Welcome to ${roleNameList[currentUserRole]} Page`}
                         </Typography>
                     </Paper>
