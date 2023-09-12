@@ -3,18 +3,27 @@
 import { AppDispatch } from '@/redux'
 import { authSelector } from '@/redux/reducers/authSlice'
 import { getProductById, productSelector } from '@/redux/reducers/productSlice'
-import { Box, Button, List, ListItem, ListItemText, Paper } from '@mui/material'
+import { Box, Button, Paper } from '@mui/material'
 import { useRouter } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import ProductTimeline from '@/components/product-timeline'
+import useAuthEffect from '@/customHook/useAuthEffect'
+import ProductInfoTable from '@/components/product-info-table'
 
 const ProductDetails = ({ params }: { params: { id: string } }) => {
     const dispatch = useDispatch<AppDispatch>()
-    const authReducer = useSelector(authSelector)
+    const router = useRouter()
+
     const productReducer = useSelector(productSelector)
 
-    const router = useRouter()
+    const authReducer = useSelector(authSelector)
+    const currentUserRole = authReducer.user && authReducer.user?.role
+    const allowedRolesList = [0, 1, 2, 3]
+    useAuthEffect(currentUserRole, allowedRolesList)
+
+    const [openModalTimeline, setOpenModalTimeline] = useState(false)
 
     useEffect(() => {
         dispatch(
@@ -26,68 +35,51 @@ const ProductDetails = ({ params }: { params: { id: string } }) => {
     }, [authReducer.token])
 
     return (
-        <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-            <Paper sx={{ p: 3, maxWidth: 720, width: '100%' }}>
-                <Button
-                    variant='text'
-                    onClick={() => router.back()}
-                    startIcon={<ArrowBackIcon />}
-                >
-                    戻る
-                </Button>
-                <List
-                    sx={{
-                        width: '100%',
-                        bgcolor: 'background.paper'
-                    }}
-                >
-                    <ListItem>
-                        <ListItemText
-                            primary='ID'
-                            secondary={productReducer.product?.productID}
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary='Model'
-                            secondary={productReducer.product?.model}
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary='Description'
-                            secondary={productReducer.product?.description}
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary='Manufactory Email'
-                            secondary={productReducer.product?.manufactoryEmail}
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary='Retailer Email'
-                            secondary={
-                                productReducer.product?.retailerEmail
-                                    ? productReducer.product?.retailerEmail
-                                    : 'None'
-                            }
-                        />
-                    </ListItem>
-                    <ListItem>
-                        <ListItemText
-                            primary='Customer Email'
-                            secondary={
-                                productReducer.product?.customerEmail
-                                    ? productReducer.product?.customerEmail
-                                    : 'None'
-                            }
-                        />
-                    </ListItem>
-                </List>
-            </Paper>
-        </Box>
+        currentUserRole !== null &&
+        allowedRolesList.includes(currentUserRole) && (
+            <>
+                <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+                    <Paper sx={{ p: 3, maxWidth: 720, width: '100%' }}>
+                        <Button
+                            variant='text'
+                            onClick={() => router.back()}
+                            startIcon={<ArrowBackIcon />}
+                        >
+                            戻る
+                        </Button>
+                        {productReducer.product && (
+                            <ProductInfoTable
+                                productInfo={productReducer.product}
+                            />
+                        )}
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                marginTop: 3
+                            }}
+                        >
+                            <Button
+                                variant='text'
+                                onClick={() => setOpenModalTimeline(true)}
+                            >
+                                Show Product History
+                            </Button>
+                        </Box>
+                    </Paper>
+                </Box>
+                <ProductTimeline
+                    productHistory={
+                        productReducer.product?.history
+                            ? productReducer.product?.history
+                            : []
+                    }
+                    open={openModalTimeline}
+                    onClose={() => setOpenModalTimeline(false)}
+                />
+            </>
+        )
     )
 }
 

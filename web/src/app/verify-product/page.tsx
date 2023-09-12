@@ -1,35 +1,21 @@
 'use client'
 
 import QRCodeScanner from '@/components/qr-code-scanner'
+import useAuthEffect from '@/customHook/useAuthEffect'
 import { authSelector } from '@/redux/reducers/authSlice'
-import {
-    Box,
-    Button,
-    List,
-    ListItem,
-    ListItemText,
-    Paper,
-    TextField,
-    Typography
-} from '@mui/material'
+import { IProduct } from '@/global-types'
+import { Box, Button, Paper, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
+import ProductInfoTable from '@/components/product-info-table'
 
-interface Map {
-    [key: string]: string | undefined
-}
-interface IProduct extends Map {
-    productID: string
-    model: string
-    description: string
-    manufactoryEmail: string
-    retailerEmail: string
-    customerEmail: string
-}
 const VerifyProduct = () => {
     const authReducer = useSelector(authSelector)
+    const currentUserRole = authReducer.user && authReducer.user?.role
+    const allowedRolesList = [2]
+    useAuthEffect(currentUserRole, allowedRolesList)
 
     const [productScannerData, setProductScannerData] =
         useState<IProduct | null>(null)
@@ -54,8 +40,14 @@ const VerifyProduct = () => {
 
             let isReal = true
             Object.keys(productInfo).forEach((key) => {
-                if (key !== 'retailerEmail') {
-                    if (productInfo[key] !== productScannerData[key]) {
+                if (key !== 'retailerEmail' && key !== 'history') {
+                    if (
+                        productInfo[key] !==
+                        {
+                            ...productScannerData,
+                            customerEmail: customerEmailInputData
+                        }[key]
+                    ) {
                         isReal = false
                         return
                     }
@@ -76,78 +68,53 @@ const VerifyProduct = () => {
     }
 
     return (
-        <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-            <Paper
-                sx={{
-                    p: 3,
-                    maxWidth: 720,
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: 3
-                }}
-            >
-                <QRCodeScanner setResult={setProductScannerData} />
-                <Typography variant='h5'>Product Information</Typography>
-                {productScannerData && (
-                    <>
-                        <List
-                            sx={{
-                                width: '100%',
-                                bgcolor: 'background.paper'
-                            }}
-                        >
-                            <ListItem>
-                                <ListItemText
-                                    primary='ID'
-                                    secondary={productScannerData.productID}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary='Model'
-                                    secondary={productScannerData.model}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary='Description'
-                                    secondary={productScannerData.description}
-                                />
-                            </ListItem>
-                            <ListItem>
-                                <ListItemText
-                                    primary='Manufactory Email'
-                                    secondary={
-                                        productScannerData.manufactoryEmail
-                                    }
-                                />
-                            </ListItem>
-                        </List>
-                        <TextField
-                            sx={{ width: '50%' }}
-                            label='Customer Email'
-                            variant='standard'
-                            value={customerEmailInputData}
-                            onChange={(e) =>
-                                setCustomerEmailInputData(e.target.value)
-                            }
-                        />
-                        <Button
-                            variant='contained'
-                            disabled={
-                                customerEmailInputData.trim() ? false : true
-                            }
-                            onClick={handleVerify}
-                        >
-                            Verify
-                        </Button>
-                    </>
-                )}
-            </Paper>
-        </Box>
+        currentUserRole !== null &&
+        allowedRolesList.includes(currentUserRole) && (
+            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+                <Paper
+                    sx={{
+                        p: 3,
+                        maxWidth: 720,
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: 3
+                    }}
+                >
+                    <QRCodeScanner setResult={setProductScannerData} />
+                    <Typography variant='h5'>
+                        Product Information from QR code
+                    </Typography>
+                    {productScannerData && (
+                        <>
+                            <ProductInfoTable
+                                productInfo={productScannerData}
+                            />
+                            <TextField
+                                sx={{ width: '50%' }}
+                                label='Owned customer email'
+                                variant='standard'
+                                value={customerEmailInputData}
+                                onChange={(e) =>
+                                    setCustomerEmailInputData(e.target.value)
+                                }
+                            />
+                            <Button
+                                variant='contained'
+                                disabled={
+                                    customerEmailInputData.trim() ? false : true
+                                }
+                                onClick={handleVerify}
+                            >
+                                Verify
+                            </Button>
+                        </>
+                    )}
+                </Paper>
+            </Box>
+        )
     )
 }
 

@@ -1,45 +1,33 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
 import axios from 'axios'
+import { showAlert } from './alertSlice'
+import { AuthState, ILoginParams, IRegisterParams } from '../types/auth-types'
 
-interface IUser {
-    id: number
-    email: string
-    location: string
-    name: string
-    phone_number: string
-    role: number
-}
-interface AuthState {
-    token: string
-    user: IUser | null
-}
 const initialState: AuthState = {
     token: '',
     user: null
 }
 
-interface IRegisterParams {
-    name: string
-    email: string
-    password: string
-    phone_number: string
-    location: string
-    role: number
-}
-
-interface ILoginParams {
-    email: string
-    password: string
-}
 export const login = createAsyncThunk(
     'auth/login',
-    async (data: ILoginParams) => {
-        const response = await axios.post(
-            `http://localhost:8000/api/v1/auth/login`,
-            data
-        )
-        return response.data
+    async (data: ILoginParams, { dispatch }) => {
+        try {
+            dispatch(showAlert({ loading: true }))
+
+            const response = await axios.post(
+                `http://localhost:8000/api/v1/auth/login`,
+                data
+            )
+
+            dispatch(showAlert({ success: response.data.message }))
+
+            return response.data
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            dispatch(showAlert({ error: error.response.data.message }))
+        }
     }
 )
 
@@ -58,12 +46,25 @@ export const getAuth = createAsyncThunk('auth/getAuth', async () => {
 
 export const register = createAsyncThunk(
     'auth/register',
-    async (data: IRegisterParams) => {
-        const response = await axios.post(
-            `http://localhost:8000/api/v1/auth/register`,
-            data
-        )
-        return response.data
+    async (data: IRegisterParams, { dispatch }) => {
+        try {
+            dispatch(showAlert({ loading: true }))
+
+            const response = await axios.post(
+                `http://localhost:8000/api/v1/auth/register`,
+                data.userData,
+                {
+                    headers: { Authorization: `Bearer ${data.accessToken}` }
+                }
+            )
+            dispatch(showAlert({ success: response.data.message }))
+
+            return response.data
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            dispatch(showAlert({ error: error.response.data.message }))
+        }
     }
 )
 
@@ -72,10 +73,6 @@ const authSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        builder.addCase(login.pending, (state, action) => {
-            console.log('pending')
-        })
         builder.addCase(login.fulfilled, (state, action) => {
             state.token = action.payload.data.access_token
             state.user = action.payload.data.user
@@ -83,6 +80,7 @@ const authSlice = createSlice({
                 'accessToken',
                 action.payload.data.access_token
             )
+
             window.location.href = '/'
 
             console.log('fulfilled')
@@ -93,8 +91,6 @@ const authSlice = createSlice({
             console.log('rejected')
         })
         builder.addCase(getAuth.fulfilled, (state, action) => {
-            console.log('state, action', state, action)
-
             const accessToken = localStorage.getItem('accessToken')
             if (accessToken) {
                 state.token = accessToken
@@ -102,10 +98,6 @@ const authSlice = createSlice({
             }
         })
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        builder.addCase(register.pending, (state, action) => {
-            console.log('pending')
-        })
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         builder.addCase(register.fulfilled, (state, action) => {
             console.log('fulfilled')

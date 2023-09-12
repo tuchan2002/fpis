@@ -5,12 +5,9 @@ const {
     createManufactory,
     createRetailer,
     createCustomer
-} = require('../web3/auth');
+} = require('../utils/web3-method/auth');
 
-const createAccessToken = (payload) => jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: '1d'
-});
-
+const createAccessToken = (payload) => jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
 const authController = {
     register: async (req, res) => {
         const {
@@ -29,26 +26,13 @@ const authController = {
                     .json({ message: 'Email address already exists.' });
             }
 
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const newUser = {
-                name,
-                email,
-                location,
-                phone_number,
-                password: hashedPassword,
-                role
-            };
-
-            const createdUser = await db.User.create(newUser);
-            createdUser.password = '';
-
-            let isSavedToBlockchain;
+            let result;
             if (role === 0) {
-                isSavedToBlockchain = await createManufactory(email, name, location);
+                result = await createManufactory(email, name, location);
             } else if (role === 1) {
-                isSavedToBlockchain = await createRetailer(email, name, location);
+                result = await createRetailer(email, name, location);
             } else if (role === 2) {
-                isSavedToBlockchain = await createCustomer(
+                result = await createCustomer(
                     email,
                     name,
                     location,
@@ -56,19 +40,29 @@ const authController = {
                 );
             }
 
-            if (isSavedToBlockchain) {
-                console.log('Register account successful.');
+            if (result.status === 1n) {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                const newUser = {
+                    name,
+                    email,
+                    location,
+                    phone_number,
+                    password: hashedPassword,
+                    role
+                };
+
+                const createdUser = await db.User.create(newUser);
+                createdUser.password = '';
 
                 return res.status(201).json({
-                    message: 'Register account successful.',
+                    message: 'Account registration successful.',
                     success: true,
                     data: {
                         user: createdUser
                     }
                 });
             }
-            console.log('Register account failed.');
-            return res.status(500).json({ message: 'Save to blockchain failed.' });
+            return res.status(500).json({ message: 'Account registration failed.'});
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }
@@ -98,7 +92,7 @@ const authController = {
             user.password = '';
             const access_token = createAccessToken({
                 userId: user.id,
-                role: user.role
+                userRole: user.role
             });
             return res.json({
                 message: 'Login successfully.',
@@ -113,7 +107,6 @@ const authController = {
         }
     },
     getAuth: async (req, res) => {
-        console.log(req.userId);
         try {
             const user = await db.User.findOne({
                 attributes: { exclude: ['password'] },

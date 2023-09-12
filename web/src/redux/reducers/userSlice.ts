@@ -1,20 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
 import axios from 'axios'
+import { UserState } from '../types/user-types'
 
-interface IUser {
-    id: number
-    email: string
-    location: string
-    name: string
-    phone_number: string
-    role: number
-}
-
-interface UserState {
-    users: IUser[]
-    user: IUser | null
-}
 const initialState: UserState = {
     users: [],
     user: null
@@ -66,32 +54,20 @@ const userSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        builder.addCase(getAllOfUsers.pending, (state, action) => {
-            console.log('pending')
-        })
         builder.addCase(getAllOfUsers.fulfilled, (state, action) => {
-            console.log('fulfilled', action)
+            console.log('fulfilled')
 
             state.users = action.payload.data.users
         })
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        builder.addCase(getUserById.pending, (state, action) => {
-            console.log('pending')
-        })
         builder.addCase(getUserById.fulfilled, (state, action) => {
-            console.log('fulfilled', action)
+            console.log('fulfilled')
 
             state.user = action.payload.data.user
         })
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        builder.addCase(getUsersByRole.pending, (state, action) => {
-            console.log('pending')
-        })
         builder.addCase(getUsersByRole.fulfilled, (state, action) => {
-            console.log('fulfilled', action)
+            console.log('fulfilled')
 
             state.users = action.payload.data.users
         })

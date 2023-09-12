@@ -1,26 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { RootState } from '..'
+import { AlertState } from '../types/alert-types'
 
-interface AlertState {
-    loading: boolean
-    error: string
-    success: string
-}
 const initialState: AlertState = {
-    loading: false,
-    error: '',
-    success: ''
+    alert: {
+        loading: false,
+        error: '',
+        success: ''
+    }
 }
 const alertSlice = createSlice({
     name: 'alert',
     initialState,
     reducers: {
         showAlert(state, action) {
-            state = action.payload
+            state.alert = action.payload
         }
     }
 })
 
 const alertReducer = alertSlice.reducer
+
+export const alertSelector = (state: RootState) => state.alertReducer
 
 export const { showAlert } = alertSlice.actions
 

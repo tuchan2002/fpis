@@ -8,7 +8,7 @@ const userController = {
             });
 
             res.status(200).json({
-                message: 'Get users successfully.',
+                message: 'Successfully retrieved users.',
                 success: true,
                 data: {
                     users
@@ -31,7 +31,7 @@ const userController = {
             });
 
             res.status(200).json({
-                message: 'Get user successfully.',
+                message: 'Successfully retrieved user.',
                 success: true,
                 data: {
                     user
@@ -54,7 +54,7 @@ const userController = {
             });
 
             res.status(200).json({
-                message: 'Get users by role successfully.',
+                message: 'Successfully retrieved users by role.',
                 success: true,
                 data: {
                     users

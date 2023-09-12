@@ -11,24 +11,26 @@ import html2canvas from 'html2canvas'
 import DownloadIcon from '@mui/icons-material/Download'
 import { createProduct } from '@/redux/reducers/productSlice'
 import { AppDispatch } from '@/redux'
+import useAuthEffect from '@/customHook/useAuthEffect'
 
 const CreateProduct = () => {
     const dispatch = useDispatch<AppDispatch>()
     const router = useRouter()
 
-    const auth = useSelector(authSelector)
+    const authReducer = useSelector(authSelector)
+    const currentUserRole = authReducer.user && authReducer.user?.role
+    const allowedRolesList = [0]
+    useAuthEffect(currentUserRole, allowedRolesList)
 
     const qrCodeRef = useRef<HTMLDivElement | null>(null)
     const [productInputData, setProductInputData] = useState({
         productID: uuidv4(),
         model: '',
         description: '',
-        manufactoryEmail: auth.user?.email
+        manufactoryEmail: authReducer.user?.email
     })
-    console.log('productInputData', productInputData)
 
     const [showQRcode, setShowQRcode] = useState(false)
-
     const { productID, model, description } = productInputData
 
     const onChangeProductInputData = (e: ChangeEvent<HTMLInputElement>) => {
@@ -51,7 +53,10 @@ const CreateProduct = () => {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         dispatch(
-            createProduct({ body: productInputData, accessToken: auth.token })
+            createProduct({
+                body: productInputData,
+                accessToken: authReducer.token
+            })
         )
 
         // reset data
@@ -59,97 +64,102 @@ const CreateProduct = () => {
     }
 
     return (
-        <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-            <Paper sx={{ p: 3, maxWidth: 720, width: '100%' }}>
-                <Box
-                    component='form'
-                    onSubmit={handleSubmit}
-                    noValidate
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 3
-                    }}
-                >
-                    <Typography variant='h4'>Create Product</Typography>
-                    <TextField
-                        variant='standard'
-                        required
-                        fullWidth
-                        id='model'
-                        label='Model'
-                        name='model'
-                        value={model}
-                        onChange={onChangeProductInputData}
-                    />
-                    <TextField
-                        variant='standard'
-                        required
-                        fullWidth
-                        id='description'
-                        label='Description'
-                        name='description'
-                        value={description}
-                        onChange={onChangeProductInputData}
-                    />
-                    <Button
-                        variant='contained'
-                        sx={{ alignSelf: 'center' }}
-                        onClick={() => setShowQRcode(true)}
-                        disabled={
-                            model.trim() && description.trim() ? false : true
-                        }
+        currentUserRole !== null &&
+        allowedRolesList.includes(currentUserRole) && (
+            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+                <Paper sx={{ p: 3, maxWidth: 720, width: '100%' }}>
+                    <Box
+                        component='form'
+                        onSubmit={handleSubmit}
+                        noValidate
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 3
+                        }}
                     >
-                        Generate QR code
-                    </Button>
-
-                    {showQRcode && (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                gap: 1
-                            }}
+                        <Typography variant='h4'>Create Product</Typography>
+                        <TextField
+                            variant='standard'
+                            required
+                            fullWidth
+                            id='model'
+                            label='Model'
+                            name='model'
+                            value={model}
+                            onChange={onChangeProductInputData}
+                        />
+                        <TextField
+                            variant='standard'
+                            required
+                            fullWidth
+                            id='description'
+                            label='Description'
+                            name='description'
+                            value={description}
+                            onChange={onChangeProductInputData}
+                        />
+                        <Button
+                            variant='contained'
+                            sx={{ alignSelf: 'center' }}
+                            onClick={() => setShowQRcode(true)}
+                            disabled={
+                                model.trim() && description.trim()
+                                    ? false
+                                    : true
+                            }
                         >
-                            <div
-                                ref={qrCodeRef}
-                                style={{
-                                    width: 180,
-                                    height: 180,
+                            Generate QR code
+                        </Button>
+
+                        {showQRcode && (
+                            <Box
+                                sx={{
                                     display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: 1
                                 }}
                             >
-                                <QRCode
-                                    value={JSON.stringify(productInputData)}
-                                    size={160}
-                                />
-                            </div>
+                                <div
+                                    ref={qrCodeRef}
+                                    style={{
+                                        width: 180,
+                                        height: 180,
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <QRCode
+                                        value={JSON.stringify(productInputData)}
+                                        size={160}
+                                    />
+                                </div>
 
+                                <Button
+                                    variant='contained'
+                                    onClick={downloadQRcode}
+                                    startIcon={<DownloadIcon />}
+                                >
+                                    Download
+                                </Button>
+                            </Box>
+                        )}
+
+                        {showQRcode && (
                             <Button
+                                type='submit'
                                 variant='contained'
-                                onClick={downloadQRcode}
-                                startIcon={<DownloadIcon />}
+                                sx={{ alignSelf: 'flex-end' }}
                             >
-                                Download
+                                Create
                             </Button>
-                        </Box>
-                    )}
-
-                    {showQRcode && (
-                        <Button
-                            type='submit'
-                            variant='contained'
-                            sx={{ alignSelf: 'flex-end' }}
-                        >
-                            Create
-                        </Button>
-                    )}
-                </Box>
-            </Paper>
-        </Box>
+                        )}
+                    </Box>
+                </Paper>
+            </Box>
+        )
     )
 }
 

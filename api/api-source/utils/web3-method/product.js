@@ -1,4 +1,4 @@
-const web3Api = require('../configs/web3Config');
+const web3Api = require('../../configs/web3Config');
 
 const { contract, web3 } = web3Api;
 
@@ -22,11 +22,13 @@ const createProductOnBlockchain = async (
     productID,
     model,
     description,
-    manufactoryEmail
+    manufactoryEmail,
+    manufactoryLocation,
+    productionDate,
 ) => {
     try {
         return await contract.methods
-            .createProduct(productID, model, description, manufactoryEmail)
+            .createProduct(productID, model, description, manufactoryEmail, manufactoryLocation, productionDate)
             .send({
                 from: accountAddress
             });
@@ -49,8 +51,19 @@ const getProductDetail = async (productID) => {
 
 const getProductsByCustomer = async (customerEmail) => {
     try {
-        const productList = await contract.methods
+        const productIdList = await contract.methods
             .getProductsByCustomer(customerEmail)
+            .call({ from: accountAddress });
+        return productIdList;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const getProductsByManufactory = async (manufactoryEmail) => {
+    try {
+        const productList = await contract.methods
+            .getProductsByManufactory(manufactoryEmail)
             .call({ from: accountAddress });
 
         return productList;
@@ -59,10 +72,22 @@ const getProductsByCustomer = async (customerEmail) => {
     }
 };
 
-const moveToRetailer = async (productID, retailerEmail) => {
+const getProductsByRetailer = async (retailerEmail) => {
+    try {
+        const productList = await contract.methods
+            .getProductsByRetailer(retailerEmail)
+            .call({ from: accountAddress });
+
+        return productList;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const moveToRetailer = async (productID, retailerEmail, retailLocation, movingDate) => {
     try {
         return await contract.methods
-            .moveToRetailer(productID, retailerEmail)
+            .moveToRetailer(productID, retailerEmail, retailLocation, movingDate)
             .send({
                 from: accountAddress
             });
@@ -71,10 +96,10 @@ const moveToRetailer = async (productID, retailerEmail) => {
     }
 };
 
-const sellToFirstCustomer = async (productID, retailerEmail, customerEmail) => {
+const sellToFirstCustomer = async (productID, retailerEmail, customerEmail, saleDate) => {
     try {
         return await contract.methods
-            .sellToFirstCustomer(productID, retailerEmail, customerEmail)
+            .sellToFirstCustomer(productID, retailerEmail, customerEmail, saleDate)
             .send({
                 from: accountAddress
             });
@@ -86,11 +111,12 @@ const sellToFirstCustomer = async (productID, retailerEmail, customerEmail) => {
 const changeCustomer = async (
     productID,
     oldCustomerEmail,
-    newCustomerEmail
+    newCustomerEmail,
+    changeDate
 ) => {
     try {
         return await contract.methods
-            .changeCustomer(productID, oldCustomerEmail, newCustomerEmail)
+            .changeCustomer(productID, oldCustomerEmail, newCustomerEmail, changeDate)
             .send({
                 from: accountAddress
             });
@@ -106,5 +132,7 @@ module.exports = {
     moveToRetailer,
     sellToFirstCustomer,
     changeCustomer,
-    getAllProducts
+    getAllProducts,
+    getProductsByManufactory,
+    getProductsByRetailer
 };
