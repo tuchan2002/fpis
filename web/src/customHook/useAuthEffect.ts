@@ -10,13 +10,10 @@ const useAuthEffect = (
     const router = useRouter()
 
     useEffect(() => {
-        console.log('OK 1', currentUserRole)
         if (currentUserRole !== null) {
-            console.log('OK 2', currentUserRole)
 
             if (!allowedRolesList.includes(currentUserRole)) {
-                console.log('OK')
-                router.back()
+                router.push('/')
             }
         }
     }, [currentUserRole])

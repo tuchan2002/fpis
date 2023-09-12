@@ -1,10 +1,19 @@
 'use client'
 
+import useAuthEffect from '@/customHook/useAuthEffect'
+import { authSelector } from '@/redux/reducers/authSlice'
 import { Box, Typography } from '@mui/material'
+import { useSelector } from 'react-redux'
 
 export default function Home() {
+    const authReducer = useSelector(authSelector)
+    const currentUserRole = authReducer.user && authReducer.user?.role
+    const allowedRolesList = [0,1,2,3]
+    useAuthEffect(currentUserRole, allowedRolesList)
+
     return (
-        <Box sx={{ p: 3 }}>
+        currentUserRole !== null &&
+        allowedRolesList.includes(currentUserRole) && <Box sx={{ p: 3 }}>
             <Typography>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Similique unde fugit veniam eius, perspiciatis sunt? Corporis
