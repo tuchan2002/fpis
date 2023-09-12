@@ -18,9 +18,9 @@ export default function Home() {
             <Box sx={{ p: 3 }}>
                 <Container>
                     <Paper style={{ padding: '20px' }}>
-                        <Typography variant='h4'>{`${roleNameList[currentUserRole]} Home Page`}</Typography>
+                        <Typography variant='h4'>{`${roleNameList[currentUserRole]} Home page`}</Typography>
                         <Typography variant='h6' color='textSecondary'>
-                            {`Welcome to ${roleNameList[currentUserRole]} Page`}
+                            {`Welcome to ${roleNameList[currentUserRole]} page`}
                         </Typography>
                     </Paper>
                 </Container>
