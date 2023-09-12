@@ -126,8 +126,8 @@ contract FPIS {
           historyItem.date = _changeDate;
           product.history.push(historyItem);
 
-          removeElement(i, oldCustomer.products);
           newCustomer.products.push(_productID);
+          removeElement(i, oldCustomer.products);
 
           return true;
         }
@@ -263,7 +263,7 @@ contract FPIS {
       array[i] = array[i+1];
     }
 
-    delete array[array.length-1];
+    array.pop();
     return true;
   }
 }

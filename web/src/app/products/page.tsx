@@ -39,6 +39,7 @@ const ProductsPage = () => {
     useAuthEffect(currentUserRole, allowedRolesList)
 
     console.log('products currentUserRole', currentUserRole)
+    console.log('products productReducer.products', productReducer.products)
 
     useEffect(() => {
         if (currentUserRole === 0 || currentUserRole === 1) {
@@ -67,12 +68,14 @@ const ProductsPage = () => {
                     alignItems: 'flex-end'
                 }}
             >
-                <Button
-                    variant='contained'
-                    onClick={() => router.push('/create-product')}
-                >
-                    Create Product
-                </Button>
+                {currentUserRole === 0 && (
+                    <Button
+                        variant='contained'
+                        onClick={() => router.push('/create-product')}
+                    >
+                        Create Product
+                    </Button>
+                )}
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                         <TableHead>
