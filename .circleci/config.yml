@@ -81,6 +81,7 @@ jobs:
               cd api/
               npm run compile-contract
               npm run deploy-contract:testnet
+              cat contract-info.json
             fi
       - persist_to_workspace:
           root: ~/fpis/api
