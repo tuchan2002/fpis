@@ -198,7 +198,6 @@ contract FPIS {
     }
 
     return (matchingProducts, matchingProductIds);
-    
   }
 
   function getProductDetail(string memory _productID) public view returns (string memory, string memory, string memory, string memory, string memory,  HistoryItem[] memory) {
