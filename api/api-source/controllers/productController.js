@@ -337,6 +337,69 @@ const productController = {
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }
+    },
+
+    verifyProduct: async (req, res) => {
+        const { productScannerData, customerEmail } = req.body;
+        const { productID } = productScannerData;
+
+        try {
+            const customer = await db.User.findOne({
+                where: {
+                    email: customerEmail
+                }
+            });
+            if (!customer) {
+                return res
+                    .status(400)
+                    .json({ message: 'Email address does not exist or is not a customer.' });
+            }
+            if (customer.role !== 2) {
+                return res.status(400).json({ message: 'Email address does not exist or is not a customer.' });
+            }
+
+            const productDetail = await getProductDetail(productID);
+
+            const productInfoByID = {
+                productID,
+                model: productDetail[0],
+                description: productDetail[1],
+                manufactoryEmail: productDetail[2],
+                retailerEmail: productDetail[3],
+                customerEmail: productDetail[4],
+                history: productDetail[5].map((item) => ({
+                    timestamp: item.timestamp.toString(),
+                    action: item.action,
+                    details: item.details,
+                    date: item.date
+                }))
+            };
+
+            let isReal = true;
+            Object.keys(productInfoByID).forEach((key) => {
+                if (key !== 'retailerEmail' && key !== 'history') {
+                    if (
+                        productInfoByID[key]
+                                !== {
+                                    ...productScannerData,
+                                    customerEmail
+                                }[key]
+                    ) {
+                        isReal = false;
+                    }
+                }
+            });
+
+            if (isReal) {
+                return res
+                    .status(200)
+                    .json({ success: true, message: 'This product is genuine.' });
+            }
+
+            return res.status(400).json({ success: true, message: 'This product is fake.'});
+        } catch (err) {
+            return res.status(500).json({ message: err.message });
+        }
     }
 
 };

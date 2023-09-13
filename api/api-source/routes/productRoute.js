@@ -29,11 +29,11 @@ router.post(
     isCustomer,
     productController.exchangeProductToAnotherCustomer
 );
-// router.post(
-//     '/verify-product',
-//     isAuth,
-//     isCustomer,
-//     productController.verifyProduct
-// );
+router.post(
+    '/verify-product',
+    isAuth,
+    isCustomer,
+    productController.verifyProduct
+);
 
 module.exports = router;
