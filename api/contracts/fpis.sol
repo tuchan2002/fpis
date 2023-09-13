@@ -81,7 +81,6 @@ contract FPIS {
     product.history.push(historyItem);
 
     return true;
-    
   }
 
   function sellToFirstCustomer(string memory _productID, string memory _retailerEmail, string memory _customerEmail, string memory _saleDate) public payable returns(bool) {
