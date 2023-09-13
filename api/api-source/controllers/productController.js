@@ -337,6 +337,15 @@ const productController = {
         } catch (err) {
             return res.status(500).json({ message: err.message });
         }
+    },
+
+    verifyProduct: async (req, res) => {
+        const { productID } = req.body;
+        try{
+
+        } catch (err) {
+            return res.status(500).json({ message: err.message });
+        }
     }
 };
 
