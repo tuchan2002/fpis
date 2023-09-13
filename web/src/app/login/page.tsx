@@ -20,7 +20,7 @@ const Login = () => {
 
     useEffect(() => {
         if (authReducer.token) {
-            router.back()
+            router.push('/')
         }
     }, [authReducer.token])
 
