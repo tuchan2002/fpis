@@ -76,6 +76,7 @@ jobs:
             git diff $previous_commit -- api/contracts/
             if [ -z "$changes" ]; then
               echo "There are no changes in the smart contract code."
+              cat contract-info.json
             else
               echo "There are changes in the smart contract code."
               cd api/
@@ -144,25 +145,25 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - develop
       - deploy-contract:
           requires:
             - build-push-frontend
           filters:
             branches:
               only:
-                - master
+                - develop
       - build-push-backend:
           requires:
             - deploy-contract
           filters:
             branches:
               only:
-                - master
+                - develop
       - deploy-backend-frontend:
           requires:
             - build-push-backend
           filters:
             branches:
               only:
-                - master
+                - develop
