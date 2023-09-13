@@ -7,11 +7,14 @@ import { IProduct } from '@/global-types'
 import { Box, Button, Paper, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import Swal from 'sweetalert2'
+import { useDispatch, useSelector } from 'react-redux'
 import ProductInfoTable from '@/components/product-info-table'
+import { AppDispatch } from '@/redux'
+import { showAlert } from '@/redux/reducers/alertSlice'
 
 const VerifyProduct = () => {
+    const dispatch = useDispatch<AppDispatch>()
+
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
     const allowedRolesList = [2]
@@ -27,43 +30,23 @@ const VerifyProduct = () => {
             return
         }
 
-        const productID = productScannerData.productID
         try {
-            const response = await axios.get(
-                `http://localhost:8000/api/v1/product/${productID}`,
+            const response = await axios.post(
+                `http://localhost:8000/api/v1/product/verify-product`,
+                {
+                    productScannerData,
+                    customerEmail: customerEmailInputData
+                },
                 {
                     headers: { Authorization: `Bearer ${authReducer.token}` }
                 }
             )
 
-            const productInfo: IProduct = response.data.data.product
+            dispatch(showAlert({ success: response.data.message }))
 
-            let isReal = true
-            Object.keys(productInfo).forEach((key) => {
-                if (key !== 'retailerEmail' && key !== 'history') {
-                    if (
-                        productInfo[key] !==
-                        {
-                            ...productScannerData,
-                            customerEmail: customerEmailInputData
-                        }[key]
-                    ) {
-                        isReal = false
-                        return
-                    }
-                }
-            })
-
-            await Swal.fire({
-                icon: `${isReal ? 'success' : 'error'}`,
-                text: `${
-                    isReal
-                        ? 'This product is genuine.'
-                        : 'This product is fake.'
-                }`
-            })
-        } catch (error) {
-            console.log(error)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            dispatch(showAlert({ error: error.response.data.message }))
         }
     }
 
