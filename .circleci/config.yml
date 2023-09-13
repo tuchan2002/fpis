@@ -73,10 +73,12 @@ jobs:
             previous_commit=$(git rev-parse HEAD^)
             changes=$(git diff $previous_commit -- api/contracts/)
 
-            ls
             git diff $previous_commit -- api/contracts/
             if [ -z "$changes" ]; then
               echo "There are no changes in the smart contract code."
+              cd api/
+              ls
+              cat contract-info.json
             else
               echo "There are changes in the smart contract code."
               cd api/
