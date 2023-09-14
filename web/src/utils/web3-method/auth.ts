@@ -1,13 +1,4 @@
-const web3Api = require('../../configs/web3Config');
-
-const { contract, web3 } = web3Api;
-
-let accountAddress = '';
-web3.eth.getAccounts().then((accounts) => {
-    accountAddress = accounts[0];
-});
-
-const createManufactory = async (email, name, location) => {
+export const createManufactory = async (email, name, location) => {
     try {
         return await contract.methods
             .createManufactory(email, name, location)
@@ -19,7 +10,7 @@ const createManufactory = async (email, name, location) => {
     }
 };
 
-const createRetailer = async (email, name, location) => {
+export const createRetailer = async (email, name, location) => {
     try {
         return await contract.methods.createRetailer(email, name, location).send({
             from: accountAddress
@@ -29,7 +20,7 @@ const createRetailer = async (email, name, location) => {
     }
 };
 
-const createCustomer = async (email, name, location, phone_number) => {
+export const createCustomer = async (email, name, location, phone_number) => {
     try {
         return await contract.methods
             .createCustomer(email, name, location, phone_number)
@@ -41,8 +32,3 @@ const createCustomer = async (email, name, location, phone_number) => {
     }
 };
 
-module.exports = {
-    createManufactory,
-    createRetailer,
-    createCustomer
-};

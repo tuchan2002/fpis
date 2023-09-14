@@ -35,6 +35,7 @@ services:
       - DB_NAME=$MYSQLDB_DATABASE
       - DB_PORT=$MYSQLDB_CONTAINER_PORT
       - NODE_ENV=$NODE_ENV
+      - ACCESS_TOKEN_SECRET=$ACCESS_TOKEN_SECRET
     volumes:
       - ./api:/app
     expose:

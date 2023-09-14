@@ -5,19 +5,7 @@ orbs:
   docker: circleci/docker@2.2.0
 
 jobs:
-  eslint-backend:
-    working_directory: ~/fpis/api
-    executor: node/default
-    steps:
-      - checkout:
-          path: ~/fpis
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          command: npm run lint
-          name: Run Lint
-
-  eslint-frontend:
+  eslint:
     working_directory: ~/fpis/web
     executor: node/default
     steps:
@@ -29,7 +17,7 @@ jobs:
           command: npm run lint
           name: Run Lint
 
-  build-push-frontend:
+  build-push-next-app:
     working_directory: ~/fpis/web
     environment:
       DOCKER_IMAGE: tuchan17/fpis_next
@@ -91,39 +79,7 @@ jobs:
           paths:
             - contract-info.json
 
-  build-push-backend:
-    working_directory: ~/fpis/api
-    environment:
-      DOCKER_IMAGE: tuchan17/fpis_express
-      DOCKER_TAG: latest
-    executor: docker/docker
-    steps:
-      - setup_remote_docker
-      - checkout:
-          path: ~/fpis
-      - attach_workspace:
-          at: ~/fpis/api
-      - run:
-          name: Use Persisted File
-          command: |
-            mv ~/fpis/api/contract-info.json ~/fpis/api/contract-info-old.json
-            cp ~/fpis/api/contract-info-old.json ./contract-info.json
-            cat contract-info.json
-      - docker/check:
-          docker-username: DOCKER_USERNAME
-          docker-password: DOCKER_PASSWORD
-      - docker/build:
-          image: $DOCKER_IMAGE
-          tag: $DOCKER_TAG
-      - docker/push:
-          digest-path: /tmp/digest.txt
-          image: $DOCKER_IMAGE
-          tag: $DOCKER_TAG
-      - run:
-          command: |
-            echo "Digest is: $(</tmp/digest.txt)"
-
-  deploy-backend-frontend: 
+  deploy: 
     machine:
       image: ubuntu-2004:current
     steps:
@@ -138,34 +94,25 @@ jobs:
 workflows:
   test-build-deploy:
     jobs:
-      - eslint-backend
-      - eslint-frontend
-      - build-push-frontend:
-          requires:
-            - eslint-backend
-            - eslint-frontend
-          filters:
-            branches:
-              only:
-                - develop
+      - eslint
       - deploy-contract:
           requires:
-            - build-push-frontend
+            - eslint
           filters:
             branches:
               only:
-                - develop
-      - build-push-backend:
+                - master
+      - build-push-next-app:
           requires:
             - deploy-contract
           filters:
             branches:
               only:
-                - develop
-      - deploy-backend-frontend:
+                - master
+      - deploy:
           requires:
-            - build-push-backend
+            - build-push-next-app
           filters:
             branches:
               only:
-                - develop
+                - master
