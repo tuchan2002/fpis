@@ -12,7 +12,6 @@ export default function Home() {
     const allowedRolesList = [0, 1, 2, 3]
     useAuthEffect(currentUserRole, allowedRolesList)
 
-
     return (
         currentUserRole !== null &&
         allowedRolesList.includes(currentUserRole) && (
