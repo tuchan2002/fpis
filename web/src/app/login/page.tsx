@@ -1,19 +1,14 @@
 'use client'
 
 import {
-    Avatar,
     Box,
     Button,
     Paper,
-    TextField,
-    Typography
 } from '@mui/material'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import React, {  useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useDispatch, useSelector } from 'react-redux'
+import {  useSelector } from 'react-redux'
 import { authSelector } from '@/redux/reducers/authSlice'
-import { AppDispatch } from '@/redux'
 import GoogleIcon from '@mui/icons-material/Google'
 import { addDocument } from '@/firebase/services'
 import { auth } from '@/firebase/config'
@@ -25,7 +20,6 @@ import {
 
 const googleProvider = new GoogleAuthProvider()
 const Login = () => {
-    const dispatch = useDispatch<AppDispatch>()
     const router = useRouter()
 
     const authReducer = useSelector(authSelector)
@@ -44,14 +38,18 @@ const Login = () => {
 
         console.log(details, result.user)
         if (details?.isNewUser) {
-            await addDocument('users', {
-                displayName: user.displayName,
-                email: user.email,
-                photoURL: user.photoURL,
-                uid: user.uid,
-                providerId: details.providerId,
-                role: 2
-            })
+            try {
+                await addDocument('users', {
+                    displayName: user.displayName,
+                    email: user.email,
+                    photoURL: user.photoURL,
+                    uid: user.uid,
+                    providerId: details.providerId,
+                    role: 2
+                })
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 
