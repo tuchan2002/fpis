@@ -18,10 +18,9 @@ export interface IProduct extends IProductMap {
 }
 
 export interface IUser {
-    id: number
+    displayName: string
     email: string
-    location: string
-    name: string
-    phone_number: string
+    uid: string
+    photoURL: string
     role: number
 }

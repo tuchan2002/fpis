@@ -49,7 +49,8 @@ const Login = () => {
                 email: user.email,
                 photoURL: user.photoURL,
                 uid: user.uid,
-                providerId: details.providerId
+                providerId: details.providerId,
+                role: 2
             })
         }
     }
