@@ -1,7 +1,6 @@
 import { IUser } from '@/global-types'
 
 export interface AuthState {
-    token: string
     user: IUser | null
 }
 

@@ -1,36 +1,57 @@
 'use client'
 
-import { Avatar, Box, Button, TextField, Typography } from '@mui/material'
+import {
+    Avatar,
+    Box,
+    Button,
+    Paper,
+    TextField,
+    Typography
+} from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useDispatch, useSelector } from 'react-redux'
-import { authSelector, login } from '@/redux/reducers/authSlice'
+import { authSelector } from '@/redux/reducers/authSlice'
 import { AppDispatch } from '@/redux'
+import GoogleIcon from '@mui/icons-material/Google'
+import { addDocument } from '@/firebase/services'
+import { auth } from '@/firebase/config'
+import {
+    GoogleAuthProvider,
+    getAdditionalUserInfo,
+    signInWithPopup
+} from 'firebase/auth'
 
-const initialState = { email: '', password: '' }
+const googleProvider = new GoogleAuthProvider()
 const Login = () => {
     const dispatch = useDispatch<AppDispatch>()
     const router = useRouter()
 
     const authReducer = useSelector(authSelector)
 
-    const [userInputData, setUserInputData] = useState(initialState)
-    const { email, password } = userInputData
-
     useEffect(() => {
-        if (authReducer.token) {
+        if (authReducer.user) {
             router.push('/')
         }
-    }, [authReducer.token])
+    }, [authReducer.user])
 
-    const onChangeUserInputData = (e: ChangeEvent<HTMLInputElement>) => {
-        setUserInputData({ ...userInputData, [e.target.name]: e.target.value })
-    }
+    const handleLoginWithGoogle = async () => {
+        const result = await signInWithPopup(auth, googleProvider)
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        dispatch(login(userInputData))
+        const { user } = result
+        const details = getAdditionalUserInfo(result)
+
+        console.log(details, result.user)
+        if (details?.isNewUser) {
+            await addDocument('users', {
+                displayName: user.displayName,
+                email: user.email,
+                photoURL: user.photoURL,
+                uid: user.uid,
+                providerId: details.providerId
+            })
+        }
     }
 
     return (
@@ -42,51 +63,18 @@ const Login = () => {
                 alignItems: 'center'
             }}
         >
-            <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-                <LockOutlinedIcon />
-            </Avatar>
-            <Typography component='h1' variant='h5'>
-                Login
-            </Typography>
-            <Box
-                component='form'
-                onSubmit={handleSubmit}
-                noValidate
-                sx={{ mt: 1 }}
-            >
-                <TextField
-                    variant='standard'
-                    margin='normal'
-                    required
-                    fullWidth
-                    id='email'
-                    label='Email'
-                    name='email'
-                    value={email}
-                    onChange={onChangeUserInputData}
-                />
-                <TextField
-                    variant='standard'
-                    margin='normal'
-                    required
-                    fullWidth
-                    label='Password'
-                    type='password'
-                    id='password'
-                    name='password'
-                    value={password}
-                    onChange={onChangeUserInputData}
-                />
+            <Paper sx={{ p: 3 }}>
                 <Button
+                    startIcon={<GoogleIcon />}
                     type='submit'
                     fullWidth
                     variant='contained'
-                    sx={{ mt: 3, mb: 2 }}
-                    disabled={email.trim() && password.trim() ? false : true}
+                    sx={{ minWidth: '300px' }}
+                    onClick={handleLoginWithGoogle}
                 >
-                    Login
+                    Sign In With Google
                 </Button>
-            </Box>
+            </Paper>
         </Box>
     )
 }

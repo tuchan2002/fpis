@@ -1,7 +1,9 @@
 'use client'
 
+import { auth } from '@/firebase/config'
 import { authSelector } from '@/redux/reducers/authSlice'
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material'
+import { signOut } from 'firebase/auth'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
@@ -31,8 +33,12 @@ const NavbarMenu = () => {
     const currentUserRole = authReducer.user && authReducer.user?.role
 
     const logout = () => {
-        localStorage.removeItem('accessToken')
-        window.location.href = '/login'
+        try {
+            signOut(auth)
+            window.location.href = '/login'
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return (
