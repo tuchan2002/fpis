@@ -1,13 +1,9 @@
 'use client'
 
-import {
-    Box,
-    Button,
-    Paper,
-} from '@mui/material'
-import React, {  useEffect } from 'react'
+import { Box, Button, Paper } from '@mui/material'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import {  useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { authSelector } from '@/redux/reducers/authSlice'
 import GoogleIcon from '@mui/icons-material/Google'
 import { addDocument } from '@/firebase/services'

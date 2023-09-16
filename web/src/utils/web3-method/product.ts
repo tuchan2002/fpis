@@ -1,3 +1,5 @@
+import { ICreateProductParams } from '@/redux/types/product-types'
+
 export const getAllProducts = async () => {
     try {
         const data = await contract.methods
@@ -29,12 +31,15 @@ export const getAllProducts = async () => {
     }
 }
 export const createProductOnBlockchain = async (
-    productID,
-    model,
-    description,
-    manufactoryEmail,
-    manufactoryLocation,
-    productionDate
+    {
+        productID,
+        model,
+        description,
+        manufactoryEmail,
+        productionDate
+    }: ICreateProductParams,
+    contract: any,
+    accountAddress: string
 ) => {
     try {
         return await contract.methods
@@ -43,14 +48,13 @@ export const createProductOnBlockchain = async (
                 model,
                 description,
                 manufactoryEmail,
-                manufactoryLocation,
                 productionDate
             )
             .send({
                 from: accountAddress
             })
     } catch (error) {
-        console.error(error)
+        throw error
     }
 }
 

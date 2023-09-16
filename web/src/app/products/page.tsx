@@ -18,12 +18,7 @@ import { IconButton } from '@mui/material'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '@/redux'
-import {
-    getAllOfProducts,
-    getOwnedProducts,
-    getProductsByCustomer,
-    productSelector
-} from '@/redux/reducers/productSlice'
+import { productSelector } from '@/redux/reducers/productSlice'
 import { authSelector } from '@/redux/reducers/authSlice'
 import useAuthEffect from '@/customHook/useAuthEffect'
 
@@ -38,20 +33,20 @@ const ProductsPage = () => {
     const allowedRolesList = [0, 1, 2, 3]
     useAuthEffect(currentUserRole, allowedRolesList)
 
-    useEffect(() => {
-        if (currentUserRole === 0 || currentUserRole === 1) {
-            dispatch(getOwnedProducts({ accessToken: authReducer.token }))
-        } else if (currentUserRole === 2) {
-            dispatch(
-                getProductsByCustomer({
-                    customerId: '' + authReducer.user?.id,
-                    accessToken: authReducer.token
-                })
-            )
-        } else if (currentUserRole === 3) {
-            dispatch(getAllOfProducts({ accessToken: authReducer.token }))
-        }
-    }, [authReducer.token, currentUserRole])
+    // useEffect(() => {
+    //     if (currentUserRole === 0 || currentUserRole === 1) {
+    //         dispatch(getOwnedProducts({ accessToken: authReducer.token }))
+    //     } else if (currentUserRole === 2) {
+    //         dispatch(
+    //             getProductsByCustomer({
+    //                 customerId: '' + authReducer.user?.id,
+    //                 accessToken: authReducer.token
+    //             })
+    //         )
+    //     } else if (currentUserRole === 3) {
+    //         dispatch(getAllOfProducts({ accessToken: authReducer.token }))
+    //     }
+    // }, [authReducer.token, currentUserRole])
 
     return (
         currentUserRole !== null &&

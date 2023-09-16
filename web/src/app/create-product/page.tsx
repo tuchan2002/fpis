@@ -12,10 +12,15 @@ import DownloadIcon from '@mui/icons-material/Download'
 import { createProduct } from '@/redux/reducers/productSlice'
 import { AppDispatch } from '@/redux'
 import useAuthEffect from '@/customHook/useAuthEffect'
+import { web3Selector } from '@/redux/reducers/web3Slice'
+import moment from 'moment'
 
 const CreateProduct = () => {
     const dispatch = useDispatch<AppDispatch>()
     const router = useRouter()
+
+    const web3Reducer = useSelector(web3Selector)
+    console.log('web3Reducerweb3Reducer', web3Reducer)
 
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
@@ -27,7 +32,8 @@ const CreateProduct = () => {
         productID: uuidv4(),
         model: '',
         description: '',
-        manufactoryEmail: authReducer.user?.email
+        manufactoryEmail: authReducer.user ? authReducer.user.email : '',
+        productionDate: ''
     })
 
     const [showQRcode, setShowQRcode] = useState(false)
@@ -51,11 +57,16 @@ const CreateProduct = () => {
     }
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        console.log('contractAddress', web3Reducer.account)
         e.preventDefault()
         dispatch(
             createProduct({
-                body: productInputData,
-                accessToken: authReducer.token
+                data: {
+                    ...productInputData,
+                    productionDate: moment().format('LLL')
+                },
+                contract: web3Reducer.contract,
+                contractAddress: web3Reducer.account
             })
         )
 

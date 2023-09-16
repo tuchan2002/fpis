@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
-import Web3  from 'web3'
+import Web3 from 'web3'
 import detectEthereumProvider from '@metamask/detect-provider'
 import { showAlert } from './alertSlice'
 import { Web3State } from '../types/web3-types'
@@ -9,7 +9,7 @@ const initialState: Web3State = {
     provider: null,
     web3: null,
     contract: null,
-    account: ""
+    account: ''
 }
 
 export const loadProvider = createAsyncThunk(
@@ -33,6 +33,7 @@ export const loadProvider = createAsyncThunk(
 
                 let accountAddress
                 provider.on('accountsChanged', (accounts) => {
+                    console.log('accounts', accounts)
                     accountAddress = accounts[0]
                 })
 
@@ -55,12 +56,18 @@ export const loadProvider = createAsyncThunk(
 const web3Slice = createSlice({
     name: 'web3',
     initialState,
-    reducers: {},
+    reducers: {
+        setAccount(state, action) {
+            state.account = action.payload
+        }
+    },
     extraReducers: (builder) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         builder.addCase(loadProvider.pending, (state, action) => {})
         builder.addCase(loadProvider.fulfilled, (state, action) => {
-            if(action.payload) {
+            console.log('action.payload', action.payload)
+
+            if (action.payload) {
                 state.provider = action.payload.provider
                 state.web3 = action.payload.web3
                 state.contract = action.payload.contract
@@ -78,6 +85,6 @@ const web3Reducer = web3Slice.reducer
 
 export const web3Selector = (state: RootState) => state.web3Reducer
 
-export const {} = web3Slice.actions
+export const { setAccount } = web3Slice.actions
 
 export default web3Reducer

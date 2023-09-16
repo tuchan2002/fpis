@@ -1,12 +1,11 @@
 import { IProduct } from '@/global-types'
 
 export interface ICreateProductParams {
-    body: {
-        productID: string
-        model: string
-        description: string
-    }
-    accessToken: string
+    productID: string
+    model: string
+    description: string
+    manufactoryEmail: string
+    productionDate: string
 }
 
 export interface IProductState {
