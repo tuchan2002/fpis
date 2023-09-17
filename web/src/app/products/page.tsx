@@ -18,14 +18,19 @@ import { IconButton } from '@mui/material'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '@/redux'
-import { productSelector } from '@/redux/reducers/productSlice'
+import {
+    getAllOfProducts,
+    productSelector
+} from '@/redux/reducers/productSlice'
 import { authSelector } from '@/redux/reducers/authSlice'
 import useAuthEffect from '@/customHook/useAuthEffect'
+import { web3Selector } from '@/redux/reducers/web3Slice'
 
 const ProductsPage = () => {
     const dispatch = useDispatch<AppDispatch>()
     const router = useRouter()
 
+    const web3Reducer = useSelector(web3Selector)
     const productReducer = useSelector(productSelector)
 
     const authReducer = useSelector(authSelector)
@@ -33,20 +38,26 @@ const ProductsPage = () => {
     const allowedRolesList = [0, 1, 2, 3]
     useAuthEffect(currentUserRole, allowedRolesList)
 
-    // useEffect(() => {
-    //     if (currentUserRole === 0 || currentUserRole === 1) {
-    //         dispatch(getOwnedProducts({ accessToken: authReducer.token }))
-    //     } else if (currentUserRole === 2) {
-    //         dispatch(
-    //             getProductsByCustomer({
-    //                 customerId: '' + authReducer.user?.id,
-    //                 accessToken: authReducer.token
-    //             })
-    //         )
-    //     } else if (currentUserRole === 3) {
-    //         dispatch(getAllOfProducts({ accessToken: authReducer.token }))
-    //     }
-    // }, [authReducer.token, currentUserRole])
+    useEffect(() => {
+        // if (currentUserRole === 0 || currentUserRole === 1) {
+        //     dispatch(getOwnedProducts({ accessToken: authReducer.token }))
+        // } else if (currentUserRole === 2) {
+        //     dispatch(
+        //         getProductsByCustomer({
+        //             customerId: '' + authReducer.user?.id,
+        //             accessToken: authReducer.token
+        //         })
+        //     )
+        // } else if (currentUserRole === 3) {
+        //     dispatch(getAllOfProducts({ accessToken: authReducer.token }))
+        // }
+        dispatch(
+            getAllOfProducts({
+                contract: web3Reducer.contract,
+                accountAddress: web3Reducer.account
+            })
+        )
+    }, [web3Reducer.contract, web3Reducer.account])
 
     return (
         currentUserRole !== null &&
@@ -82,7 +93,7 @@ const ProductsPage = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {productReducer.products.map((product) => (
+                            {productReducer.products?.map((product) => (
                                 <TableRow
                                     key={product.productID}
                                     sx={{

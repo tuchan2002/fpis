@@ -1,29 +1,32 @@
+import { IHistoryItem, IProduct } from '@/global-types'
 import { ICreateProductParams } from '@/redux/types/product-types'
 
-export const getAllProducts = async () => {
+export const getAllProducts = async (contract: any, accountAddress: string) => {
     try {
         const data = await contract.methods
             .getAllProducts()
             .call({ from: accountAddress })
 
-        const productsResult = data[0].map((product, index) => {
-            const productHistory = product.history.map((item) => ({
-                timestamp: item.timestamp.toString(),
-                action: item.action,
-                details: item.details,
-                date: item.date
-            }))
+        const productsResult = data[0].map(
+            (product: IProduct, index: number) => {
+                const productHistory = product.history.map((item) => ({
+                    timestamp: item.timestamp.toString(),
+                    action: item.action,
+                    details: item.details,
+                    date: item.date
+                }))
 
-            return {
-                productID: data[1][index],
-                model: product[0],
-                description: product[1],
-                manufactoryEmail: product[2],
-                retailerEmail: product[3],
-                customerEmail: product[4],
-                history: productHistory
+                return {
+                    productID: data[1][index],
+                    model: product[0],
+                    description: product[1],
+                    manufactoryEmail: product[2],
+                    retailerEmail: product[3],
+                    customerEmail: product[4],
+                    history: productHistory
+                }
             }
-        })
+        )
 
         return productsResult
     } catch (error) {
@@ -58,7 +61,11 @@ export const createProductOnBlockchain = async (
     }
 }
 
-export const getProductDetail = async (productID) => {
+export const getProductDetail = async (
+    productID: string,
+    contract: any,
+    accountAddress: string
+) => {
     try {
         const productDetail = await contract.methods
             .getProductDetail(productID)
@@ -71,7 +78,7 @@ export const getProductDetail = async (productID) => {
             manufactoryEmail: productDetail[2],
             retailerEmail: productDetail[3],
             customerEmail: productDetail[4],
-            history: productDetail[5].map((item) => ({
+            history: productDetail[5].map((item: IHistoryItem) => ({
                 timestamp: item.timestamp.toString(),
                 action: item.action,
                 details: item.details,

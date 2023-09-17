@@ -10,5 +10,5 @@ export interface ICreateProductParams {
 
 export interface IProductState {
     products: IProduct[]
-    product: IProduct | null
+    product: IProduct | undefined
 }

@@ -11,11 +11,13 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ProductTimeline from '@/components/product-timeline'
 import useAuthEffect from '@/customHook/useAuthEffect'
 import ProductInfoTable from '@/components/product-info-table'
+import { web3Selector } from '@/redux/reducers/web3Slice'
 
 const ProductDetails = ({ params }: { params: { id: string } }) => {
     const dispatch = useDispatch<AppDispatch>()
     const router = useRouter()
 
+    const web3Reducer = useSelector(web3Selector)
     const productReducer = useSelector(productSelector)
 
     const authReducer = useSelector(authSelector)
@@ -29,10 +31,11 @@ const ProductDetails = ({ params }: { params: { id: string } }) => {
         dispatch(
             getProductById({
                 productID: params?.id,
-                accessToken: authReducer.token
+                contract: web3Reducer.contract,
+                accountAddress: web3Reducer.account
             })
         )
-    }, [authReducer.token])
+    }, [web3Reducer.contract, web3Reducer.account])
 
     return (
         currentUserRole !== null &&

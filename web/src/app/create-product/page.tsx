@@ -57,7 +57,7 @@ const CreateProduct = () => {
     }
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        console.log('contractAddress', web3Reducer.account)
+        console.log('handleSubmit > web3Reducer', web3Reducer)
         e.preventDefault()
         dispatch(
             createProduct({
@@ -66,12 +66,9 @@ const CreateProduct = () => {
                     productionDate: moment().format('LLL')
                 },
                 contract: web3Reducer.contract,
-                contractAddress: web3Reducer.account
+                accountAddress: web3Reducer.account
             })
         )
-
-        // reset data
-        router.push('/products')
     }
 
     return (

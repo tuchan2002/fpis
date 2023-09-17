@@ -48,7 +48,7 @@ contract FPIS {
 
   receive() external payable {}
 
-  function createProduct(string memory _productID, string memory _model, string memory _description, string memory _manufactoryEmail, string memory _productionDate) public payable returns (bool) {
+  function createProduct(string memory _productID, string memory _model, string memory _description, string memory _manufactoryEmail, string memory _productionDate) public payable returns (bool)  {
     Product storage newProduct = productList[_productID];
     newProduct.model = _model;
     newProduct.description = _description;
@@ -62,7 +62,6 @@ contract FPIS {
     newProduct.history.push(historyItem);
 
     productList[_productID] = newProduct;
-
     productIds.push(_productID);
 
     return true;
