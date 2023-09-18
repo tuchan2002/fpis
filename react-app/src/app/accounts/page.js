@@ -1,5 +1,4 @@
-import {
-    Box,
+import {Box,
     Button,
     Paper,
     Table,
@@ -7,48 +6,47 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
-} from '@mui/material'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import { IconButton } from '@mui/material'
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import { authSelector } from '../../redux/reducers/authSlice'
-import { getAllOfUsers, userSelector } from '../../redux/reducers/userSlice'
-import useAuthEffect from '../../customHook/useAuthEffect'
+    TableRow,
+    IconButton } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { authSelector } from '../../redux/reducers/authSlice';
+import { getAllOfUsers, userSelector } from '../../redux/reducers/userSlice';
+import useAuthEffect from '../../customHook/useAuthEffect';
 
-const Accounts = () => {
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+function Accounts() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const userReducer = useSelector(userSelector)
+    const userReducer = useSelector(userSelector);
 
-    const authReducer = useSelector(authSelector)
-    const currentUserRole = authReducer.user && authReducer.user?.role
-    const allowedRolesList = [3]
-    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive)
+    const authReducer = useSelector(authSelector);
+    const currentUserRole = authReducer.user && authReducer.user?.role;
+    const allowedRolesList = [3];
+    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
     useEffect(() => {
-        dispatch(getAllOfUsers())
-    }, [])
+        dispatch(getAllOfUsers());
+    }, []);
 
     const convertRoleToText = (role) => {
         switch (role) {
-            case 0:
-                return 'Manufactory'
-            case 1:
-                return 'Retailer'
-            case 2:
-                return 'Customer'
-            default:
-                return 'Admin'
+        case 0:
+            return 'Manufactory';
+        case 1:
+            return 'Retailer';
+        case 2:
+            return 'Customer';
+        default:
+            return 'Admin';
         }
-    }
+    };
 
     return (
-        currentUserRole !== null &&
-        allowedRolesList.includes(currentUserRole) && (
+        currentUserRole !== null
+        && allowedRolesList.includes(currentUserRole) && (
             <Box
                 sx={{
                     p: 3,
@@ -72,7 +70,7 @@ const Accounts = () => {
                         <TableBody>
                             { userReducer.users.map((user) => {
                                 if (user.role === 3) {
-                                    return
+                                    return;
                                 }
 
                                 return (
@@ -97,14 +95,14 @@ const Accounts = () => {
                                             </Link>
                                         </TableCell>
                                     </TableRow>
-                                )
+                                );
                             })}
                         </TableBody>
                     </Table>
                 </TableContainer>
             </Box>
         )
-    )
+    );
 }
 
-export default Accounts
+export default Accounts;

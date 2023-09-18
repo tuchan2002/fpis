@@ -1,63 +1,62 @@
-import { Box, Button, Paper, TextField, Typography } from '@mui/material'
-import React, { ChangeEvent, FormEvent, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import QRCode from 'qrcode.react'
-import { v4 as uuidv4 } from 'uuid'
-import html2canvas from 'html2canvas'
-import DownloadIcon from '@mui/icons-material/Download'
-import moment from 'moment'
-import { AppDispatch } from '../../redux'
-import { useNavigate } from 'react-router-dom'
-import { web3Selector } from '../../redux/reducers/web3Slice'
-import { authSelector } from '../../redux/reducers/authSlice'
-import useAuthEffect from '../../customHook/useAuthEffect'
-import { createProduct } from '../../redux/reducers/productSlice'
+import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import React, { ChangeEvent, FormEvent, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import QRCode from 'qrcode.react';
+import { v4 as uuidv4 } from 'uuid';
+import html2canvas from 'html2canvas';
+import DownloadIcon from '@mui/icons-material/Download';
+import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
+import { AppDispatch } from '../../redux';
+import { web3Selector } from '../../redux/reducers/web3Slice';
+import { authSelector } from '../../redux/reducers/authSlice';
+import useAuthEffect from '../../customHook/useAuthEffect';
+import { createProduct } from '../../redux/reducers/productSlice';
 
-const CreateProduct= () => {
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+function CreateProduct() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const web3Reducer = useSelector(web3Selector)
-    console.log('web3Reducerweb3Reducer', web3Reducer)
+    const web3Reducer = useSelector(web3Selector);
+    console.log('web3Reducerweb3Reducer', web3Reducer);
 
-    const authReducer = useSelector(authSelector)
-    const currentUserRole = authReducer.user && authReducer.user?.role
-    const allowedRolesList = [0]
-    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive)
+    const authReducer = useSelector(authSelector);
+    const currentUserRole = authReducer.user && authReducer.user?.role;
+    const allowedRolesList = [0];
+    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
-    const qrCodeRef = useRef(null)
+    const qrCodeRef = useRef(null);
     const [productInputData, setProductInputData] = useState({
         productID: uuidv4(),
         model: '',
         description: '',
         manufactoryEmail: authReducer.user ? authReducer.user.email : '',
         productionDate: ''
-    })
+    });
 
-    const [showQRcode, setShowQRcode] = useState(false)
-    const { productID, model, description } = productInputData
+    const [showQRcode, setShowQRcode] = useState(false);
+    const { productID, model, description } = productInputData;
 
     const onChangeProductInputData = (e) => {
         setProductInputData({
             ...productInputData,
             [e.target.name]: e.target.value
-        })
-    }
+        });
+    };
 
     const downloadQRcode = () => {
         html2canvas(qrCodeRef.current).then((canvas) => {
-            const qrCodeImage = canvas.toDataURL('image/png')
-            const a = document.createElement('a')
-            a.href = qrCodeImage
-            a.download = `${productID}_${model}.png`
-            a.click()
-        })
-    }
+            const qrCodeImage = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = qrCodeImage;
+            a.download = `${productID}_${model}.png`;
+            a.click();
+        });
+    };
 
     const handleSubmit = async (e) => {
-        console.log('handleSubmit > web3Reducer', web3Reducer)
-        e.preventDefault()
-
+        console.log('handleSubmit > web3Reducer', web3Reducer);
+        e.preventDefault();
 
         dispatch(
             createProduct({
@@ -68,12 +67,12 @@ const CreateProduct= () => {
                 contract: web3Reducer.contract,
                 accountAddress: web3Reducer.account
             })
-        )
-    }
+        );
+    };
 
     return (
-        currentUserRole !== null &&
-        allowedRolesList.includes(currentUserRole) && (
+        currentUserRole !== null
+        && allowedRolesList.includes(currentUserRole) && (
             <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
                 <Paper sx={{ p: 3, maxWidth: 720, width: '100%' }}>
                     <Box
@@ -112,9 +111,7 @@ const CreateProduct= () => {
                             sx={{ alignSelf: 'center' }}
                             onClick={() => setShowQRcode(true)}
                             disabled={
-                                model.trim() && description.trim()
-                                    ? false
-                                    : true
+                                !(model.trim() && description.trim())
                             }
                         >
                             Generate QR code
@@ -168,7 +165,7 @@ const CreateProduct= () => {
                 </Paper>
             </Box>
         )
-    )
+    );
 }
 
-export default CreateProduct
+export default CreateProduct;

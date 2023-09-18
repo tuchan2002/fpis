@@ -1,20 +1,20 @@
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const useAuthEffect = (
     currentUserRole,
     allowedRolesList,
     isActive
 ) => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (currentUserRole !== null) {
             if (!allowedRolesList.includes(currentUserRole) || !isActive) {
-                navigate('/')
+                navigate('/');
             }
         }
-    }, [currentUserRole])
-}
+    }, [currentUserRole]);
+};
 
-export default useAuthEffect
+export default useAuthEffect;

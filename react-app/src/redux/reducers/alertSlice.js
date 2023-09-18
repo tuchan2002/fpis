@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     alert: {
@@ -6,21 +6,21 @@ const initialState = {
         error: '',
         success: ''
     }
-}
+};
 const alertSlice = createSlice({
     name: 'alert',
     initialState,
     reducers: {
         showAlert(state, action) {
-            state.alert = action.payload
+            state.alert = action.payload;
         }
     }
-})
+});
 
-const alertReducer = alertSlice.reducer
+const alertReducer = alertSlice.reducer;
 
-export const alertSelector = (state) => state.alertReducer
+export const alertSelector = (state) => state.alertReducer;
 
-export const { showAlert } = alertSlice.actions
+export const { showAlert } = alertSlice.actions;
 
-export default alertReducer
+export default alertReducer;

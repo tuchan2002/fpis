@@ -1,38 +1,38 @@
-'use client'
+'use client';
 
-import { Box, Button, Paper } from '@mui/material'
-import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { Box, Button, Paper } from '@mui/material';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import {
     GoogleAuthProvider,
     getAdditionalUserInfo,
     signInWithPopup
-} from 'firebase/auth'
-import { useNavigate } from 'react-router-dom'
-import { authSelector } from '../../redux/reducers/authSlice'
-import { auth } from '../../firebase/config'
-import { addDocument } from '../../firebase/services'
+} from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 import GoogleIcon from '@mui/icons-material/Google';
+import { authSelector } from '../../redux/reducers/authSlice';
+import { auth } from '../../firebase/config';
+import { addDocument } from '../../firebase/services';
 
-const googleProvider = new GoogleAuthProvider()
-const Login = () => {
-    const navigate = useNavigate()
+const googleProvider = new GoogleAuthProvider();
+function Login() {
+    const navigate = useNavigate();
 
-    const authReducer = useSelector(authSelector)
+    const authReducer = useSelector(authSelector);
 
     useEffect(() => {
         if (authReducer.user) {
-            navigate('/')
+            navigate('/');
         }
-    }, [authReducer.user])
+    }, [authReducer.user]);
 
     const handleLoginWithGoogle = async () => {
-        const result = await signInWithPopup(auth, googleProvider)
+        const result = await signInWithPopup(auth, googleProvider);
 
-        const { user } = result
-        const details = getAdditionalUserInfo(result)
+        const { user } = result;
+        const details = getAdditionalUserInfo(result);
 
-        console.log(details, result.user)
+        console.log(details, result.user);
         if (details?.isNewUser) {
             try {
                 await addDocument('users', {
@@ -43,12 +43,12 @@ const Login = () => {
                     providerId: details.providerId,
                     role: 2,
                     isActive: false
-                })
+                });
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
         }
-    }
+    };
 
     return (
         <Box
@@ -72,7 +72,7 @@ const Login = () => {
                 </Button>
             </Paper>
         </Box>
-    )
+    );
 }
 
-export default Login
+export default Login;

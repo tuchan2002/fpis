@@ -1,13 +1,13 @@
-import React from 'react'
+import React from 'react';
 import {
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableRow
-} from '@mui/material'
+} from '@mui/material';
 
-const ProductInfoTable = ({ productInfo }) => {
+function ProductInfoTable({ productInfo }) {
     return (
         <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label='simple table'>
@@ -61,7 +61,7 @@ const ProductInfoTable = ({ productInfo }) => {
                 </TableBody>
             </Table>
         </TableContainer>
-    )
+    );
 }
 
-export default ProductInfoTable
+export default ProductInfoTable;

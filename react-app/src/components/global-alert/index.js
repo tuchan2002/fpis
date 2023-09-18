@@ -1,11 +1,11 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import CustomAlert from './custom-alert'
-import Loading from './loading'
-import { alertSelector } from '../../redux/reducers/alertSlice'
+import React from 'react';
+import { useSelector } from 'react-redux';
+import CustomAlert from './custom-alert';
+import Loading from './loading';
+import { alertSelector } from '../../redux/reducers/alertSlice';
 
-const GlobalAlert = () => {
-    const { alert } = useSelector(alertSelector)
+function GlobalAlert() {
+    const { alert } = useSelector(alertSelector);
 
     return (
         <div>
@@ -16,10 +16,10 @@ const GlobalAlert = () => {
             )}
 
             {alert.success && (
-                <CustomAlert message={alert.success} success={true} />
+                <CustomAlert message={alert.success} success />
             )}
         </div>
-    )
+    );
 }
 
-export default GlobalAlert
+export default GlobalAlert;

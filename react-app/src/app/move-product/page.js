@@ -5,40 +5,39 @@ import {
     TextField,
     MenuItem,
     Button
-} from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getUsersByRole, userSelector } from '../../redux/reducers/userSlice'
-import { getProductById, moveProductToRetailer, productSelector } from '../../redux/reducers/productSlice'
-import { authSelector } from '../../redux/reducers/authSlice'
-import useAuthEffect from '../../customHook/useAuthEffect'
-import QRCodeScanner from '../../components/qr-code-scanner'
-import ProductInfoTable from '../../components/product-info-table'
-import ProductTimeline from '../../components/product-timeline'
-import moment from 'moment'
-import { web3Selector } from '../../redux/reducers/web3Slice'
+} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
+import { getUsersByRole, userSelector } from '../../redux/reducers/userSlice';
+import { getProductById, moveProductToRetailer, productSelector } from '../../redux/reducers/productSlice';
+import { authSelector } from '../../redux/reducers/authSlice';
+import useAuthEffect from '../../customHook/useAuthEffect';
+import QRCodeScanner from '../../components/qr-code-scanner';
+import ProductInfoTable from '../../components/product-info-table';
+import ProductTimeline from '../../components/product-timeline';
+import { web3Selector } from '../../redux/reducers/web3Slice';
 
-const MoveProduct= () => {
-    const dispatch = useDispatch()
+function MoveProduct() {
+    const dispatch = useDispatch();
 
-    const web3Reducer = useSelector(web3Selector)
-    const userReducer = useSelector(userSelector)
-    const productReducer = useSelector(productSelector)
+    const web3Reducer = useSelector(web3Selector);
+    const userReducer = useSelector(userSelector);
+    const productReducer = useSelector(productSelector);
 
-    const authReducer = useSelector(authSelector)
-    const currentUserRole = authReducer.user && authReducer.user?.role
-    const allowedRolesList = [0]
-    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive)
+    const authReducer = useSelector(authSelector);
+    const currentUserRole = authReducer.user && authReducer.user?.role;
+    const allowedRolesList = [0];
+    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
-    const [productScannerData, setProductScannerData] =
-        useState(null)
+    const [productScannerData, setProductScannerData] = useState(null);
 
-    const [selectedUserId, setSelectedUserId] = useState('')
-    const [openModalTimeline, setOpenModalTimeline] = useState(false)
+    const [selectedUserId, setSelectedUserId] = useState('');
+    const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
     useEffect(() => {
-        dispatch(getUsersByRole({ role: 1 }))
-    }, [authReducer.user])
+        dispatch(getUsersByRole({ role: 1 }));
+    }, [authReducer.user]);
 
     useEffect(() => {
         if (productScannerData && productScannerData.productID) {
@@ -48,19 +47,19 @@ const MoveProduct= () => {
                     contract: web3Reducer.contract,
                     accountAddress: web3Reducer.account
                 })
-            )
+            );
         }
-    }, [productScannerData?.productID])
+    }, [productScannerData?.productID]);
 
     const handleMoveToRetailer = async () => {
         if (!productScannerData) {
-            return
+            return;
         }
 
-        const productID = productScannerData.productID
+        const {productID} = productScannerData;
         const selectedUser = userReducer.users.find(
             (user) => user.uid === selectedUserId
-        )
+        );
 
         dispatch(moveProductToRetailer({
             data: {
@@ -70,12 +69,12 @@ const MoveProduct= () => {
             },
             contract: web3Reducer.contract,
             accountAddress: web3Reducer.account
-        }))
-    }
+        }));
+    };
 
     return (
-        currentUserRole !== null &&
-        allowedRolesList.includes(currentUserRole) && (
+        currentUserRole !== null
+        && allowedRolesList.includes(currentUserRole) && (
             <>
                 <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
                     <Paper
@@ -116,9 +115,7 @@ const MoveProduct= () => {
                                     label='Retailer'
                                     variant='standard'
                                     value={selectedUserId}
-                                    onChange={(e) =>
-                                        setSelectedUserId(e.target.value)
-                                    }
+                                    onChange={(e) => setSelectedUserId(e.target.value)}
                                 >
                                     {userReducer.users.map((user) => (
                                         <MenuItem key={user.uid} value={user.uid}>
@@ -129,7 +126,7 @@ const MoveProduct= () => {
 
                                 <Button
                                     variant='contained'
-                                    disabled={selectedUserId ? false : true}
+                                    disabled={!selectedUserId}
                                     onClick={handleMoveToRetailer}
                                 >
                                     Move
@@ -149,7 +146,7 @@ const MoveProduct= () => {
                 />
             </>
         )
-    )
+    );
 }
 
-export default MoveProduct
+export default MoveProduct;

@@ -1,8 +1,8 @@
-import React from 'react'
-import CircularProgress from '@mui/material/CircularProgress'
-import Box from '@mui/material/Box'
+import React from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
-const Loading = () => {
+function Loading() {
     return (
         <Box
             sx={{
@@ -20,7 +20,7 @@ const Loading = () => {
         >
             <CircularProgress size={60} />
         </Box>
-    )
+    );
 }
 
-export default Loading
+export default Loading;

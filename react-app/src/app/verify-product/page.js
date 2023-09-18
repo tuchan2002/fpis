@@ -1,34 +1,32 @@
-import { Box, Button, Paper, TextField, Typography } from '@mui/material'
-import axios from 'axios'
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch } from '../../redux'
-import { authSelector } from '../../redux/reducers/authSlice'
-import useAuthEffect from '../../customHook/useAuthEffect'
-import QRCodeScanner from '../../components/qr-code-scanner'
-import ProductInfoTable from '../../components/product-info-table'
-import { getProductDetail } from '../../utils/web3-method/product'
-import { web3Selector } from '../../redux/reducers/web3Slice'
-import { showAlert } from '../../redux/reducers/alertSlice'
-import Swal from 'sweetalert2'
+import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
+import { AppDispatch } from '../../redux';
+import { authSelector } from '../../redux/reducers/authSlice';
+import useAuthEffect from '../../customHook/useAuthEffect';
+import QRCodeScanner from '../../components/qr-code-scanner';
+import ProductInfoTable from '../../components/product-info-table';
+import { getProductDetail } from '../../utils/web3-method/product';
+import { web3Selector } from '../../redux/reducers/web3Slice';
+import { showAlert } from '../../redux/reducers/alertSlice';
 
-const VerifyProduct= () => {
-    const dispatch = useDispatch()
+function VerifyProduct() {
+    const dispatch = useDispatch();
 
-    const web3Reducer = useSelector(web3Selector)
-    const authReducer = useSelector(authSelector)
-    const currentUserRole = authReducer.user && authReducer.user?.role
-    const allowedRolesList = [2]
-    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive)
+    const web3Reducer = useSelector(web3Selector);
+    const authReducer = useSelector(authSelector);
+    const currentUserRole = authReducer.user && authReducer.user?.role;
+    const allowedRolesList = [2];
+    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
-    const [productScannerData, setProductScannerData] =
-        useState(null)
-    const [customerEmailInputData, setCustomerEmailInputData] =
-        useState('')
+    const [productScannerData, setProductScannerData] = useState(null);
+    const [customerEmailInputData, setCustomerEmailInputData] = useState('');
 
     const handleVerify = async () => {
         if (!productScannerData) {
-            return
+            return;
         }
 
         try {
@@ -36,7 +34,7 @@ const VerifyProduct= () => {
                 productScannerData?.productID,
                 web3Reducer.contract,
                 web3Reducer.accountAddress
-            )
+            );
 
             let isReal = true;
             Object.keys(productInBlockchain).forEach((key) => {
@@ -60,21 +58,20 @@ const VerifyProduct= () => {
                         ? 'This product is genuine.'
                         : 'This product is fake.'
                 }`
-            })
+            });
         } catch (error) {
             console.log(error);
             dispatch(
                 showAlert({
                     error: 'Failed retrieved product information.'
                 })
-            )
+            );
         }
-
-    }
+    };
 
     return (
-        currentUserRole !== null &&
-        allowedRolesList.includes(currentUserRole) && (
+        currentUserRole !== null
+        && allowedRolesList.includes(currentUserRole) && (
             <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
                 <Paper
                     sx={{
@@ -102,14 +99,12 @@ const VerifyProduct= () => {
                                 label='Owned customer email'
                                 variant='standard'
                                 value={customerEmailInputData}
-                                onChange={(e) =>
-                                    setCustomerEmailInputData(e.target.value)
-                                }
+                                onChange={(e) => setCustomerEmailInputData(e.target.value)}
                             />
                             <Button
                                 variant='contained'
                                 disabled={
-                                    customerEmailInputData.trim() ? false : true
+                                    !customerEmailInputData.trim()
                                 }
                                 onClick={handleVerify}
                             >
@@ -120,7 +115,7 @@ const VerifyProduct= () => {
                 </Paper>
             </Box>
         )
-    )
+    );
 }
 
-export default VerifyProduct
+export default VerifyProduct;

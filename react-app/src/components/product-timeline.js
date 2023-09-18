@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
     Timeline,
     TimelineConnector,
@@ -7,45 +7,44 @@ import {
     TimelineItem,
     TimelineOppositeContent,
     TimelineSeparator
-} from '@mui/lab'
-import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges'
-import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing'
-import SellIcon from '@mui/icons-material/Sell'
-import LocalShippingIcon from '@mui/icons-material/LocalShipping'
-import { Dialog, Typography } from '@mui/material'
+} from '@mui/lab';
+import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
+import SellIcon from '@mui/icons-material/Sell';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import { Dialog, Typography } from '@mui/material';
 
-const ProductTimeline = ({
+function ProductTimeline({
     productHistory,
     open,
     onClose
-}) => {
+}) {
     const generateTimelineDot = (index) => {
         if (index === 0) {
             return (
                 <TimelineDot>
                     <PrecisionManufacturingIcon />
                 </TimelineDot>
-            )
-        } else if (index === 1) {
+            );
+        } if (index === 1) {
             return (
                 <TimelineDot color='primary'>
                     <LocalShippingIcon />
                 </TimelineDot>
-            )
-        } else if (index === 2) {
+            );
+        } if (index === 2) {
             return (
                 <TimelineDot color='primary' variant='outlined'>
                     <SellIcon />
                 </TimelineDot>
-            )
-        } else {
-            return (
-                <TimelineDot color='secondary'>
-                    <PublishedWithChangesIcon />
-                </TimelineDot>
-            )
+            );
         }
-    }
+        return (
+            <TimelineDot color='secondary'>
+                <PublishedWithChangesIcon />
+            </TimelineDot>
+        );
+    };
 
     return (
         <Dialog
@@ -86,7 +85,7 @@ const ProductTimeline = ({
                 ))}
             </Timeline>
         </Dialog>
-    )
+    );
 }
 
-export default ProductTimeline
+export default ProductTimeline;

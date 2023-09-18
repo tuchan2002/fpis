@@ -1,4 +1,4 @@
-export const createManufactory = async (   {
+export const createManufactory = async ({
     email, name
 }, contract, accountAddress) => {
     try {
@@ -6,11 +6,11 @@ export const createManufactory = async (   {
             .createManufactory(email, name)
             .send({
                 from: accountAddress
-            })
+            });
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
-}
+};
 
 export const createRetailer = async ({
     email, name
@@ -20,11 +20,11 @@ export const createRetailer = async ({
             .createRetailer(email, name)
             .send({
                 from: accountAddress
-            })
+            });
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
-}
+};
 
 export const createCustomer = async ({
     email, name, phone_number
@@ -34,8 +34,8 @@ export const createCustomer = async ({
             .createCustomer(email, name, phone_number)
             .send({
                 from: accountAddress
-            })
+            });
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
-}
+};

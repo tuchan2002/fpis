@@ -1,45 +1,45 @@
-import { Box, Button, Paper } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import { useNavigate, useParams } from 'react-router-dom'
-import { AppDispatch } from '../../../redux'
-import { web3Selector } from '../../../redux/reducers/web3Slice'
-import { getProductById, productSelector } from '../../../redux/reducers/productSlice'
-import { authSelector } from '../../../redux/reducers/authSlice'
-import useAuthEffect from '../../../customHook/useAuthEffect'
-import ProductInfoTable from '../../../components/product-info-table'
-import ProductTimeline from '../../../components/product-timeline'
+import { Box, Button, Paper } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AppDispatch } from '../../../redux';
+import { web3Selector } from '../../../redux/reducers/web3Slice';
+import { getProductById, productSelector } from '../../../redux/reducers/productSlice';
+import { authSelector } from '../../../redux/reducers/authSlice';
+import useAuthEffect from '../../../customHook/useAuthEffect';
+import ProductInfoTable from '../../../components/product-info-table';
+import ProductTimeline from '../../../components/product-timeline';
 
-const ProductDetails = () => {
+function ProductDetails() {
     const params = useParams();
 
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const web3Reducer = useSelector(web3Selector)
-    const productReducer = useSelector(productSelector)
+    const web3Reducer = useSelector(web3Selector);
+    const productReducer = useSelector(productSelector);
 
-    const authReducer = useSelector(authSelector)
-    const currentUserRole = authReducer.user && authReducer.user?.role
-    const allowedRolesList = [0, 1, 2, 3]
-    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive)
+    const authReducer = useSelector(authSelector);
+    const currentUserRole = authReducer.user && authReducer.user?.role;
+    const allowedRolesList = [0, 1, 2, 3];
+    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
-    const [openModalTimeline, setOpenModalTimeline] = useState(false)
+    const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
     useEffect(() => {
         dispatch(
             getProductById({
-                productID: params.id ?  params.id : "",
+                productID: params.id ? params.id : '',
                 contract: web3Reducer.contract,
                 accountAddress: web3Reducer.account
             })
-        )
-    }, [web3Reducer.contract, web3Reducer.account])
+        );
+    }, [web3Reducer.contract, web3Reducer.account]);
 
     return (
-        currentUserRole !== null &&
-        allowedRolesList.includes(currentUserRole) && (
+        currentUserRole !== null
+        && allowedRolesList.includes(currentUserRole) && (
             <>
                 <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
                     <Paper sx={{ p: 3, maxWidth: 720, width: '100%' }}>
@@ -83,7 +83,7 @@ const ProductDetails = () => {
                 />
             </>
         )
-    )
+    );
 }
 
-export default ProductDetails
+export default ProductDetails;

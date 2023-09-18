@@ -1,15 +1,15 @@
-import { Alert, AlertTitle, Snackbar } from '@mui/material'
-import React from 'react'
+import { Alert, AlertTitle, Snackbar } from '@mui/material';
+import React from 'react';
 
-const CustomAlert = ({
+function CustomAlert({
     message,
     success
-}) => {
-    const [open, setOpen] = React.useState(true)
+}) {
+    const [open, setOpen] = React.useState(true);
 
     const handleClose = () => {
-        setOpen(false)
-    }
+        setOpen(false);
+    };
 
     return (
         <Snackbar
@@ -26,7 +26,7 @@ const CustomAlert = ({
                 {message}
             </Alert>
         </Snackbar>
-    )
+    );
 }
 
-export default CustomAlert
+export default CustomAlert;

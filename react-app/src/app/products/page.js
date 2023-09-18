@@ -1,5 +1,4 @@
-import {
-    Box,
+import {Box,
     Button,
     Paper,
     Table,
@@ -7,67 +6,65 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
-} from '@mui/material'
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import { IconButton } from '@mui/material'
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
-import { web3Selector } from '../../redux/reducers/web3Slice'
-import { getAllOfProducts, getAllProductsByCustomer, getAllProductsByManufactory, getAllProductsByRetailer, productSelector } from '../../redux/reducers/productSlice'
-import { authSelector } from '../../redux/reducers/authSlice'
-import useAuthEffect from '../../customHook/useAuthEffect'
+    TableRow,
+    IconButton } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { web3Selector } from '../../redux/reducers/web3Slice';
+import { getAllOfProducts, getAllProductsByCustomer, getAllProductsByManufactory, getAllProductsByRetailer, productSelector } from '../../redux/reducers/productSlice';
+import { authSelector } from '../../redux/reducers/authSlice';
+import useAuthEffect from '../../customHook/useAuthEffect';
 
-const Products = () => {
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+function Products() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const web3Reducer = useSelector(web3Selector)
-    const productReducer = useSelector(productSelector)
+    const web3Reducer = useSelector(web3Selector);
+    const productReducer = useSelector(productSelector);
 
-    const authReducer = useSelector(authSelector)
-    const currentUserRole = authReducer.user && authReducer.user?.role
-    const allowedRolesList = [0, 1, 2, 3]
-    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive)
+    const authReducer = useSelector(authSelector);
+    const currentUserRole = authReducer.user && authReducer.user?.role;
+    const allowedRolesList = [0, 1, 2, 3];
+    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
     useEffect(() => {
-        if(web3Reducer.contract && web3Reducer.account) {
+        if (web3Reducer.contract && web3Reducer.account) {
             if (currentUserRole === 0) {
                 dispatch(getAllProductsByManufactory({
                     manufactoryEmail: authReducer.user?.email,
                     contract: web3Reducer.contract,
                     accountAddress: web3Reducer.account
-                }))
-            } else if(currentUserRole === 1) {
+                }));
+            } else if (currentUserRole === 1) {
                 dispatch(getAllProductsByRetailer({
                     retailerEmail: authReducer.user?.email,
                     contract: web3Reducer.contract,
                     accountAddress: web3Reducer.account
-                }))
-            } 
-            else if (currentUserRole === 2) {
+                }));
+            } else if (currentUserRole === 2) {
                 dispatch(
                     getAllProductsByCustomer({
                         customerEmail: authReducer.user?.email,
                         contract: web3Reducer.contract,
                         accountAddress: web3Reducer.account
                     })
-                )
+                );
             } else if (currentUserRole === 3) {
                 dispatch(
                     getAllOfProducts({
                         contract: web3Reducer.contract,
                         accountAddress: web3Reducer.account
                     })
-                )
+                );
             }
         }
-    }, [authReducer.user, web3Reducer.contract, web3Reducer.account])
+    }, [authReducer.user, web3Reducer.contract, web3Reducer.account]);
 
     return (
-        currentUserRole !== null &&
-        allowedRolesList.includes(currentUserRole) && (
+        currentUserRole !== null
+        && allowedRolesList.includes(currentUserRole) && (
             <Box
                 sx={{
                     p: 3,
@@ -136,7 +133,7 @@ const Products = () => {
                 </TableContainer>
             </Box>
         )
-    )
+    );
 }
 
-export default Products
+export default Products;

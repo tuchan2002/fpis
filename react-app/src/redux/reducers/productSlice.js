@@ -1,11 +1,11 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { showAlert } from './alertSlice'
-import { changeCustomer, createProductOnBlockchain, getAllProducts, getProductDetail, getProductsByCustomer, getProductsByManufactory, getProductsByRetailer, moveToRetailer, sellToFirstCustomer } from '../../utils/web3-method/product'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { showAlert } from './alertSlice';
+import { changeCustomer, createProductOnBlockchain, getAllProducts, getProductDetail, getProductsByCustomer, getProductsByManufactory, getProductsByRetailer, moveToRetailer, sellToFirstCustomer } from '../../utils/web3-method/product';
 
 const initialState = {
     products: [],
     product: undefined
-}
+};
 
 export const createProduct = createAsyncThunk(
     'product/createProduct',
@@ -18,29 +18,29 @@ export const createProduct = createAsyncThunk(
         { dispatch }
     ) => {
         try {
-            dispatch(showAlert({ loading: true }))
+            dispatch(showAlert({ loading: true }));
 
-            await createProductOnBlockchain(data, contract, accountAddress)
+            await createProductOnBlockchain(data, contract, accountAddress);
 
             dispatch(
                 showAlert({
                     success: 'Successfully saved product to the blockchain.'
                 })
-            )
-            window.location.href = '/products'
+            );
+            window.location.href = '/products';
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error) {
-            console.log(error)
+            console.log(error);
 
             dispatch(
                 showAlert({
                     error: 'Failed to save product to the blockchain.'
                 })
-            )
+            );
         }
     }
-)
+);
 
 export const getAllOfProducts = createAsyncThunk(
     'product/getAllOfProducts',
@@ -52,14 +52,14 @@ export const getAllOfProducts = createAsyncThunk(
         { dispatch }
     ) => {
         try {
-            dispatch(showAlert({ loading: true }))
+            dispatch(showAlert({ loading: true }));
 
-            const products = await getAllProducts(contract, accountAddress)
-            console.log('products', products)
+            const products = await getAllProducts(contract, accountAddress);
+            console.log('products', products);
 
-            dispatch(showAlert({ loading: false }))
+            dispatch(showAlert({ loading: false }));
 
-            return products
+            return products;
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error) {
@@ -67,10 +67,10 @@ export const getAllOfProducts = createAsyncThunk(
                 showAlert({
                     error: 'Failed retrieved products information.'
                 })
-            )
+            );
         }
     }
-)
+);
 
 export const getAllProductsByManufactory = createAsyncThunk(
     'product/getProductsByManufactory',
@@ -83,13 +83,13 @@ export const getAllProductsByManufactory = createAsyncThunk(
         { dispatch }
     ) => {
         try {
-            dispatch(showAlert({ loading: true }))
+            dispatch(showAlert({ loading: true }));
 
-            const products = await getProductsByManufactory(manufactoryEmail, contract, accountAddress)
+            const products = await getProductsByManufactory(manufactoryEmail, contract, accountAddress);
 
-            dispatch(showAlert({ loading: false }))
+            dispatch(showAlert({ loading: false }));
 
-            return products
+            return products;
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error) {
@@ -97,10 +97,10 @@ export const getAllProductsByManufactory = createAsyncThunk(
                 showAlert({
                     error: 'Failed retrieved products information.'
                 })
-            )
+            );
         }
     }
-)
+);
 
 export const getAllProductsByRetailer = createAsyncThunk(
     'product/getAllProductsByRetailer',
@@ -113,22 +113,22 @@ export const getAllProductsByRetailer = createAsyncThunk(
         { dispatch }
     ) => {
         try {
-            dispatch(showAlert({ loading: true }))
+            dispatch(showAlert({ loading: true }));
 
-            const products = await getProductsByRetailer(retailerEmail, contract, accountAddress)
+            const products = await getProductsByRetailer(retailerEmail, contract, accountAddress);
 
-            dispatch(showAlert({ loading: false }))
+            dispatch(showAlert({ loading: false }));
 
-            return products
+            return products;
         } catch (error) {
             dispatch(
                 showAlert({
                     error: 'Failed retrieved products information.'
                 })
-            )
+            );
         }
     }
-)
+);
 
 export const getAllProductsByCustomer = createAsyncThunk(
     'product/getAllProductsByCustomer',
@@ -141,23 +141,22 @@ export const getAllProductsByCustomer = createAsyncThunk(
         { dispatch }
     ) => {
         try {
-            dispatch(showAlert({ loading: true }))
+            dispatch(showAlert({ loading: true }));
 
-            const products = await getProductsByCustomer(customerEmail, contract, accountAddress)
+            const products = await getProductsByCustomer(customerEmail, contract, accountAddress);
 
-            dispatch(showAlert({ loading: false }))
+            dispatch(showAlert({ loading: false }));
 
-            return products
+            return products;
         } catch (error) {
             dispatch(
                 showAlert({
                     error: 'Failed retrieved products information.'
                 })
-            )
+            );
         }
     }
-)
-
+);
 
 export const getProductById = createAsyncThunk(
     'product/getProductById',
@@ -170,28 +169,26 @@ export const getProductById = createAsyncThunk(
         { dispatch }
     ) => {
         try {
-            dispatch(showAlert({ loading: true }))
+            dispatch(showAlert({ loading: true }));
 
             const product = await getProductDetail(
                 productID,
                 contract,
                 accountAddress
-            )
+            );
 
-            dispatch(showAlert({ loading: false }))
+            dispatch(showAlert({ loading: false }));
 
-            return product
-
+            return product;
         } catch (error) {
             dispatch(
                 showAlert({
                     error: 'Failed retrieved product information.'
                 })
-            )
+            );
         }
     }
-)
-
+);
 
 export const moveProductToRetailer = createAsyncThunk(
     'product/moveProductToRetailer',
@@ -204,21 +201,20 @@ export const moveProductToRetailer = createAsyncThunk(
         { dispatch }
     ) => {
         try {
-            dispatch(showAlert({ loading: true }))
+            dispatch(showAlert({ loading: true }));
 
             await moveToRetailer(
                 data,
                 contract,
                 accountAddress
-            )
+            );
 
-            dispatch(showAlert({ success: 'Successfully moved the product to the retailer.' }))
-
+            dispatch(showAlert({ success: 'Successfully moved the product to the retailer.' }));
         } catch (error) {
-            dispatch(showAlert({ error: 'Failed to move the product to the retailer.' }))
+            dispatch(showAlert({ error: 'Failed to move the product to the retailer.' }));
         }
     }
-)
+);
 
 export const sellProductToRetailer = createAsyncThunk(
     'product/sellProductToRetailer',
@@ -231,21 +227,20 @@ export const sellProductToRetailer = createAsyncThunk(
         { dispatch }
     ) => {
         try {
-            dispatch(showAlert({ loading: true }))
+            dispatch(showAlert({ loading: true }));
 
             await sellToFirstCustomer(
                 data,
                 contract,
                 accountAddress
-            )
+            );
 
-            dispatch(showAlert({ success: 'Successfully sold the product to the customer.' }))
-
+            dispatch(showAlert({ success: 'Successfully sold the product to the customer.' }));
         } catch (error) {
-            dispatch(showAlert({ error: 'Failed to sell the product to the customer.' }))
+            dispatch(showAlert({ error: 'Failed to sell the product to the customer.' }));
         }
     }
-)
+);
 
 export const changeCustomerOfProduct = createAsyncThunk(
     'product/changeCustomerOfProduct',
@@ -258,21 +253,20 @@ export const changeCustomerOfProduct = createAsyncThunk(
         { dispatch }
     ) => {
         try {
-            dispatch(showAlert({ loading: true }))
+            dispatch(showAlert({ loading: true }));
 
             await changeCustomer(
                 data,
                 contract,
                 accountAddress
-            )
+            );
 
-            dispatch(showAlert({ success: 'Successfully changed the product to another customer.' }))
-
+            dispatch(showAlert({ success: 'Successfully changed the product to another customer.' }));
         } catch (error) {
-            dispatch(showAlert({ error:  'Failed to change the product.' }))
+            dispatch(showAlert({ error: 'Failed to change the product.' }));
         }
     }
-)
+);
 
 const productSlice = createSlice({
     name: 'product',
@@ -280,36 +274,36 @@ const productSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getAllOfProducts.fulfilled, (state, action) => {
-            console.log('fulfilled')
-            state.products = action.payload
-        })
+            console.log('fulfilled');
+            state.products = action.payload;
+        });
 
         builder.addCase(getProductById.fulfilled, (state, action) => {
-            console.log('fulfilled')
-            state.product = action.payload
-        })
+            console.log('fulfilled');
+            state.product = action.payload;
+        });
 
         builder.addCase(getAllProductsByManufactory.fulfilled, (state, action) => {
-            console.log('fulfilled')
-            state.products = action.payload
-        })
+            console.log('fulfilled');
+            state.products = action.payload;
+        });
 
         builder.addCase(getAllProductsByRetailer.fulfilled, (state, action) => {
-            console.log('fulfilled')
-            state.products = action.payload
-        })
+            console.log('fulfilled');
+            state.products = action.payload;
+        });
 
         builder.addCase(getAllProductsByCustomer.fulfilled, (state, action) => {
-            console.log('fulfilled')
-            state.products = action.payload
-        })
+            console.log('fulfilled');
+            state.products = action.payload;
+        });
     }
-})
+});
 
-const productReducer = productSlice.reducer
+const productReducer = productSlice.reducer;
 
-export const productSelector = (state) => state.productReducer
+export const productSelector = (state) => state.productReducer;
 
-export const {} = productSlice.actions
+export const {} = productSlice.actions;
 
-export default productReducer
+export default productReducer;

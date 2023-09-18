@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
-import { Html5QrcodeScanType, Html5QrcodeScanner } from 'html5-qrcode'
+import React, { useEffect } from 'react';
+import { Html5QrcodeScanType, Html5QrcodeScanner } from 'html5-qrcode';
 
-const QRCodeScanner = ({
+function QRCodeScanner({
     setResult
-}) => {
+}) {
     useEffect(() => {
         const scanner = new Html5QrcodeScanner(
             'reader',
@@ -20,22 +20,22 @@ const QRCodeScanner = ({
                 ]
             },
             false
-        )
+        );
 
         const onScanSuccess = (scanData) => {
             // scanner.clear()
             if (scanData) {
-                setResult(JSON.parse(scanData))
+                setResult(JSON.parse(scanData));
             }
-        }
+        };
 
         const onScanError = (err) => {
-            console.error(err)
-        }
-        scanner.render(onScanSuccess, onScanError)
-    }, [])
+            console.error(err);
+        };
+        scanner.render(onScanSuccess, onScanError);
+    }, []);
 
-    return <div id='reader' style={{ width: 375 }}></div>
+    return <div id='reader' style={{ width: 375 }} />;
 }
 
-export default QRCodeScanner
+export default QRCodeScanner;

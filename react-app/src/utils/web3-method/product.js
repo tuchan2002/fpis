@@ -1,9 +1,8 @@
-
 export const getAllProducts = async (contract, accountAddress) => {
     try {
         const data = await contract.methods
             .getAllProducts()
-            .call({ from: accountAddress })
+            .call({ from: accountAddress });
 
         const productsResult = data[0].map(
             (product, index) => {
@@ -12,7 +11,7 @@ export const getAllProducts = async (contract, accountAddress) => {
                     action: item.action,
                     details: item.details,
                     date: item.date
-                }))
+                }));
 
                 return {
                     productID: data[1][index],
@@ -22,15 +21,15 @@ export const getAllProducts = async (contract, accountAddress) => {
                     retailerEmail: product[3],
                     customerEmail: product[4],
                     history: productHistory
-                }
+                };
             }
-        )
+        );
 
-        return productsResult
+        return productsResult;
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
-}
+};
 export const createProductOnBlockchain = async (
     {
         productID,
@@ -53,11 +52,11 @@ export const createProductOnBlockchain = async (
             )
             .send({
                 from: accountAddress
-            })
+            });
     } catch (error) {
-        throw error
+        throw error;
     }
-}
+};
 
 export const getProductDetail = async (
     productID,
@@ -67,7 +66,7 @@ export const getProductDetail = async (
     try {
         const productDetail = await contract.methods
             .getProductDetail(productID)
-            .call({ from: accountAddress })
+            .call({ from: accountAddress });
 
         return {
             productID,
@@ -82,50 +81,48 @@ export const getProductDetail = async (
                 details: item.details,
                 date: item.date
             }))
-        }
+        };
     } catch (error) {
-        throw error
+        throw error;
     }
-}
+};
 
 export const getProductsByCustomer = async (customerEmail, contract, accountAddress) => {
     try {
-        const productIdList = await contract.methods.getProductsByCustomer(customerEmail).call({ from: accountAddress })
+        const productIdList = await contract.methods.getProductsByCustomer(customerEmail).call({ from: accountAddress });
 
-        const productDetailListPromise = []
+        const productDetailListPromise = [];
         productIdList.forEach((productId) => {
-            const productDetail = contract.methods.getProductDetail(productId).call({ from: accountAddress })
-            productDetailListPromise.push(productDetail)
-        })
+            const productDetail = contract.methods.getProductDetail(productId).call({ from: accountAddress });
+            productDetailListPromise.push(productDetail);
+        });
 
-        const productsResult = Promise.all(productDetailListPromise).then((productDetailList) => {
-            return productDetailList.map((productDetail, index) => ({
-                productID: productIdList[index],
-                model: productDetail[0],
-                description: productDetail[1],
-                manufactoryEmail: productDetail[2],
-                retailerEmail: productDetail[3],
-                customerEmail: productDetail[4],
-                history: productDetail[5].map((item) => ({
-                    timestamp: item.timestamp.toString(),
-                    action: item.action,
-                    details: item.details,
-                    date: item.date
-                }))
+        const productsResult = Promise.all(productDetailListPromise).then((productDetailList) => productDetailList.map((productDetail, index) => ({
+            productID: productIdList[index],
+            model: productDetail[0],
+            description: productDetail[1],
+            manufactoryEmail: productDetail[2],
+            retailerEmail: productDetail[3],
+            customerEmail: productDetail[4],
+            history: productDetail[5].map((item) => ({
+                timestamp: item.timestamp.toString(),
+                action: item.action,
+                details: item.details,
+                date: item.date
             }))
-        })
+        })));
 
-        return productsResult
+        return productsResult;
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
-}
-export const getProductsByManufactory = async (manufactoryEmail,     contract,
+};
+export const getProductsByManufactory = async (manufactoryEmail, contract,
     accountAddress) => {
     try {
         const data = await contract.methods
             .getProductsByManufactory(manufactoryEmail)
-            .call({ from: accountAddress })
+            .call({ from: accountAddress });
 
         const productsResult = data[0].map((product, index) => {
             const productHistory = product.history.map((item) => ({
@@ -133,7 +130,7 @@ export const getProductsByManufactory = async (manufactoryEmail,     contract,
                 action: item.action,
                 details: item.details,
                 date: item.date
-            }))
+            }));
 
             return {
                 productID: data[1][index],
@@ -143,21 +140,21 @@ export const getProductsByManufactory = async (manufactoryEmail,     contract,
                 retailerEmail: product[3],
                 customerEmail: product[4],
                 history: productHistory
-            }
-        })
+            };
+        });
 
-        return productsResult
+        return productsResult;
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
-}
+};
 
-export const getProductsByRetailer = async (retailerEmail,    contract,
+export const getProductsByRetailer = async (retailerEmail, contract,
     accountAddress) => {
     try {
         const data = await contract.methods
             .getProductsByRetailer(retailerEmail)
-            .call({ from: accountAddress })
+            .call({ from: accountAddress });
 
         const productsResult = data[0].map((product, index) => {
             const productHistory = product.history.map((item) => ({
@@ -165,7 +162,7 @@ export const getProductsByRetailer = async (retailerEmail,    contract,
                 action: item.action,
                 details: item.details,
                 date: item.date
-            }))
+            }));
 
             return {
                 productID: data[1][index],
@@ -175,14 +172,14 @@ export const getProductsByRetailer = async (retailerEmail,    contract,
                 retailerEmail: product[3],
                 customerEmail: product[4],
                 history: productHistory
-            }
-        })
+            };
+        });
 
-        return productsResult
+        return productsResult;
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
-}
+};
 
 export const moveToRetailer = async (
     {
@@ -202,11 +199,11 @@ export const moveToRetailer = async (
             )
             .send({
                 from: accountAddress
-            })
+            });
     } catch (error) {
-        throw error
+        throw error;
     }
-}
+};
 
 export const sellToFirstCustomer = async (
     {
@@ -228,11 +225,11 @@ export const sellToFirstCustomer = async (
             )
             .send({
                 from: accountAddress
-            })
+            });
     } catch (error) {
-        throw error
+        throw error;
     }
-}
+};
 
 export const changeCustomer = async (
     {
@@ -254,8 +251,8 @@ export const changeCustomer = async (
             )
             .send({
                 from: accountAddress
-            })
+            });
     } catch (error) {
-        throw error
+        throw error;
     }
-}
+};
