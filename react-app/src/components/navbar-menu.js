@@ -41,6 +41,7 @@ function NavbarMenu() {
     };
 
     const logout = () => {
+        handleCloseUserMenu()
         try {
             signOut(auth);
             window.location.href = '/login';
