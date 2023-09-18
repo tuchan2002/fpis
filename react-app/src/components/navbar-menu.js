@@ -41,7 +41,6 @@ function NavbarMenu() {
     };
 
     const logout = () => {
-        handleCloseUserMenu()
         try {
             signOut(auth);
             window.location.href = '/login';
@@ -96,11 +95,6 @@ function NavbarMenu() {
                                 id='menu-appbar'
                                 anchorEl={anchorElUser}
                                 anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right'
-                                }}
-                                keepMounted
-                                transformOrigin={{
                                     vertical: 'top',
                                     horizontal: 'right'
                                 }}
