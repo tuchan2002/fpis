@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
 import { showAlert } from './alertSlice'
-import { createProductOnBlockchain, getAllProducts, getProductDetail, getProductsByCustomer, getProductsByManufactory, getProductsByRetailer, moveToRetailer, sellToFirstCustomer } from '../../utils/web3-method/product'
+import { changeCustomer, createProductOnBlockchain, getAllProducts, getProductDetail, getProductsByCustomer, getProductsByManufactory, getProductsByRetailer, moveToRetailer, sellToFirstCustomer } from '../../utils/web3-method/product'
 
 const initialState = {
     products: [],
@@ -145,7 +144,7 @@ export const getAllProductsByCustomer = createAsyncThunk(
             dispatch(showAlert({ loading: true }))
 
             const products = await getProductsByCustomer(customerEmail, contract, accountAddress)
-
+console.log(products);
             dispatch(showAlert({ loading: false }))
 
             return products
@@ -249,6 +248,33 @@ export const sellProductToRetailer = createAsyncThunk(
     }
 )
 
+export const changeCustomerOfProduct = createAsyncThunk(
+    'product/changeCustomerOfProduct',
+    async (
+        {
+            data,
+            contract,
+            accountAddress
+        },
+        { dispatch }
+    ) => {
+        try {
+            dispatch(showAlert({ loading: true }))
+
+            await changeCustomer(
+                data,
+                contract,
+                accountAddress
+            )
+
+            dispatch(showAlert({ success: 'Successfully changed the product to another customer.' }))
+
+        } catch (error) {
+            dispatch(showAlert({ error:  'Failed to change the product.' }))
+        }
+    }
+)
+
 const productSlice = createSlice({
     name: 'product',
     initialState,
@@ -270,6 +296,11 @@ const productSlice = createSlice({
         })
 
         builder.addCase(getAllProductsByRetailer.fulfilled, (state, action) => {
+            console.log('fulfilled')
+            state.products = action.payload
+        })
+
+        builder.addCase(getAllProductsByCustomer.fulfilled, (state, action) => {
             console.log('fulfilled')
             state.products = action.payload
         })

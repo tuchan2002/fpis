@@ -88,20 +88,17 @@ export const getProductDetail = async (
     }
 }
 
-export const getProductsByCustomer = async (customerEmail,     contract,
-    accountAddress) => {
+export const getProductsByCustomer = async (customerEmail, contract, accountAddress) => {
     try {
-        const productIdList = await contract.methods
-            .getProductsByCustomer(customerEmail)
-            .call({ from: accountAddress })
+        const productIdList = await contract.methods.getProductsByCustomer(customerEmail).call({ from: accountAddress })
 
         const productDetailListPromise = []
         productIdList.forEach((productId) => {
-            const productDetail = getProductDetail(productId)
+            const productDetail = contract.methods.getProductDetail(productId).call({ from: accountAddress })
             productDetailListPromise.push(productDetail)
         })
 
-        Promise.all(productDetailListPromise).then((productDetailList) => {
+        const productsResult = Promise.all(productDetailListPromise).then((productDetailList) => {
             return productDetailList.map((productDetail, index) => ({
                 productID: productIdList[index],
                 model: productDetail[0],
@@ -117,6 +114,8 @@ export const getProductsByCustomer = async (customerEmail,     contract,
                 }))
             }))
         })
+
+        return productsResult
     } catch (error) {
         console.error(error)
     }
@@ -234,15 +233,16 @@ export const sellToFirstCustomer = async (
         throw error
     }
 }
-/*
-
-
 
 export const changeCustomer = async (
-    productID,
-    oldCustomerEmail,
-    newCustomerEmail,
-    changeDate
+    {
+        productID,
+        oldCustomerEmail,
+        newCustomerEmail,
+        changeDate
+    },
+    contract,
+    accountAddress
 ) => {
     try {
         return await contract.methods
@@ -256,7 +256,6 @@ export const changeCustomer = async (
                 from: accountAddress
             })
     } catch (error) {
-        console.error(error)
+        throw error
     }
 }
-*/

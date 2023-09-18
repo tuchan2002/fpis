@@ -32,34 +32,36 @@ const Products = () => {
     useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive)
 
     useEffect(() => {
-        if (currentUserRole === 0) {
-            dispatch(getAllProductsByManufactory({
-                manufactoryEmail: authReducer.user?.email,
-                contract: web3Reducer.contract,
-                accountAddress: web3Reducer.account
-            }))
-        } else if(currentUserRole === 1) {
-            dispatch(getAllProductsByRetailer({
-                retailerEmail: authReducer.user?.email,
-                contract: web3Reducer.contract,
-                accountAddress: web3Reducer.account
-            }))
-        } 
-        else if (currentUserRole === 2) {
-            dispatch(
-                getAllProductsByCustomer({
-                    customerEmail: authReducer.user?.email,
-                    customerId: '' + authReducer.user?.id,
-                    accessToken: authReducer.token
-                })
-            )
-        } else if (currentUserRole === 3) {
-            dispatch(
-                getAllOfProducts({
+        if(web3Reducer.contract && web3Reducer.account) {
+            if (currentUserRole === 0) {
+                dispatch(getAllProductsByManufactory({
+                    manufactoryEmail: authReducer.user?.email,
                     contract: web3Reducer.contract,
                     accountAddress: web3Reducer.account
-                })
-            )
+                }))
+            } else if(currentUserRole === 1) {
+                dispatch(getAllProductsByRetailer({
+                    retailerEmail: authReducer.user?.email,
+                    contract: web3Reducer.contract,
+                    accountAddress: web3Reducer.account
+                }))
+            } 
+            else if (currentUserRole === 2) {
+                dispatch(
+                    getAllProductsByCustomer({
+                        customerEmail: authReducer.user?.email,
+                        contract: web3Reducer.contract,
+                        accountAddress: web3Reducer.account
+                    })
+                )
+            } else if (currentUserRole === 3) {
+                dispatch(
+                    getAllOfProducts({
+                        contract: web3Reducer.contract,
+                        accountAddress: web3Reducer.account
+                    })
+                )
+            }
         }
     }, [authReducer.user, web3Reducer.contract, web3Reducer.account])
 

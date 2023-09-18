@@ -12,19 +12,22 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../../redux'
-import { userSelector } from '../../redux/reducers/userSlice'
-import { productSelector } from '../../redux/reducers/productSlice'
+import { getUsersByRole, userSelector } from '../../redux/reducers/userSlice'
+import { changeCustomerOfProduct, getProductById, productSelector } from '../../redux/reducers/productSlice'
 import { authSelector } from '../../redux/reducers/authSlice'
 import useAuthEffect from '../../customHook/useAuthEffect'
 import QRCodeScanner from '../../components/qr-code-scanner'
 import ProductInfoTable from '../../components/product-info-table'
 import ProductTimeline from '../../components/product-timeline'
+import { web3Selector } from '../../redux/reducers/web3Slice'
+import moment from 'moment'
 
 const ChangeOwnership = () => {
     const dispatch = useDispatch()
 
     const userReducer = useSelector(userSelector)
     const productReducer = useSelector(productSelector)
+    const web3Reducer = useSelector(web3Selector)
 
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
@@ -37,20 +40,21 @@ const ChangeOwnership = () => {
     const [selectedUserId, setSelectedUserId] = useState('')
     const [openModalTimeline, setOpenModalTimeline] = useState(false)
 
-    // useEffect(() => {
-    //     dispatch(getUsersByRole({ role: 2, accessToken: authReducer.token }))
-    // }, [authReducer.token])
+    useEffect(() => {
+        dispatch(getUsersByRole({ role: 2 }))
+    }, [authReducer.user])
 
-    // useEffect(() => {
-    //     if (productScannerData && productScannerData.productID) {
-    //         dispatch(
-    //             getProductById({
-    //                 productID: productScannerData.productID,
-    //                 accessToken: authReducer.token
-    //             })
-    //         )
-    //     }
-    // }, [authReducer.token, productScannerData?.productID])
+    useEffect(() => {
+        if (productScannerData && productScannerData.productID) {
+            dispatch(
+                getProductById({
+                    productID: productScannerData.productID,
+                    contract: web3Reducer.contract,
+                    accountAddress: web3Reducer.account
+                })
+            )
+        }
+    }, [productScannerData?.productID])
 
     const handleChangeOwnership = async () => {
         if (!productScannerData) {
@@ -62,23 +66,16 @@ const ChangeOwnership = () => {
             (user) => user.uid === selectedUserId
         )
 
-        // try {
-        //     dispatch(showAlert({ loading: true }))
-
-        //     const response = await axios.post(
-        //         `http://localhost:8000/api/v1/product/exchange-another-customer`,
-        //         { productID: productID, newCustomerEmail: selectedUser?.email },
-        //         {
-        //             headers: { Authorization: `Bearer ${authReducer.token}` }
-        //         }
-        //     )
-
-        //     dispatch(showAlert({ success: response.data.message }))
-
-        //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        // } catch (error: any) {
-        //     dispatch(showAlert({ error: error.response.data.message }))
-        // }
+        dispatch(changeCustomerOfProduct({
+            data: {
+                productID,
+                oldCustomerEmail: authReducer.user.email,
+                newCustomerEmail: selectedUser.email,
+                changeDate: moment().format('LLL')
+            },
+            contract: web3Reducer.contract,
+            accountAddress: web3Reducer.account
+        }))
     }
 
     return (
