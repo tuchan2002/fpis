@@ -6,22 +6,22 @@ import {
     MenuItem,
     Button
 } from '@mui/material'
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch } from '../../redux'
-import { userSelector } from '../../redux/reducers/userSlice'
-import { productSelector } from '../../redux/reducers/productSlice'
+import { getUsersByRole, userSelector } from '../../redux/reducers/userSlice'
+import { getProductById, productSelector, sellProductToRetailer } from '../../redux/reducers/productSlice'
 import { authSelector } from '../../redux/reducers/authSlice'
 import useAuthEffect from '../../customHook/useAuthEffect'
-import { showAlert } from '../../redux/reducers/alertSlice'
 import QRCodeScanner from '../../components/qr-code-scanner'
 import ProductInfoTable from '../../components/product-info-table'
 import ProductTimeline from '../../components/product-timeline'
+import { web3Selector } from '../../redux/reducers/web3Slice'
+import moment from 'moment'
 
 const SellProduct = () => {
     const dispatch = useDispatch()
 
+    const web3Reducer = useSelector(web3Selector)
     const userReducer = useSelector(userSelector)
     const productReducer = useSelector(productSelector)
 
@@ -36,20 +36,21 @@ const SellProduct = () => {
     const [selectedUserId, setSelectedUserId] = useState('')
     const [openModalTimeline, setOpenModalTimeline] = useState(false)
 
-    // useEffect(() => {
-    //     dispatch(getUsersByRole({ role: 2, accessToken: authReducer.token }))
-    // }, [authReducer.token])
+    useEffect(() => {
+        dispatch(getUsersByRole({ role: 2 }))
+    }, [authReducer.user])
 
-    // useEffect(() => {
-    //     if (productScannerData && productScannerData.productID) {
-    //         dispatch(
-    //             getProductById({
-    //                 productID: productScannerData.productID,
-    //                 accessToken: authReducer.token
-    //             })
-    //         )
-    //     }
-    // }, [authReducer.token, productScannerData?.productID])
+    useEffect(() => {
+        if (productScannerData && productScannerData.productID) {
+            dispatch(
+                getProductById({
+                    productID: productScannerData.productID,
+                    contract: web3Reducer.contract,
+                    accountAddress: web3Reducer.account
+                })
+            )
+        }
+    }, [productScannerData?.productID])
 
     const handleSellToCustomer = async () => {
         if (!productScannerData) {
@@ -61,23 +62,16 @@ const SellProduct = () => {
             (user) => user.uid === selectedUserId
         )
 
-        // try {
-        //     dispatch(showAlert({ loading: true }))
-
-        //     const response = await axios.post(
-        //         `http://localhost:8000/api/v1/product/sell-to-customer`,
-        //         { productID: productID, customerEmail: selectedUser?.email },
-        //         {
-        //             headers: { Authorization: `Bearer ${authReducer.token}` }
-        //         }
-        //     )
-
-        //     dispatch(showAlert({ success: response.data.message }))
-
-        //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        // } catch (error: any) {
-        //     dispatch(showAlert({ error: error.response.data.message }))
-        // }
+        dispatch(sellProductToRetailer({
+            data: {
+                productID,
+                retailerEmail: authReducer.user.email,
+                customerEmail: selectedUser.email,
+                saleDate: moment().format('LLL'),
+            },
+            contract: web3Reducer.contract,
+            accountAddress: web3Reducer.account
+        }))
     }
 
     return (

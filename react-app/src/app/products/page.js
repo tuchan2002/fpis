@@ -13,10 +13,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import { IconButton } from '@mui/material'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch } from '../../redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { web3Selector } from '../../redux/reducers/web3Slice'
-import { getAllOfProducts, productSelector } from '../../redux/reducers/productSlice'
+import { getAllOfProducts, getAllProductsByCustomer, getAllProductsByManufactory, getAllProductsByRetailer, productSelector } from '../../redux/reducers/productSlice'
 import { authSelector } from '../../redux/reducers/authSlice'
 import useAuthEffect from '../../customHook/useAuthEffect'
 
@@ -33,25 +32,36 @@ const Products = () => {
     useAuthEffect(currentUserRole, allowedRolesList)
 
     useEffect(() => {
-        // if (currentUserRole === 0 || currentUserRole === 1) {
-        //     dispatch(getOwnedProducts({ accessToken: authReducer.token }))
-        // } else if (currentUserRole === 2) {
-        //     dispatch(
-        //         getProductsByCustomer({
-        //             customerId: '' + authReducer.user?.id,
-        //             accessToken: authReducer.token
-        //         })
-        //     )
-        // } else if (currentUserRole === 3) {
-        //     dispatch(getAllOfProducts({ accessToken: authReducer.token }))
-        // }
-        dispatch(
-            getAllOfProducts({
+        if (currentUserRole === 0) {
+            dispatch(getAllProductsByManufactory({
+                manufactoryEmail: authReducer.user?.email,
                 contract: web3Reducer.contract,
                 accountAddress: web3Reducer.account
-            })
-        )
-    }, [web3Reducer.contract, web3Reducer.account])
+            }))
+        } else if(currentUserRole === 1) {
+            dispatch(getAllProductsByRetailer({
+                retailerEmail: authReducer.user?.email,
+                contract: web3Reducer.contract,
+                accountAddress: web3Reducer.account
+            }))
+        } 
+        else if (currentUserRole === 2) {
+            dispatch(
+                getAllProductsByCustomer({
+                    customerEmail: authReducer.user?.email,
+                    customerId: '' + authReducer.user?.id,
+                    accessToken: authReducer.token
+                })
+            )
+        } else if (currentUserRole === 3) {
+            dispatch(
+                getAllOfProducts({
+                    contract: web3Reducer.contract,
+                    accountAddress: web3Reducer.account
+                })
+            )
+        }
+    }, [authReducer.user, web3Reducer.contract, web3Reducer.account])
 
     return (
         currentUserRole !== null &&

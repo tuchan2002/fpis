@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { showAlert } from './alertSlice'
-import { createProductOnBlockchain, getAllProducts, getProductDetail, moveToRetailer } from '../../utils/web3-method/product'
+import { createProductOnBlockchain, getAllProducts, getProductDetail, getProductsByCustomer, getProductsByManufactory, getProductsByRetailer, moveToRetailer, sellToFirstCustomer } from '../../utils/web3-method/product'
 
 const initialState = {
     products: [],
@@ -73,6 +73,93 @@ export const getAllOfProducts = createAsyncThunk(
     }
 )
 
+export const getAllProductsByManufactory = createAsyncThunk(
+    'product/getProductsByManufactory',
+    async (
+        {
+            manufactoryEmail,
+            contract,
+            accountAddress
+        },
+        { dispatch }
+    ) => {
+        try {
+            dispatch(showAlert({ loading: true }))
+
+            const products = await getProductsByManufactory(manufactoryEmail, contract, accountAddress)
+
+            dispatch(showAlert({ loading: false }))
+
+            return products
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error) {
+            dispatch(
+                showAlert({
+                    error: 'Failed retrieved products information.'
+                })
+            )
+        }
+    }
+)
+
+export const getAllProductsByRetailer = createAsyncThunk(
+    'product/getAllProductsByRetailer',
+    async (
+        {
+            retailerEmail,
+            contract,
+            accountAddress
+        },
+        { dispatch }
+    ) => {
+        try {
+            dispatch(showAlert({ loading: true }))
+
+            const products = await getProductsByRetailer(retailerEmail, contract, accountAddress)
+
+            dispatch(showAlert({ loading: false }))
+
+            return products
+        } catch (error) {
+            dispatch(
+                showAlert({
+                    error: 'Failed retrieved products information.'
+                })
+            )
+        }
+    }
+)
+
+export const getAllProductsByCustomer = createAsyncThunk(
+    'product/getAllProductsByCustomer',
+    async (
+        {
+            customerEmail,
+            contract,
+            accountAddress
+        },
+        { dispatch }
+    ) => {
+        try {
+            dispatch(showAlert({ loading: true }))
+
+            const products = await getProductsByCustomer(customerEmail, contract, accountAddress)
+
+            dispatch(showAlert({ loading: false }))
+
+            return products
+        } catch (error) {
+            dispatch(
+                showAlert({
+                    error: 'Failed retrieved products information.'
+                })
+            )
+        }
+    }
+)
+
+
 export const getProductById = createAsyncThunk(
     'product/getProductById',
     async (
@@ -97,7 +184,6 @@ export const getProductById = createAsyncThunk(
 
             return product
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error) {
             dispatch(
                 showAlert({
@@ -136,6 +222,33 @@ export const moveProductToRetailer = createAsyncThunk(
     }
 )
 
+export const sellProductToRetailer = createAsyncThunk(
+    'product/sellProductToRetailer',
+    async (
+        {
+            data,
+            contract,
+            accountAddress
+        },
+        { dispatch }
+    ) => {
+        try {
+            dispatch(showAlert({ loading: true }))
+
+            await sellToFirstCustomer(
+                data,
+                contract,
+                accountAddress
+            )
+
+            dispatch(showAlert({ success: 'Successfully sold the product to the customer.' }))
+
+        } catch (error) {
+            dispatch(showAlert({ error: 'Failed to sell the product to the customer.' }))
+        }
+    }
+)
+
 const productSlice = createSlice({
     name: 'product',
     initialState,
@@ -149,6 +262,16 @@ const productSlice = createSlice({
         builder.addCase(getProductById.fulfilled, (state, action) => {
             console.log('fulfilled')
             state.product = action.payload
+        })
+
+        builder.addCase(getAllProductsByManufactory.fulfilled, (state, action) => {
+            console.log('fulfilled')
+            state.products = action.payload
+        })
+
+        builder.addCase(getAllProductsByRetailer.fulfilled, (state, action) => {
+            console.log('fulfilled')
+            state.products = action.payload
         })
     }
 })

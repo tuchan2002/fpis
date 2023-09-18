@@ -88,32 +88,8 @@ export const getProductDetail = async (
     }
 }
 
-export const moveToRetailer = async (
-    {
-        productID,
-        retailerEmail,
-        movingDate
-    },
-    contract,
-    accountAddress
-) => {
-    try {
-        return await contract.methods
-            .moveToRetailer(
-                productID,
-                retailerEmail,
-                movingDate
-            )
-            .send({
-                from: accountAddress
-            })
-    } catch (error) {
-        console.error(error)
-    }
-}
-
-/*
-export const getProductsByCustomer = async (customerEmail) => {
+export const getProductsByCustomer = async (customerEmail,     contract,
+    accountAddress) => {
     try {
         const productIdList = await contract.methods
             .getProductsByCustomer(customerEmail)
@@ -145,10 +121,10 @@ export const getProductsByCustomer = async (customerEmail) => {
         console.error(error)
     }
 }
-
-export const getProductsByManufactory = async (manufactoryEmail) => {
+export const getProductsByManufactory = async (manufactoryEmail,     contract,
+    accountAddress) => {
     try {
-        const productList = await contract.methods
+        const data = await contract.methods
             .getProductsByManufactory(manufactoryEmail)
             .call({ from: accountAddress })
 
@@ -177,9 +153,10 @@ export const getProductsByManufactory = async (manufactoryEmail) => {
     }
 }
 
-export const getProductsByRetailer = async (retailerEmail) => {
+export const getProductsByRetailer = async (retailerEmail,    contract,
+    accountAddress) => {
     try {
-        const productList = await contract.methods
+        const data = await contract.methods
             .getProductsByRetailer(retailerEmail)
             .call({ from: accountAddress })
 
@@ -208,11 +185,39 @@ export const getProductsByRetailer = async (retailerEmail) => {
     }
 }
 
+export const moveToRetailer = async (
+    {
+        productID,
+        retailerEmail,
+        movingDate
+    },
+    contract,
+    accountAddress
+) => {
+    try {
+        return await contract.methods
+            .moveToRetailer(
+                productID,
+                retailerEmail,
+                movingDate
+            )
+            .send({
+                from: accountAddress
+            })
+    } catch (error) {
+        throw error
+    }
+}
+
 export const sellToFirstCustomer = async (
-    productID,
-    retailerEmail,
-    customerEmail,
-    saleDate
+    {
+        productID,
+        retailerEmail,
+        customerEmail,
+        saleDate
+    },
+    contract,
+    accountAddress
 ) => {
     try {
         return await contract.methods
@@ -226,9 +231,12 @@ export const sellToFirstCustomer = async (
                 from: accountAddress
             })
     } catch (error) {
-        console.error(error)
+        throw error
     }
 }
+/*
+
+
 
 export const changeCustomer = async (
     productID,

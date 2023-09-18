@@ -8,18 +8,15 @@ import {
 } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch } from '../../redux'
 import { getUsersByRole, userSelector } from '../../redux/reducers/userSlice'
 import { getProductById, moveProductToRetailer, productSelector } from '../../redux/reducers/productSlice'
 import { authSelector } from '../../redux/reducers/authSlice'
 import useAuthEffect from '../../customHook/useAuthEffect'
-import axios from 'axios'
-import { showAlert } from '../../redux/reducers/alertSlice'
 import QRCodeScanner from '../../components/qr-code-scanner'
 import ProductInfoTable from '../../components/product-info-table'
 import ProductTimeline from '../../components/product-timeline'
-import { web3Selector } from '../../redux/reducers/web3Slice'
 import moment from 'moment'
+import { web3Selector } from '../../redux/reducers/web3Slice'
 
 const MoveProduct= () => {
     const dispatch = useDispatch()
@@ -41,7 +38,7 @@ const MoveProduct= () => {
 
     useEffect(() => {
         dispatch(getUsersByRole({ role: 1 }))
-    }, [authReducer.token])
+    }, [authReducer.user])
 
     useEffect(() => {
         if (productScannerData && productScannerData.productID) {
