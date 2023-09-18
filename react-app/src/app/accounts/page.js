@@ -27,7 +27,7 @@ const Accounts = () => {
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
     const allowedRolesList = [3]
-    useAuthEffect(currentUserRole, allowedRolesList)
+    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive)
 
     useEffect(() => {
         dispatch(getAllOfUsers())

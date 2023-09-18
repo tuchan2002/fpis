@@ -29,7 +29,7 @@ const ChangeOwnership = () => {
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
     const allowedRolesList = [2]
-    useAuthEffect(currentUserRole, allowedRolesList)
+    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive)
 
     const [productScannerData, setProductScannerData] =
         useState(null)

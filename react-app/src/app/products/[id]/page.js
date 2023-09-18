@@ -23,7 +23,7 @@ const ProductDetails = () => {
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
     const allowedRolesList = [0, 1, 2, 3]
-    useAuthEffect(currentUserRole, allowedRolesList)
+    useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive)
 
     const [openModalTimeline, setOpenModalTimeline] = useState(false)
 
