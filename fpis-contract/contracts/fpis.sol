@@ -24,20 +24,17 @@ contract FPIS {
   struct Manufactory {
     string name;
     string email;
-    string location;
   }
 
   struct Retailer {
     string name;
     string email;
-    string location;
   }
 
   struct Customer {
     string name;
     string email;
     string phone_number;
-    string location;
     string[] products;
     bool isExist;
   }
@@ -49,7 +46,9 @@ contract FPIS {
 
   string[] private productIds;
 
-  function createProduct(string memory _productID, string memory _model, string memory _description, string memory _manufactoryEmail, string memory _manufactoryLocation, string memory _productionDate) public payable returns (bool) {
+  receive() external payable {}
+
+  function createProduct(string memory _productID, string memory _model, string memory _description, string memory _manufactoryEmail, string memory _productionDate) public payable returns (bool)  {
     Product storage newProduct = productList[_productID];
     newProduct.model = _model;
     newProduct.description = _description;
@@ -58,25 +57,24 @@ contract FPIS {
     HistoryItem memory historyItem;
     historyItem.timestamp = block.timestamp;
     historyItem.action = "Manufactured";
-    historyItem.details = string(abi.encodePacked("Manufactory Email: ", _manufactoryEmail, ", Manufactory Location: ", _manufactoryLocation));
+    historyItem.details = string(abi.encodePacked("Manufactory Email: ", _manufactoryEmail));
     historyItem.date = _productionDate;
     newProduct.history.push(historyItem);
 
     productList[_productID] = newProduct;
-
     productIds.push(_productID);
 
     return true;
   }
 
-  function moveToRetailer(string memory _productID, string memory _retailerEmail, string memory _retailLocation, string memory _movingDate) public payable returns (bool) {
+  function moveToRetailer(string memory _productID, string memory _retailerEmail, string memory _movingDate) public payable returns (bool) {
     Product storage product = productList[_productID];
     product.retailerEmail = _retailerEmail;
 
     HistoryItem memory historyItem;
     historyItem.timestamp = block.timestamp;
     historyItem.action = "Moved to Retailer";
-    historyItem.details = string(abi.encodePacked("Retail Email: ", _retailerEmail, ", Retail Location: ", _retailLocation));
+    historyItem.details = string(abi.encodePacked("Retail Email: ", _retailerEmail));
     historyItem.date = _movingDate;
     product.history.push(historyItem);
 
@@ -204,46 +202,43 @@ contract FPIS {
     return (productList[_productID].model, productList[_productID].description, productList[_productID].manufactoryEmail, productList[_productID].retailerEmail, productList[_productID].customerEmail, productList[_productID].history);
   }
 
-  function getCustomerDetail(string memory _customerEmail) public view returns (string memory, string memory, string memory) {
-    return (customerList[_customerEmail].name, customerList[_customerEmail].phone_number, customerList[_customerEmail].location);
+  function getCustomerDetail(string memory _customerEmail) public view returns (string memory, string memory) {
+    return (customerList[_customerEmail].name, customerList[_customerEmail].phone_number);
   }
 
-  function getRetailerDetail(string memory _retailerEmail) public view returns (string memory, string memory) {
-    return (retailerList[_retailerEmail].name, retailerList[_retailerEmail].location);
+  function getRetailerDetail(string memory _retailerEmail) public view returns (string memory) {
+    return (retailerList[_retailerEmail].name);
   }
 
-  function getManafactorDetail(string memory _manufactorEmail) public view returns (string memory, string memory) {
-    return (retailerList[_manufactorEmail].name, retailerList[_manufactorEmail].location);
+  function getManafactorDetail(string memory _manufactorEmail) public view returns (string memory) {
+    return (manufactoryList[_manufactorEmail].name);
   }
 
   function getProductsByCustomer(string memory _customerEmail) public view returns(string[] memory) {
     return customerList[_customerEmail].products;
   }
 
-  function createManufactory(string memory _manufactorEmail, string memory _manufactorName, string memory _manufactorLocation) public payable returns (bool) {
+  function createManufactory(string memory _manufactorEmail, string memory _manufactorName) public payable returns (bool) {
     Retailer memory newManufactor;
     newManufactor.name = _manufactorName;
-    newManufactor.location = _manufactorLocation;
     retailerList[_manufactorEmail] = newManufactor;
     return true;
   }
 
-  function createRetailer(string memory _retailerEmail, string memory _retailerName, string memory _retailerLocation) public payable returns (bool) {
+  function createRetailer(string memory _retailerEmail, string memory _retailerName) public payable returns (bool) {
     Retailer memory newRetailer;
     newRetailer.name = _retailerName;
-    newRetailer.location = _retailerLocation;
     retailerList[_retailerEmail] = newRetailer;
     return true;
   }
 
-  function createCustomer(string memory _customerEmail, string memory _name, string memory _location, string memory _phone_number) public payable returns (bool) {
+  function createCustomer(string memory _customerEmail, string memory _name, string memory _phone_number) public payable returns (bool) {
     if (customerList[_customerEmail].isExist) {
       return false;
     }
 
     Customer memory newCustomer;
     newCustomer.name = _name;
-    newCustomer.location = _location;
     newCustomer.phone_number = _phone_number;
     newCustomer.isExist = true;
     customerList[_customerEmail] = newCustomer;
