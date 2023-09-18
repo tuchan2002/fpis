@@ -70,7 +70,7 @@ const Accounts = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {userReducer.users.map((user) => {
+                            { userReducer.users.map((user) => {
                                 if (user.role === 3) {
                                     return
                                 }

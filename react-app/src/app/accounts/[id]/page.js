@@ -1,4 +1,4 @@
-import { Box, Button, List, ListItem, ListItemText, Paper } from '@mui/material'
+import { Box, Button, FormControlLabel, FormGroup, List, ListItem, ListItemText, Paper, Switch } from '@mui/material'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { AppDispatch } from '../../../redux'
 import { authSelector } from '../../../redux/reducers/authSlice'
 import useAuthEffect from '../../../customHook/useAuthEffect'
-import { getUserById, userSelector } from '../../../redux/reducers/userSlice'
+import { getUserById, toggleActiveAccount, userSelector } from '../../../redux/reducers/userSlice'
 
 const AccountDetails = () => {
     const params = useParams();
@@ -39,6 +39,10 @@ const AccountDetails = () => {
             default:
                 return 'Manufactory'
         }
+    }
+
+    const handleToggleActiveAccount = async () => {
+        dispatch(toggleActiveAccount({isActive: !userReducer.user?.isActive ,userId: userReducer.user?.uid}))
     }
 
     return (
@@ -80,6 +84,11 @@ const AccountDetails = () => {
                                         : 3
                                 )}
                             />
+                        </ListItem>
+                        <ListItem>
+                            <FormGroup>
+                                <FormControlLabel control={<Switch checked={userReducer.user?.isActive} onClick={handleToggleActiveAccount} />} label={userReducer.user?.isActive ? "Active" : "Inactive"} />
+                            </FormGroup>
                         </ListItem>
                     </List>
                 </Paper>

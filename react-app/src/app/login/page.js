@@ -41,7 +41,8 @@ const Login = () => {
                     photoURL: user.photoURL,
                     uid: user.uid,
                     providerId: details.providerId,
-                    role: 2
+                    role: 2,
+                    isActive: false
                 })
             } catch (error) {
                 console.log(error)

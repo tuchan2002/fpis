@@ -30,7 +30,7 @@ export const getDocumentsCondition = async (
     const q = query(docRef, where(key, operator, value))
     const querySnapshot = await getDocs(q)
     const data = querySnapshot.docs.map((doc) => doc.data())
-
+console.log(data);
     return data;
 }
 
@@ -62,8 +62,17 @@ export const addDocument = async (collectionName, data) => {
 
 export const updateDocument = async (
     collectionName,
-    docId,
-    data
+    data,
+    key,
+    value
 ) => {
-    await updateDoc(doc(db, collectionName, docId), data)
+    const docCollection = collection(db, collectionName)
+
+    const q = query(docCollection, where(key, '==', value), limit(1))
+    const querySnapshot = await getDocs(q)
+    const docId = querySnapshot.docs.map((doc) => doc.id)[0]
+
+    console.log(docId);
+    const docRef = doc(db, collectionName, docId);
+    await updateDoc(docRef, data)
 }
