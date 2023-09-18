@@ -7,6 +7,7 @@ import { AppDispatch } from '../../../redux'
 import { authSelector } from '../../../redux/reducers/authSlice'
 import useAuthEffect from '../../../customHook/useAuthEffect'
 import { getUserById, toggleActiveAccount, userSelector } from '../../../redux/reducers/userSlice'
+import { web3Selector } from '../../../redux/reducers/web3Slice'
 
 const AccountDetails = () => {
     const params = useParams();
@@ -14,6 +15,8 @@ const AccountDetails = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const userReducer = useSelector(userSelector)
+    const web3Reducer = useSelector(web3Selector)
+
 
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
@@ -42,7 +45,7 @@ const AccountDetails = () => {
     }
 
     const handleToggleActiveAccount = async () => {
-        dispatch(toggleActiveAccount({isActive: !userReducer.user?.isActive ,userId: userReducer.user?.uid}))
+        dispatch(toggleActiveAccount({userData: userReducer.user, contract: web3Reducer.contract, accountAddress: web3Reducer.account}))
     }
 
     return (

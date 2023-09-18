@@ -1,4 +1,6 @@
-export const createManufactory = async (email, name) => {
+export const createManufactory = async (   {
+    email, name
+}, contract, accountAddress) => {
     try {
         return await contract.methods
             .createManufactory(email, name)
@@ -10,7 +12,9 @@ export const createManufactory = async (email, name) => {
     }
 }
 
-export const createRetailer = async (email, name) => {
+export const createRetailer = async ({
+    email, name
+}, contract, accountAddress) => {
     try {
         return await contract.methods
             .createRetailer(email, name)
@@ -22,7 +26,9 @@ export const createRetailer = async (email, name) => {
     }
 }
 
-export const createCustomer = async (email, name, phone_number) => {
+export const createCustomer = async ({
+    email, name, phone_number
+}, contract, accountAddress) => {
     try {
         return await contract.methods
             .createCustomer(email, name, phone_number)

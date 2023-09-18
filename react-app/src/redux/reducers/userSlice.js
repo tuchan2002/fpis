@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { getDocument, getDocuments, getDocumentsCondition, updateDocument } from '../../firebase/services'
 import { showAlert } from './alertSlice'
+import { createCustomer, createManufactory, createRetailer } from '../../utils/web3-method/auth'
 
 const initialState = {
     users: [],
@@ -48,17 +49,31 @@ export const getUsersByRole = createAsyncThunk(
 
 export const toggleActiveAccount = createAsyncThunk(
     'user/toggleActiveAccount',
-    async ({ isActive, userId }, {dispatch}) => {
+    async ({
+        userData,
+        contract,
+        accountAddress
+    }, {dispatch}) => {
         try {
             dispatch(showAlert({ loading: true }))
+            
+            if(userData.isActive === false) {
+                if(userData.role === 0) {
+                    await createManufactory({name: userData.displayName, email: userData.email}, contract, accountAddress)
+                } else if(userData.role === 1) {
+                    await createRetailer({name: userData.displayName, email: userData.email}, contract, accountAddress)
+                } else if(userData.role === 2) {
+                    await createCustomer({name: userData.displayName, email: userData.email, phone_number: ""}, contract, accountAddress)
+                }
+            }
 
-            await updateDocument('users', { isActive }, 'uid', userId)
+            await updateDocument('users', { isActive: !userData.isActive }, 'uid', userData.uid)
 
-            dispatch(showAlert({ success: `Account ${isActive ? 'activation' : 'deactivation'} successful.` }))
+            dispatch(showAlert({ success: `Account ${!userData.isActive ? 'activation' : 'deactivation'} successful.` }))
 
-            return isActive
+            return !userData.isActive
         } catch (error) {
-            dispatch(showAlert({ error: `Account ${isActive ? 'activation' : 'deactivation'} failed.` }))
+            dispatch(showAlert({ error: `Account ${!userData.isActive ? 'activation' : 'deactivation'} failed.` }))
         }
     }
 )
