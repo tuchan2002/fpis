@@ -443,7 +443,8 @@ function App() {
                         email,
                         uid,
                         photoURL,
-                        role: userDoc?.role
+                        role: userDoc?.role,
+                        isActive: userDoc?.isActive
                     })
                 )
             } else {

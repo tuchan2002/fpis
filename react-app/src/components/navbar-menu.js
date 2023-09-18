@@ -59,7 +59,7 @@ const NavbarMenu = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                         {navItems.map((item, index) => {
                             return (
-                                currentUserRole !== null &&
+                                authReducer.user?.isActive && currentUserRole !== null &&
                                 item.allowedRolesList.includes(
                                     currentUserRole
                                 ) && (
