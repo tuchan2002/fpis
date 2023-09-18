@@ -7,10 +7,15 @@ import { authSelector } from '../../redux/reducers/authSlice'
 import useAuthEffect from '../../customHook/useAuthEffect'
 import QRCodeScanner from '../../components/qr-code-scanner'
 import ProductInfoTable from '../../components/product-info-table'
+import { getProductDetail } from '../../utils/web3-method/product'
+import { web3Selector } from '../../redux/reducers/web3Slice'
+import { showAlert } from '../../redux/reducers/alertSlice'
+import Swal from 'sweetalert2'
 
 const VerifyProduct= () => {
     const dispatch = useDispatch()
 
+    const web3Reducer = useSelector(web3Selector)
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
     const allowedRolesList = [2]
@@ -26,24 +31,45 @@ const VerifyProduct= () => {
             return
         }
 
-        // try {
-        //     const response = await axios.post(
-        //         `http://localhost:8000/api/v1/product/verify-product`,
-        //         {
-        //             productScannerData,
-        //             customerEmail: customerEmailInputData
-        //         },
-        //         {
-        //             headers: { Authorization: `Bearer ${authReducer.token}` }
-        //         }
-        //     )
+        try {
+            const productInBlockchain = await getProductDetail(
+                productScannerData?.productID,
+                web3Reducer.contract,
+                web3Reducer.accountAddress
+            )
 
-        //     dispatch(showAlert({ success: response.data.message }))
+            let isReal = true;
+            Object.keys(productInBlockchain).forEach((key) => {
+                if (key !== 'retailerEmail' && key !== 'history') {
+                    if (
+                        productInBlockchain[key]
+                                !== {
+                                    ...productScannerData,
+                                    customerEmail: customerEmailInputData
+                                }[key]
+                    ) {
+                        isReal = false;
+                    }
+                }
+            });
 
-        //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        // } catch (error: any) {
-        //     dispatch(showAlert({ error: error.response.data.message }))
-        // }
+            await Swal.fire({
+                icon: `${isReal ? 'success' : 'error'}`,
+                text: `${
+                    isReal
+                        ? 'This product is genuine.'
+                        : 'This product is fake.'
+                }`
+            })
+        } catch (error) {
+            console.log(error);
+            dispatch(
+                showAlert({
+                    error: 'Failed retrieved product information.'
+                })
+            )
+        }
+
     }
 
     return (

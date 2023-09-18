@@ -144,7 +144,7 @@ export const getAllProductsByCustomer = createAsyncThunk(
             dispatch(showAlert({ loading: true }))
 
             const products = await getProductsByCustomer(customerEmail, contract, accountAddress)
-console.log(products);
+
             dispatch(showAlert({ loading: false }))
 
             return products
@@ -177,7 +177,6 @@ export const getProductById = createAsyncThunk(
                 contract,
                 accountAddress
             )
-            console.log('product', product)
 
             dispatch(showAlert({ loading: false }))
 
