@@ -13,6 +13,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { authSelector } from '../../redux/reducers/authSlice';
 import { auth } from '../../firebase/config';
 import { addDocument } from '../../firebase/services';
+import logo from '../../logo.svg';
 
 const googleProvider = new GoogleAuthProvider();
 function Login() {
@@ -59,7 +60,12 @@ function Login() {
                 alignItems: 'center'
             }}
         >
-            <Paper sx={{ p: 3 }}>
+            <Paper elevation={3} sx={{ p: 3 }}>
+                <img
+                    src={logo}
+                    alt="logo"
+                    style={{ marginBottom: "16px" }}
+                />
                 <Button
                     startIcon={<GoogleIcon />}
                     type='submit'

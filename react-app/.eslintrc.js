@@ -28,6 +28,7 @@ module.exports = {
         'comma-dangle': ['error', {functions: 'ignore'}],
         'consistent-return': 'off',
         eqeqeq: 'off',
+        'no-useless-catch': 'off',
         'function-paren-newline': 'off',
         'import/no-named-as-default': 'off',
         'import/no-named-as-default-member': 'off',
