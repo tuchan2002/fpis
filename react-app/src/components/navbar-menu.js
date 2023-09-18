@@ -1,7 +1,7 @@
 import { auth } from '../firebase/config'
-import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material'
+import { AppBar, Avatar, Box, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material'
 import { signOut } from 'firebase/auth'
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { authSelector } from '../redux/reducers/authSlice'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
@@ -31,6 +31,16 @@ const NavbarMenu = () => {
     const authReducer = useSelector(authSelector)
     const currentUserRole = authReducer.user && authReducer.user?.role
 
+    const [anchorElUser, setAnchorElUser] = useState(null);
+  
+    const handleOpenUserMenu = (event) => {
+      setAnchorElUser(event.currentTarget);
+    };
+  
+    const handleCloseUserMenu = () => {
+      setAnchorElUser(null);
+    };
+
     const logout = () => {
         try {
             signOut(auth)
@@ -42,21 +52,22 @@ const NavbarMenu = () => {
 
     return (
         pathname !== '/login' && (
-            <AppBar component='nav' position='sticky'>
+            <AppBar component='nav' position='sticky' sx={{paddingY: 0.5}}>
                 <Toolbar>
                     <Typography
                         variant='h6'
                         component='div'
                         sx={{
-                            flexGrow: 1,
                             display: { xs: 'none', sm: 'block' },
-                            fontStyle: 'italic'
+                            fontStyle: 'italic',
+                            fontSize: 30,
+                            mr: 8
                         }}
                     >
                         <Link to='/'>FPISystem</Link>
                     </Typography>
 
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
                         {navItems.map((item, index) => {
                             return (
                                 authReducer.user?.isActive && currentUserRole !== null &&
@@ -69,18 +80,44 @@ const NavbarMenu = () => {
                                         onClick={() => {
                                             navigate(item.to)
                                         }}
+                                        size="large"
                                     >
                                         {item.label}
                                     </Button>
                                 )
                             )
                         })}
-                        {currentUserRole !== null && (
-                            <Button sx={{ color: '#fff' }} onClick={logout}>
-                                Logout
-                            </Button>
-                        )}
                     </Box>
+                    {currentUserRole !== null && (
+                         <Box sx={{ flexGrow: 0 }}>
+                           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                             <Avatar alt={authReducer.user?.displayName} src={authReducer.user?.photoURL} />
+                           </IconButton>
+                         <Menu
+                           sx={{ mt: '45px' }}
+                           id="menu-appbar"
+                           anchorEl={anchorElUser}
+                           anchorOrigin={{
+                             vertical: 'top',
+                             horizontal: 'right',
+                           }}
+                           keepMounted
+                           transformOrigin={{
+                             vertical: 'top',
+                             horizontal: 'right',
+                           }}
+                           open={Boolean(anchorElUser)}
+                           onClose={handleCloseUserMenu}
+                         >
+                             <MenuItem onClick={handleCloseUserMenu} sx={{minWidth: 120}}>
+                               <Typography textAlign="center">Profile</Typography>
+                             </MenuItem>
+                             <MenuItem onClick={logout} sx={{minWidth: 120}}>
+                               <Typography textAlign="center">Logout</Typography>
+                             </MenuItem>
+                         </Menu>
+                       </Box>
+                    )}
                 </Toolbar>
             </AppBar>
         )
