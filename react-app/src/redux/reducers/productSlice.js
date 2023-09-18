@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { showAlert } from './alertSlice'
-import { createProductOnBlockchain, getAllProducts, getProductDetail } from '../../utils/web3-method/product'
+import { createProductOnBlockchain, getAllProducts, getProductDetail, moveToRetailer } from '../../utils/web3-method/product'
 
 const initialState = {
     products: [],
@@ -104,6 +104,34 @@ export const getProductById = createAsyncThunk(
                     error: 'Failed retrieved product information.'
                 })
             )
+        }
+    }
+)
+
+
+export const moveProductToRetailer = createAsyncThunk(
+    'product/moveProductToRetailer',
+    async (
+        {
+            data,
+            contract,
+            accountAddress
+        },
+        { dispatch }
+    ) => {
+        try {
+            dispatch(showAlert({ loading: true }))
+
+            await moveToRetailer(
+                data,
+                contract,
+                accountAddress
+            )
+
+            dispatch(showAlert({ success: 'Successfully moved the product to the retailer.' }))
+
+        } catch (error) {
+            dispatch(showAlert({ error: 'Failed to move the product to the retailer.' }))
         }
     }
 )

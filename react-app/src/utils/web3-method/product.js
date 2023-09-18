@@ -88,6 +88,30 @@ export const getProductDetail = async (
     }
 }
 
+export const moveToRetailer = async (
+    {
+        productID,
+        retailerEmail,
+        movingDate
+    },
+    contract,
+    accountAddress
+) => {
+    try {
+        return await contract.methods
+            .moveToRetailer(
+                productID,
+                retailerEmail,
+                movingDate
+            )
+            .send({
+                from: accountAddress
+            })
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 /*
 export const getProductsByCustomer = async (customerEmail) => {
     try {
@@ -179,28 +203,6 @@ export const getProductsByRetailer = async (retailerEmail) => {
         })
 
         return productsResult
-    } catch (error) {
-        console.error(error)
-    }
-}
-
-export const moveToRetailer = async (
-    productID,
-    retailerEmail,
-    retailLocation,
-    movingDate
-) => {
-    try {
-        return await contract.methods
-            .moveToRetailer(
-                productID,
-                retailerEmail,
-                retailLocation,
-                movingDate
-            )
-            .send({
-                from: accountAddress
-            })
     } catch (error) {
         console.error(error)
     }

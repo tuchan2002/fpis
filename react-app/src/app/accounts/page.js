@@ -59,12 +59,6 @@ const Accounts = () => {
                     alignItems: 'flex-end'
                 }}
             >
-                <Button
-                    variant='contained'
-                    onClick={() => navigate('/create-account')}
-                >
-                    Create Account
-                </Button>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                         <TableHead>

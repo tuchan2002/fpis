@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { getDocumentsCondition } from '../../firebase/services'
 
 const initialState = {
     users: [],
@@ -34,14 +35,9 @@ export const getUserById = createAsyncThunk(
 
 export const getUsersByRole = createAsyncThunk(
     'user/getUsersByRole',
-    async ({ role, accessToken }) => {
-        const response = await axios.get(
-            `http://localhost:8000/api/v1/user/role/${role}`,
-            {
-                headers: { Authorization: `Bearer ${accessToken}` }
-            }
-        )
-        return response.data
+    async ({ role }) => {
+        const users = await getDocumentsCondition('users', 'role', role)
+        return users
     }
 )
 const userSlice = createSlice({
@@ -63,8 +59,7 @@ const userSlice = createSlice({
 
         builder.addCase(getUsersByRole.fulfilled, (state, action) => {
             console.log('fulfilled')
-
-            state.users = action.payload.data.users
+            state.users = action.payload
         })
     }
 })
