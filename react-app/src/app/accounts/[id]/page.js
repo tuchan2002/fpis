@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { AppDispatch } from '../../../redux'
 import { authSelector } from '../../../redux/reducers/authSlice'
 import useAuthEffect from '../../../customHook/useAuthEffect'
-import { userSelector } from '../../../redux/reducers/userSlice'
+import { getUserById, userSelector } from '../../../redux/reducers/userSlice'
 
 const AccountDetails = () => {
     const params = useParams();
@@ -20,14 +20,13 @@ const AccountDetails = () => {
     const allowedRolesList = [3]
     useAuthEffect(currentUserRole, allowedRolesList)
 
-    // useEffect(() => {
-    //     dispatch(
-    //         getUserById({
-    //             userId: params?.id,
-    //             accessToken: authReducer.token
-    //         })
-    //     )
-    // }, [authReducer.token])
+    useEffect(() => {
+        dispatch(
+            getUserById({
+                userId: params?.id,
+            })
+        )
+    }, [authReducer.user])
 
     const convertRoleToText = (role) => {
         switch (role) {

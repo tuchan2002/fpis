@@ -22,11 +22,12 @@ export const getDocuments = async (collectionName) => {
 export const getDocumentsCondition = async (
     collectionName,
     key,
+    operator,
     value
 ) => {
     const docRef = collection(db, collectionName)
 
-    const q = query(docRef, where(key, '==', value))
+    const q = query(docRef, where(key, operator, value))
     const querySnapshot = await getDocs(q)
     const data = querySnapshot.docs.map((doc) => doc.data())
 

@@ -13,10 +13,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import { IconButton } from '@mui/material'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch } from '../../redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { authSelector } from '../../redux/reducers/authSlice'
-import { userSelector } from '../../redux/reducers/userSlice'
+import { getAllOfUsers, userSelector } from '../../redux/reducers/userSlice'
 import useAuthEffect from '../../customHook/useAuthEffect'
 
 const Accounts = () => {
@@ -30,9 +29,9 @@ const Accounts = () => {
     const allowedRolesList = [3]
     useAuthEffect(currentUserRole, allowedRolesList)
 
-    // useEffect(() => {
-    //     dispatch(getAllOfUsers({ accessToken: authReducer.token }))
-    // }, [authReducer.token])
+    useEffect(() => {
+        dispatch(getAllOfUsers())
+    }, [])
 
     const convertRoleToText = (role) => {
         switch (role) {
@@ -65,7 +64,6 @@ const Accounts = () => {
                             <TableRow>
                                 <TableCell>Email</TableCell>
                                 <TableCell align='left'>Name</TableCell>
-                                <TableCell align='left'>Location</TableCell>
                                 <TableCell align='left'>Phone Number</TableCell>
                                 <TableCell align='left'>Role</TableCell>
                                 <TableCell align='left'>Detail</TableCell>

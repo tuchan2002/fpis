@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { getDocumentsCondition } from '../../firebase/services'
+import { getDocument, getDocuments, getDocumentsCondition } from '../../firebase/services'
 
 const initialState = {
     users: [],
@@ -9,11 +9,13 @@ const initialState = {
 
 export const getAllOfUsers = createAsyncThunk(
     'user/getAllOfUsers',
-    async ({ accessToken }) => {
-        const response = await axios.get(`http://localhost:8000/api/v1/user`, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-        })
-        return response.data
+    async () => {
+        try {
+            const users = await getDocumentsCondition('users', 'role', '!=', 3)
+            return users
+        } catch (error) {
+            console.log(error);
+        }
     }
 )
 
@@ -21,23 +23,25 @@ export const getUserById = createAsyncThunk(
     'user/getUserById',
     async ({
         userId,
-        accessToken
     }) => {
-        const response = await axios.get(
-            `http://localhost:8000/api/v1/user/${userId}`,
-            {
-                headers: { Authorization: `Bearer ${accessToken}` }
-            }
-        )
-        return response.data
+        try {
+            const user = await getDocument('users', 'uid', userId)
+            return user
+        } catch (error) {
+            console.log(error);
+        }
     }
 )
 
 export const getUsersByRole = createAsyncThunk(
     'user/getUsersByRole',
     async ({ role }) => {
-        const users = await getDocumentsCondition('users', 'role', role)
-        return users
+        try {
+            const users = await getDocumentsCondition('users', 'role', '==', role)
+            return users
+        } catch (error) {
+            console.log(error);
+        }
     }
 )
 const userSlice = createSlice({
@@ -48,13 +52,13 @@ const userSlice = createSlice({
         builder.addCase(getAllOfUsers.fulfilled, (state, action) => {
             console.log('fulfilled')
 
-            state.users = action.payload.data.users
+            state.users = action.payload
         })
 
         builder.addCase(getUserById.fulfilled, (state, action) => {
             console.log('fulfilled')
 
-            state.user = action.payload.data.user
+            state.user = action.payload
         })
 
         builder.addCase(getUsersByRole.fulfilled, (state, action) => {
