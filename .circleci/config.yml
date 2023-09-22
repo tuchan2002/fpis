@@ -74,6 +74,7 @@ jobs:
             cp ~/fpis/react-app/src/contract-info-old.json ./contract-info.json
             cat contract-info.json
             ls
+            ls src/
             pwd
       - docker/check:
           docker-username: DOCKER_USERNAME
