@@ -65,6 +65,7 @@ contract FPIS {
     productIds.push(_productID);
 
     return true;
+    
   }
 
   function moveToRetailer(string memory _productID, string memory _retailerEmail, string memory _movingDate) public payable returns (bool) {

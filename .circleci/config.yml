@@ -42,13 +42,13 @@ jobs:
               echo "There are no changes in the smart contract code."
               cd react-app/
               ls
-              cat contract-info.json
+              cat src/contract-info.json
             else
               echo "There are changes in the smart contract code."
               cd react-app/
               npm run compile
               npm run deploy:testnet
-              cat contract-info.json
+              cat src/contract-info.json
             fi
       - persist_to_workspace:
           root: ~/fpis/react-app/src
