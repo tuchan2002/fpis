@@ -17,6 +17,44 @@ jobs:
           command: npm run lint
           name: Run Lint
 
+  deploy-contract: 
+    working_directory: ~/fpis/react-app
+    executor: node/default
+    steps:
+      - checkout:
+          path: ~/fpis
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Create .env file
+          command: |
+            echo "PRIVATE_KEY=$METAMASK_PRIVATE_KEY" > ~/fpis/react-app/.env
+            cat .env
+      - run:
+          name: Checking the change in smart contract code
+          command: |
+            cd ..
+            previous_commit=$(git rev-parse HEAD^)
+            changes=$(git diff $previous_commit -- react-app/contracts/)
+
+            git diff $previous_commit -- react-app/contracts/
+            if [ -z "$changes" ]; then
+              echo "There are no changes in the smart contract code."
+              cd react-app/
+              ls
+              cat contract-info.json
+            else
+              echo "There are changes in the smart contract code."
+              cd react-app/
+              npm run compile
+              npm run deploy:testnet
+              cat contract-info.json
+            fi
+      - persist_to_workspace:
+          root: ~/fpis/react-app/src
+          paths:
+            - contract-info.json
+
   build-and-push:
     working_directory: ~/fpis/react-app
     environment:
@@ -27,6 +65,14 @@ jobs:
       - setup_remote_docker
       - checkout:
           path: ~/fpis
+      - attach_workspace:
+          at: ~/fpis/react-app/src
+      - run:
+          name: Use Persisted File
+          command: |
+            mv ~/fpis/react-app/src/contract-info.json ~/fpis/react-app/src/contract-info-old.json
+            cp ~/fpis/react-app/src/contract-info-old.json ./contract-info.json
+            cat contract-info.json
       - docker/check:
           docker-username: DOCKER_USERNAME
           docker-password: DOCKER_PASSWORD
@@ -40,44 +86,6 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-
-  deploy-contract: 
-    working_directory: ~/fpis/api
-    executor: node/default
-    steps:
-      - checkout:
-          path: ~/fpis
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          name: Create .env file
-          command: |
-            echo "PRIVATE_KEY=$METAMASK_PRIVATE_KEY" > ~/fpis/api/.env
-            cat .env
-      - run:
-          name: Checking the change in smart contract code
-          command: |
-            cd ..
-            previous_commit=$(git rev-parse HEAD^)
-            changes=$(git diff $previous_commit -- api/contracts/)
-
-            git diff $previous_commit -- api/contracts/
-            if [ -z "$changes" ]; then
-              echo "There are no changes in the smart contract code."
-              cd api/
-              ls
-              cat contract-info.json
-            else
-              echo "There are changes in the smart contract code."
-              cd api/
-              npm run compile-contract
-              npm run deploy-contract:testnet
-              cat contract-info.json
-            fi
-      - persist_to_workspace:
-          root: ~/fpis/api
-          paths:
-            - contract-info.json
 
   deploy: 
     machine:
@@ -95,9 +103,16 @@ workflows:
   test-build-deploy:
     jobs:
       - eslint
-      - build-and-push:
+      - deploy-contract:
           requires:
             - eslint
+          filters:
+            branches:
+              only:
+                - develop
+      - build-and-push:
+          requires:
+            - deploy-contract
           filters:
             branches:
               only:
