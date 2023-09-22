@@ -1,6 +1,5 @@
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../redux';
 import { web3Selector } from '../redux/reducers/web3Slice';
 import { authSelector } from '../redux/reducers/authSlice';
 import useAuthEffect from '../customHook/useAuthEffect';

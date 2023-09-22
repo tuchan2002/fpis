@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AppDispatch } from '../../../redux';
 import { web3Selector } from '../../../redux/reducers/web3Slice';
 import { getProductById, productSelector } from '../../../redux/reducers/productSlice';
 import { authSelector } from '../../../redux/reducers/authSlice';

@@ -8,11 +8,9 @@ import {
     MenuItem,
     Button
 } from '@mui/material';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { AppDispatch } from '../../redux';
 import { getUsersByRole, userSelector } from '../../redux/reducers/userSlice';
 import { changeCustomerOfProduct, getProductById, productSelector } from '../../redux/reducers/productSlice';
 import { authSelector } from '../../redux/reducers/authSlice';

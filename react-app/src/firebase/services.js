@@ -5,7 +5,6 @@ import {
     updateDoc,
     doc,
     getDocs,
-    getDoc,
     where,
     query,
     limit
@@ -14,7 +13,7 @@ import { db } from './config';
 
 export const getDocuments = async (collectionName) => {
     const querySnapshot = await getDocs(collection(db, collectionName));
-    const data = querySnapshot.docs.map((doc) => doc.data());
+    const data = querySnapshot.docs.map((docItem) => docItem.data());
 
     return data;
 };
@@ -29,7 +28,7 @@ export const getDocumentsCondition = async (
 
     const q = query(docRef, where(key, operator, value));
     const querySnapshot = await getDocs(q);
-    const data = querySnapshot.docs.map((doc) => doc.data());
+    const data = querySnapshot.docs.map((docItem) => docItem.data());
     console.log(data);
     return data;
 };
@@ -43,7 +42,7 @@ export const getDocument = async (
 
     const q = query(docRef, where(key, '==', value), limit(1));
     const querySnapshot = await getDocs(q);
-    const data = querySnapshot.docs.map((doc) => doc.data());
+    const data = querySnapshot.docs.map((docItem) => docItem.data());
 
     if (data.length === 1) {
         return data[0];
@@ -68,7 +67,7 @@ export const updateDocument = async (
 
     const q = query(docCollection, where(key, '==', value), limit(1));
     const querySnapshot = await getDocs(q);
-    const docId = querySnapshot.docs.map((doc) => doc.id)[0];
+    const docId = querySnapshot.docs.map((docItem) => docItem.id)[0];
 
     console.log(docId);
     const docRef = doc(db, collectionName, docId);

@@ -1,13 +1,11 @@
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
-import React, { ChangeEvent, FormEvent, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import QRCode from 'qrcode.react';
 import { v4 as uuidv4 } from 'uuid';
 import html2canvas from 'html2canvas';
 import DownloadIcon from '@mui/icons-material/Download';
 import moment from 'moment';
-import { useNavigate } from 'react-router-dom';
-import { AppDispatch } from '../../redux';
 import { web3Selector } from '../../redux/reducers/web3Slice';
 import { authSelector } from '../../redux/reducers/authSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
@@ -15,7 +13,6 @@ import { createProduct } from '../../redux/reducers/productSlice';
 
 function CreateProduct() {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const web3Reducer = useSelector(web3Selector);
     console.log('web3Reducerweb3Reducer', web3Reducer);

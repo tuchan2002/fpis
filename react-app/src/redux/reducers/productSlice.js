@@ -28,8 +28,6 @@ export const createProduct = createAsyncThunk(
                 })
             );
             window.location.href = '/products';
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error) {
             console.log(error);
 
@@ -60,8 +58,6 @@ export const getAllOfProducts = createAsyncThunk(
             dispatch(showAlert({ loading: false }));
 
             return products;
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error) {
             dispatch(
                 showAlert({
@@ -90,8 +86,6 @@ export const getAllProductsByManufactory = createAsyncThunk(
             dispatch(showAlert({ loading: false }));
 
             return products;
-
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (error) {
             dispatch(
                 showAlert({
@@ -304,6 +298,6 @@ const productReducer = productSlice.reducer;
 
 export const productSelector = (state) => state.productReducer;
 
-export const {} = productSlice.actions;
+// export const {} = productSlice.actions;
 
 export default productReducer;
