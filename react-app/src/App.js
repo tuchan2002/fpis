@@ -710,7 +710,10 @@ function App() {
             const accounts = await web3Reducer.web3.eth.getAccounts();
             dispatch(setAccount(accounts[0]));
         };
-        getAccount();
+
+        if (web3Reducer.web3) {
+            getAccount();
+        }
     }, [web3Reducer.web3]);
 
     return (
