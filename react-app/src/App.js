@@ -25,10 +25,10 @@ import { setAccount, setWeb3State, web3Selector } from './redux/reducers/web3Sli
 import ProductDetails from './app/products/[id]/page';
 import contractInfo from './contract-info.json';
 
-const contractAbi = contractInfo.contractABI;
-const contractAddress = contractInfo.contractAddress;
-console.log(contractAbi, contractAddress);
 function App() {
+    const contractAbi = contractInfo.contractABI;
+    const contractAddress = contractInfo.contractAddress;
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -73,17 +73,15 @@ function App() {
                 );
 
                 if (provider) {
-                    let accountAddress;
                     provider.on('accountsChanged', (accounts) => {
-                        console.log('accounts', accounts);
-                        accountAddress = accounts[0];
+                        console.log('accountsChanged', accounts);
+                        dispatch(setAccount(accounts[0]));
                     });
 
                     const data = {
                         provider,
                         web3,
-                        contract,
-                        account: accountAddress
+                        contract
                     };
 
                     dispatch(setWeb3State(data));

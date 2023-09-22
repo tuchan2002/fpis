@@ -9,6 +9,7 @@ import ProductInfoTable from '../../components/product-info-table';
 import { getProductDetail } from '../../utils/web3-method/product';
 import { web3Selector } from '../../redux/reducers/web3Slice';
 import { showAlert } from '../../redux/reducers/alertSlice';
+import connectWallet from '../../utils/connectWallet';
 
 function VerifyProduct() {
     const dispatch = useDispatch();
@@ -24,6 +25,11 @@ function VerifyProduct() {
 
     const handleVerify = async () => {
         if (!productScannerData) {
+            return;
+        }
+
+        if (!web3Reducer.account) {
+            connectWallet(web3Reducer, dispatch);
             return;
         }
 

@@ -17,6 +17,7 @@ import QRCodeScanner from '../../components/qr-code-scanner';
 import ProductInfoTable from '../../components/product-info-table';
 import ProductTimeline from '../../components/product-timeline';
 import { web3Selector } from '../../redux/reducers/web3Slice';
+import connectWallet from '../../utils/connectWallet';
 
 function SellProduct() {
     const dispatch = useDispatch();
@@ -53,6 +54,11 @@ function SellProduct() {
 
     const handleSellToCustomer = async () => {
         if (!productScannerData) {
+            return;
+        }
+
+        if (!web3Reducer.account) {
+            connectWallet(web3Reducer, dispatch);
             return;
         }
 

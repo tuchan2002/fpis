@@ -19,7 +19,6 @@ const web3Slice = createSlice({
                 state.provider = action.payload.provider;
                 state.web3 = action.payload.web3;
                 state.contract = action.payload.contract;
-                state.account = action.payload.account;
             }
         }
     }
