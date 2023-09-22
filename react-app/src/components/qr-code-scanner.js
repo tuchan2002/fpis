@@ -9,8 +9,8 @@ function QRCodeScanner({
             'reader',
             {
                 qrbox: {
-                    width: 200,
-                    height: 200
+                    width: 225,
+                    height: 225
                 },
                 fps: 5,
                 supportedScanTypes: [
@@ -22,9 +22,9 @@ function QRCodeScanner({
         );
 
         const onScanSuccess = (scanData) => {
-            if (scanData) {
-                scanner.clear();
+            if (scanData && typeof JSON.parse(scanData) === 'object') {
                 setResult(JSON.parse(scanData));
+                scanner.clear();
             }
         };
 
@@ -32,10 +32,14 @@ function QRCodeScanner({
             console.error(err);
         };
         scanner.render(onScanSuccess, onScanError);
+
+        return () => {
+            scanner.clear();
+        };
     }, []);
 
     return (
-        <div id='reader' style={{ width: 375 }} />
+        <div id='reader' style={{ width: 400 }} />
     );
 }
 
