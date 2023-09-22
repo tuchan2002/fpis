@@ -1,5 +1,4 @@
 import {Box,
-    Button,
     Paper,
     Table,
     TableBody,
@@ -11,14 +10,13 @@ import {Box,
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { authSelector } from '../../redux/reducers/authSlice';
 import { getAllOfUsers, userSelector } from '../../redux/reducers/userSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
 
 function Accounts() {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const userReducer = useSelector(userSelector);
 

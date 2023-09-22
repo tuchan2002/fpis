@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { getDocument, getDocuments, getDocumentsCondition, updateDocument } from '../../firebase/services';
+import { getDocument, getDocumentsCondition, updateDocument } from '../../firebase/services';
 import { showAlert } from './alertSlice';
 import { createCustomer, createManufactory, createRetailer } from '../../utils/web3-method/auth';
 
@@ -111,6 +110,6 @@ const userReducer = userSlice.reducer;
 
 export const userSelector = (state) => state.userReducer;
 
-export const {} = userSlice.actions;
+// export const {} = userSlice.actions;
 
 export default userReducer;

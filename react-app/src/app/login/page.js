@@ -63,8 +63,8 @@ function Login() {
             <Paper elevation={3} sx={{ p: 3 }}>
                 <img
                     src={logo}
-                    alt="logo"
-                    style={{ marginBottom: "16px" }}
+                    alt='logo'
+                    style={{ marginBottom: '16px' }}
                 />
                 <Button
                     startIcon={<GoogleIcon />}

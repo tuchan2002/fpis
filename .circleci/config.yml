@@ -6,7 +6,7 @@ orbs:
 
 jobs:
   eslint:
-    working_directory: ~/fpis/web
+    working_directory: ~/fpis/react-app
     executor: node/default
     steps:
       - checkout:
@@ -17,10 +17,10 @@ jobs:
           command: npm run lint
           name: Run Lint
 
-  build-push-next-app:
-    working_directory: ~/fpis/web
+  build-and-push:
+    working_directory: ~/fpis/react-app
     environment:
-      DOCKER_IMAGE: tuchan17/fpis_next
+      DOCKER_IMAGE: tuchan17/fpis_app
       DOCKER_TAG: latest
     executor: docker/docker
     steps:
@@ -95,24 +95,17 @@ workflows:
   test-build-deploy:
     jobs:
       - eslint
-      - deploy-contract:
+      - build-and-push:
           requires:
             - eslint
           filters:
             branches:
               only:
-                - master
-      - build-push-next-app:
-          requires:
-            - deploy-contract
-          filters:
-            branches:
-              only:
-                - master
+                - develop
       - deploy:
           requires:
-            - build-push-next-app
+            - build-and-push
           filters:
             branches:
               only:
-                - master
+                - develop

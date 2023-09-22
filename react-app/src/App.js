@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes, useNavigate, BrowserRouter } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import Web3 from 'web3';
 import detectEthereumProvider from '@metamask/detect-provider';
-import { Button } from '@mui/material';
-import { AppDispatch } from './redux';
 import { getDocument } from './firebase/services';
 import { handleAuthStateChanged } from './redux/reducers/authSlice';
 import { auth } from './firebase/config';
@@ -712,7 +710,7 @@ function App() {
             const accounts = await web3Reducer.web3.eth.getAccounts();
             dispatch(setAccount(accounts[0]));
         };
-        web3Reducer.web3 && getAccount();
+        getAccount();
     }, [web3Reducer.web3]);
 
     return (

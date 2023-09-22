@@ -61,6 +61,10 @@ module.exports = {
         'react/no-array-index-key': 'warn',
         'jsx-a11y/label-has-for': 'off',
         'no-underscore-dangle': 'off',
-        'react/react-in-jsx-scope': 'off'
+        'react/react-in-jsx-scope': 'off',
+        camelcase: 'off',
+        'react/prop-types': 'off',
+        'no-param-reassign': 'off',
+        'prefer-destructuring': 'off'
     }
 };

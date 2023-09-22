@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AppDispatch } from '../../../redux';
 import { authSelector } from '../../../redux/reducers/authSlice';
 import useAuthEffect from '../../../customHook/useAuthEffect';
 import { getUserById, toggleActiveAccount, userSelector } from '../../../redux/reducers/userSlice';

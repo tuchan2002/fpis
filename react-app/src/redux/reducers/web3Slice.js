@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import Web3 from 'web3';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     provider: null,
@@ -23,8 +22,7 @@ const web3Slice = createSlice({
                 state.account = action.payload.account;
             }
         }
-    },
-    extraReducers: (builder) => {}
+    }
 });
 
 const web3Reducer = web3Slice.reducer;
