@@ -12,8 +12,7 @@ function QRCodeScanner({
                     width: 200,
                     height: 200
                 },
-                fps: 10,
-                rememberLastUsedCamera: true,
+                fps: 5,
                 supportedScanTypes: [
                     Html5QrcodeScanType.SCAN_TYPE_CAMERA,
                     Html5QrcodeScanType.SCAN_TYPE_FILE
@@ -23,8 +22,8 @@ function QRCodeScanner({
         );
 
         const onScanSuccess = (scanData) => {
-            // scanner.clear()
             if (scanData) {
+                scanner.clear();
                 setResult(JSON.parse(scanData));
             }
         };
@@ -35,7 +34,9 @@ function QRCodeScanner({
         scanner.render(onScanSuccess, onScanError);
     }, []);
 
-    return <div id='reader' style={{ width: 375 }} />;
+    return (
+        <div id='reader' style={{ width: 375 }} />
+    );
 }
 
 export default QRCodeScanner;

@@ -12,12 +12,10 @@ import ReduxProvider from './redux/provider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <React.StrictMode>
-        <ReduxProvider>
-            <BrowserRouter>
-                <CssBaseline />
-                <App />
-            </BrowserRouter>
-        </ReduxProvider>
-    </React.StrictMode>
+    <ReduxProvider>
+        <BrowserRouter>
+            <CssBaseline />
+            <App />
+        </BrowserRouter>
+    </ReduxProvider>
 );

@@ -25,10 +25,10 @@ import { setAccount, setWeb3State, web3Selector } from './redux/reducers/web3Sli
 import ProductDetails from './app/products/[id]/page';
 import contractInfo from './contract-info.json';
 
-const contractAbi = contractInfo.contractABI;
-const contractAddress = contractInfo.contractAddress;
-console.log(contractAbi, contractAddress);
 function App() {
+    const contractAbi = contractInfo.contractABI;
+    const contractAddress = contractInfo.contractAddress;
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

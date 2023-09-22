@@ -86,7 +86,8 @@ function NavbarMenu() {
                         ))}
                     </Box>
                     {currentUserRole !== null && (
-                        <Box sx={{ flexGrow: 0 }}>
+                        <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Typography>{authReducer.user?.displayName}</Typography>
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                 <Avatar alt={authReducer.user?.displayName} src={authReducer.user?.photoURL} />
                             </IconButton>
