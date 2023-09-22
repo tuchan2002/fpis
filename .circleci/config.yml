@@ -71,7 +71,7 @@ jobs:
           name: Use Persisted File
           command: |
             mv ~/fpis/react-app/src/contract-info.json ~/fpis/react-app/src/contract-info-old.json
-            cp ~/fpis/react-app/src/contract-info-old.json ./contract-info.json
+            cp ~/fpis/react-app/src/contract-info-old.json ./src/contract-info.json
             cat contract-info.json
             ls
             ls src/

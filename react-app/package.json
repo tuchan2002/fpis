@@ -38,9 +38,7 @@
     "eject": "react-scripts eject",
     "lint": "npx eslint .",
     "lint-fix": "npx eslint . --fix",
-    "local-network": "npx hardhat node",
     "compile": "npx hardhat compile",
-    "deploy:local": "npx hardhat run --network localhost scripts/deploy.js",
     "deploy:testnet": "npx hardhat run --network bscTestnet scripts/deploy.js"
   },
   "eslintConfig": {
