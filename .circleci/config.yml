@@ -112,18 +112,18 @@ workflows:
           filters:
             branches:
               only:
-                - develop
+                - master
       - build-and-push:
           requires:
             - deploy-contract
           filters:
             branches:
               only:
-                - develop
+                - master
       - deploy:
           requires:
             - build-and-push
           filters:
             branches:
               only:
-                - develop
+                - master

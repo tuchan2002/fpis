@@ -73,17 +73,15 @@ function App() {
                 );
 
                 if (provider) {
-                    let accountAddress;
                     provider.on('accountsChanged', (accounts) => {
-                        console.log('accounts', accounts);
-                        accountAddress = accounts[0];
+                        console.log('accountsChanged', accounts);
+                        dispatch(setAccount(accounts[0]));
                     });
 
                     const data = {
                         provider,
                         web3,
-                        contract,
-                        account: accountAddress
+                        contract
                     };
 
                     dispatch(setWeb3State(data));
