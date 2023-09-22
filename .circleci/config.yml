@@ -103,9 +103,16 @@ workflows:
   test-build-deploy:
     jobs:
       - eslint
-      - build-and-push:
+      - deploy-contract:
           requires:
             - eslint
+          filters:
+            branches:
+              only:
+                - develop
+      - build-and-push:
+          requires:
+            - deploy-contract
           filters:
             branches:
               only:
