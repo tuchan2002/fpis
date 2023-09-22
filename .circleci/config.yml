@@ -73,6 +73,8 @@ jobs:
             mv ~/fpis/react-app/src/contract-info.json ~/fpis/react-app/src/contract-info-old.json
             cp ~/fpis/react-app/src/contract-info-old.json ./contract-info.json
             cat contract-info.json
+            ls
+            pwd
       - docker/check:
           docker-username: DOCKER_USERNAME
           docker-password: DOCKER_PASSWORD
