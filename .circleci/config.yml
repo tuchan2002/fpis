@@ -72,7 +72,7 @@ jobs:
           command: |
             mv ~/fpis/react-app/src/contract-info.json ~/fpis/react-app/src/contract-info-old.json
             cp ~/fpis/react-app/src/contract-info-old.json ./src/contract-info.json
-            cat contract-info.json
+            cat src/contract-info.json
             ls
             ls src/
             pwd
