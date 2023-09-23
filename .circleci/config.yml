@@ -5,8 +5,8 @@ orbs:
   docker: circleci/docker@2.2.0
 
 jobs:
-  eslint-backend:
-    working_directory: ~/fpis/api
+  eslint:
+    working_directory: ~/fpis/react-app
     executor: node/default
     steps:
       - checkout:
@@ -15,10 +15,10 @@ jobs:
           pkg-manager: npm
       - run:
           command: npm run lint
-          name: Run Lint
+          name: Check ESlint
 
-  eslint-frontend:
-    working_directory: ~/fpis/web
+  smart-contract-testing:
+    working_directory: ~/fpis/react-app
     executor: node/default
     steps:
       - checkout:
@@ -26,35 +26,11 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          command: npm run lint
-          name: Run Lint
-
-  build-push-frontend:
-    working_directory: ~/fpis/web
-    environment:
-      DOCKER_IMAGE: tuchan17/fpis_next
-      DOCKER_TAG: latest
-    executor: docker/docker
-    steps:
-      - setup_remote_docker
-      - checkout:
-          path: ~/fpis
-      - docker/check:
-          docker-username: DOCKER_USERNAME
-          docker-password: DOCKER_PASSWORD
-      - docker/build:
-          image: $DOCKER_IMAGE
-          tag: $DOCKER_TAG
-      - docker/push:
-          digest-path: /tmp/digest.txt
-          image: $DOCKER_IMAGE
-          tag: $DOCKER_TAG
-      - run:
-          command: |
-            echo "Digest is: $(</tmp/digest.txt)"
+          command: npm run test-contract
+          name: Testing Smart Contract
 
   deploy-contract: 
-    working_directory: ~/fpis/api
+    working_directory: ~/fpis/react-app
     executor: node/default
     steps:
       - checkout:
@@ -64,34 +40,37 @@ jobs:
       - run:
           name: Create .env file
           command: |
-            echo "PRIVATE_KEY=$METAMASK_PRIVATE_KEY" > ~/fpis/api/.env
+            echo "PRIVATE_KEY=$METAMASK_PRIVATE_KEY" > ~/fpis/react-app/.env
             cat .env
       - run:
           name: Checking the change in smart contract code
           command: |
             cd ..
             previous_commit=$(git rev-parse HEAD^)
-            changes=$(git diff $previous_commit -- api/contracts/)
+            changes=$(git diff $previous_commit -- react-app/contracts/)
 
-            git diff $previous_commit -- api/contracts/
+            git diff $previous_commit -- react-app/contracts/
             if [ -z "$changes" ]; then
               echo "There are no changes in the smart contract code."
+              cd react-app/
+              ls
+              cat src/contract-info.json
             else
               echo "There are changes in the smart contract code."
-              cd api/
-              npm run compile-contract
-              npm run deploy-contract:testnet
-              cat contract-info.json
+              cd react-app/
+              npm run compile
+              npm run deploy:testnet
+              cat src/contract-info.json
             fi
       - persist_to_workspace:
-          root: ~/fpis/api
+          root: ~/fpis/react-app/src
           paths:
             - contract-info.json
 
-  build-push-backend:
-    working_directory: ~/fpis/api
+  build-and-push:
+    working_directory: ~/fpis/react-app
     environment:
-      DOCKER_IMAGE: tuchan17/fpis_express
+      DOCKER_IMAGE: tuchan17/fpis_app
       DOCKER_TAG: latest
     executor: docker/docker
     steps:
@@ -99,13 +78,16 @@ jobs:
       - checkout:
           path: ~/fpis
       - attach_workspace:
-          at: ~/fpis/api
+          at: ~/fpis/react-app/src
       - run:
           name: Use Persisted File
           command: |
-            mv ~/fpis/api/contract-info.json ~/fpis/api/contract-info-old.json
-            cp ~/fpis/api/contract-info-old.json ./contract-info.json
-            cat contract-info.json
+            mv ~/fpis/react-app/src/contract-info.json ~/fpis/react-app/src/contract-info-old.json
+            cp ~/fpis/react-app/src/contract-info-old.json ./src/contract-info.json
+            cat src/contract-info.json
+            ls
+            ls src/
+            pwd
       - docker/check:
           docker-username: DOCKER_USERNAME
           docker-password: DOCKER_PASSWORD
@@ -120,7 +102,7 @@ jobs:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
 
-  deploy-backend-frontend: 
+  deploy: 
     machine:
       image: ubuntu-2004:current
     steps:
@@ -135,33 +117,26 @@ jobs:
 workflows:
   test-build-deploy:
     jobs:
-      - eslint-backend
-      - eslint-frontend
-      - build-push-frontend:
-          requires:
-            - eslint-backend
-            - eslint-frontend
-          filters:
-            branches:
-              only:
-                - master
+      - eslint
+      - smart-contract-testing
       - deploy-contract:
           requires:
-            - build-push-frontend
+            - eslint
+            - smart-contract-testing
           filters:
             branches:
               only:
                 - master
-      - build-push-backend:
+      - build-and-push:
           requires:
             - deploy-contract
           filters:
             branches:
               only:
                 - master
-      - deploy-backend-frontend:
+      - deploy:
           requires:
-            - build-push-backend
+            - build-and-push
           filters:
             branches:
               only:
