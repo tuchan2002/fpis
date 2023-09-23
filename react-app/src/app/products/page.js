@@ -109,7 +109,7 @@ function Products() {
                             <ToggleButton value='total'>
                                 {` Total (${generateProductListFilter(productReducer.products, 'total').length}) `}
                             </ToggleButton>
-                            {currentUserRole !== 2 && (
+                            {currentUserRole !== 1 && (
                                 <ToggleButton value='atManufactory'>
                                     {` At Manufactory (${generateProductListFilter(productReducer.products, 'atManufactory').length}) `}
                                 </ToggleButton>
@@ -138,9 +138,11 @@ function Products() {
                             <TableRow>
                                 <TableCell>ID</TableCell>
                                 <TableCell align='left'>Model</TableCell>
-                                <TableCell align='left'>Description</TableCell>
                                 <TableCell align='left'>
                                     Manufactory Email
+                                </TableCell>
+                                <TableCell align='left'>
+                                    Retailer Email
                                 </TableCell>
                                 <TableCell align='left'>Detail</TableCell>
                             </TableRow>
@@ -162,10 +164,10 @@ function Products() {
                                         {product.model}
                                     </TableCell>
                                     <TableCell align='left'>
-                                        {product.description}
+                                        {product.manufactoryEmail}
                                     </TableCell>
                                     <TableCell align='left'>
-                                        {product.manufactoryEmail}
+                                        {product.retailerEmail ? product.retailerEmail : 'None'}
                                     </TableCell>
                                     <TableCell align='left'>
                                         <Link
