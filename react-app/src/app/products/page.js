@@ -7,11 +7,14 @@ import {Box,
     TableContainer,
     TableHead,
     TableRow,
-    IconButton } from '@mui/material';
+    IconButton,
+    ToggleButtonGroup,
+    ToggleButton} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
 import { web3Selector } from '../../redux/reducers/web3Slice';
 import { getAllOfProducts, getAllProductsByCustomer, getAllProductsByManufactory, getAllProductsByRetailer, productSelector } from '../../redux/reducers/productSlice';
 import { authSelector } from '../../redux/reducers/authSlice';
@@ -62,6 +65,25 @@ function Products() {
         }
     }, [authReducer.user, web3Reducer.contract, web3Reducer.account]);
 
+    const [option, setOption] = useState('total');
+    const handleChangeOption = (
+        event,
+        newOption,
+    ) => {
+        setOption(newOption);
+    };
+
+    const generateProductListFilter = (products = [], optionFilter = 'total') => {
+        if (optionFilter === 'atManufactory') {
+            return products.filter((prod) => prod?.retailerEmail.trim() === '');
+        } if (optionFilter === 'atRetailer') {
+            return products.filter((prod) => prod?.retailerEmail.trim() !== '' && prod?.customerEmail.trim() === '');
+        } if (optionFilter === 'sold') {
+            return products.filter((prod) => prod?.customerEmail.trim() !== '');
+        }
+        return products;
+    };
+
     return (
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
@@ -74,14 +96,42 @@ function Products() {
                     alignItems: 'flex-end'
                 }}
             >
-                {currentUserRole === 0 && (
-                    <Button
-                        variant='contained'
-                        onClick={() => navigate('/create-product')}
-                    >
-                        Create Product
-                    </Button>
-                )}
+                <Box sx={{display: 'flex', gap: 4, alignItems: 'center'}}>
+                    {[0, 1, 3].includes(currentUserRole)
+                    && (
+                        <ToggleButtonGroup
+                            color='secondary'
+                            value={option}
+                            exclusive
+                            onChange={handleChangeOption}
+                            size='small'
+                        >
+                            <ToggleButton value='total'>
+                                {` Total (${generateProductListFilter(productReducer.products, 'total').length}) `}
+                            </ToggleButton>
+                            {currentUserRole !== 2 && (
+                                <ToggleButton value='atManufactory'>
+                                    {` At Manufactory (${generateProductListFilter(productReducer.products, 'atManufactory').length}) `}
+                                </ToggleButton>
+                            )}
+                            <ToggleButton value='atRetailer'>
+                                {` At Retailer (${generateProductListFilter(productReducer.products, 'atRetailer').length}) `}
+                            </ToggleButton>
+                            <ToggleButton value='sold'>
+                                {` Sold (${generateProductListFilter(productReducer.products, 'sold').length}) `}
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                    )}
+                    {currentUserRole === 0 && (
+                        <Button
+                            startIcon={<AddIcon />}
+                            variant='contained'
+                            onClick={() => navigate('/create-product')}
+                        >
+                            Create Product
+                        </Button>
+                    )}
+                </Box>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                         <TableHead>
@@ -96,7 +146,7 @@ function Products() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {productReducer.products?.map((product) => (
+                            {generateProductListFilter(productReducer.products, option).map((product) => (
                                 <TableRow
                                     key={product.productID}
                                     sx={{

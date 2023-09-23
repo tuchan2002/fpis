@@ -56,7 +56,7 @@ function AccountDetails() {
                         onClick={() => navigate(-1)}
                         startIcon={<ArrowBackIcon />}
                     >
-                        戻る
+                        Back
                     </Button>
                     <List
                         sx={{

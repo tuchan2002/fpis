@@ -47,7 +47,7 @@ function ProductDetails() {
                             onClick={() => navigate(-1)}
                             startIcon={<ArrowBackIcon />}
                         >
-                            戻る
+                            Back
                         </Button>
                         {productReducer.product && (
                             <ProductInfoTable
