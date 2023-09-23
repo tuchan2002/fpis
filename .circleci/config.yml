@@ -15,7 +15,19 @@ jobs:
           pkg-manager: npm
       - run:
           command: npm run lint
-          name: Run Lint
+          name: Check ESlint
+
+  testing-contract:
+    working_directory: ~/fpis/react-app
+    executor: node/default
+    steps:
+      - checkout:
+          path: ~/fpis
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          command: npm run test-contract
+          name: Testing Smart Contract
 
   deploy-contract: 
     working_directory: ~/fpis/react-app
@@ -106,9 +118,11 @@ workflows:
   test-build-deploy:
     jobs:
       - eslint
+      - testing-contract
       - deploy-contract:
           requires:
             - eslint
+            - testing-contract
           filters:
             branches:
               only:
