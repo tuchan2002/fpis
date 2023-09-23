@@ -17,7 +17,7 @@ jobs:
           command: npm run lint
           name: Check ESlint
 
-  testing-contract:
+  smart-contract-testing:
     working_directory: ~/fpis/react-app
     executor: node/default
     steps:
@@ -118,11 +118,11 @@ workflows:
   test-build-deploy:
     jobs:
       - eslint
-      - testing-contract
+      - smart-contract-testing
       - deploy-contract:
           requires:
             - eslint
-            - testing-contract
+            - smart-contract-testing
           filters:
             branches:
               only:
