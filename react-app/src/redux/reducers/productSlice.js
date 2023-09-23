@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { showAlert } from './alertSlice';
 import { changeCustomer, createProductOnBlockchain, getAllProducts, getProductDetail, getProductsByCustomer, getProductsByManufactory, getProductsByRetailer, moveToRetailer, sellToFirstCustomer } from '../../utils/web3-method/product';
+import showSweetAlert from '../../utils/show-swal';
 
 const initialState = {
     products: [],
@@ -203,9 +204,19 @@ export const moveProductToRetailer = createAsyncThunk(
                 accountAddress
             );
 
-            dispatch(showAlert({ success: 'Successfully moved the product to the retailer.' }));
+            const product = await getProductDetail(
+                data.productID,
+                contract,
+                accountAddress
+            );
+
+            dispatch(showAlert({ loading: false }));
+
+            await showSweetAlert('success', 'Successfully moved the product to the retailer.');
+
+            return product;
         } catch (error) {
-            dispatch(showAlert({ error: 'Failed to move the product to the retailer.' }));
+            await showSweetAlert('error', 'Failed to move the product to the retailer.');
         }
     }
 );
@@ -229,9 +240,19 @@ export const sellProductToRetailer = createAsyncThunk(
                 accountAddress
             );
 
-            dispatch(showAlert({ success: 'Successfully sold the product to the customer.' }));
+            const product = await getProductDetail(
+                data.productID,
+                contract,
+                accountAddress
+            );
+
+            dispatch(showAlert({ loading: false }));
+
+            await showSweetAlert('success', 'Successfully sold the product to the customer.');
+
+            return product;
         } catch (error) {
-            dispatch(showAlert({ error: 'Failed to sell the product to the customer.' }));
+            await showSweetAlert('error', 'Failed to sell the product to the customer.');
         }
     }
 );
@@ -255,9 +276,19 @@ export const changeCustomerOfProduct = createAsyncThunk(
                 accountAddress
             );
 
-            dispatch(showAlert({ success: 'Successfully changed the product to another customer.' }));
+            const product = await getProductDetail(
+                data.productID,
+                contract,
+                accountAddress
+            );
+
+            dispatch(showAlert({ loading: false }));
+
+            await showSweetAlert('success', 'Successfully changed the product to another customer.');
+
+            return product;
         } catch (error) {
-            dispatch(showAlert({ error: 'Failed to change the product.' }));
+            await showSweetAlert('error', 'Failed to change the product.');
         }
     }
 );
@@ -268,28 +299,35 @@ const productSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getAllOfProducts.fulfilled, (state, action) => {
-            console.log('fulfilled');
             state.products = action.payload;
         });
 
         builder.addCase(getProductById.fulfilled, (state, action) => {
-            console.log('fulfilled');
             state.product = action.payload;
         });
 
         builder.addCase(getAllProductsByManufactory.fulfilled, (state, action) => {
-            console.log('fulfilled');
             state.products = action.payload;
         });
 
         builder.addCase(getAllProductsByRetailer.fulfilled, (state, action) => {
-            console.log('fulfilled');
             state.products = action.payload;
         });
 
         builder.addCase(getAllProductsByCustomer.fulfilled, (state, action) => {
-            console.log('fulfilled');
             state.products = action.payload;
+        });
+
+        builder.addCase(moveProductToRetailer.fulfilled, (state, action) => {
+            state.product = action.payload;
+        });
+
+        builder.addCase(sellProductToRetailer.fulfilled, (state, action) => {
+            state.product = action.payload;
+        });
+
+        builder.addCase(changeCustomerOfProduct.fulfilled, (state, action) => {
+            state.product = action.payload;
         });
     }
 });

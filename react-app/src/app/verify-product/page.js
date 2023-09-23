@@ -1,7 +1,6 @@
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Swal from 'sweetalert2';
 import { authSelector } from '../../redux/reducers/authSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
 import QRCodeScanner from '../../components/qr-code-scanner';
@@ -10,6 +9,7 @@ import { getProductDetail } from '../../utils/web3-method/product';
 import { web3Selector } from '../../redux/reducers/web3Slice';
 import { showAlert } from '../../redux/reducers/alertSlice';
 import connectWallet from '../../utils/connectWallet';
+import showSweetAlert from '../../utils/show-swal';
 
 function VerifyProduct() {
     const dispatch = useDispatch();
@@ -55,14 +55,11 @@ function VerifyProduct() {
                 }
             });
 
-            await Swal.fire({
-                icon: `${isReal ? 'success' : 'error'}`,
-                text: `${
-                    isReal
-                        ? 'This product is genuine.'
-                        : 'This product is fake.'
-                }`
-            });
+            if (isReal) {
+                await showSweetAlert('success', 'This product is genuine.');
+            } else {
+                await showSweetAlert('error', 'This product is fake.');
+            }
         } catch (error) {
             console.log(error);
             dispatch(

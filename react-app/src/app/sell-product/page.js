@@ -114,30 +114,35 @@ function SellProduct() {
                                 >
                                     Show Product History
                                 </Button>
-
-                                <TextField
-                                    sx={{ width: '50%' }}
-                                    id='userId'
-                                    select
-                                    label='Customer'
-                                    variant='standard'
-                                    value={selectedUserId}
-                                    onChange={(e) => setSelectedUserId(e.target.value)}
-                                >
-                                    {userReducer.users.map((user) => (
-                                        <MenuItem key={user.uid} value={user.uid}>
-                                            {`${user.displayName} - ${user.email}`}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-
-                                <Button
-                                    variant='contained'
-                                    disabled={!selectedUserId}
-                                    onClick={handleSellToCustomer}
-                                >
-                                    Sell
-                                </Button>
+                                {
+                                    !productReducer.product?.customerEmail
+                                    && (
+                                        <>
+                                            <TextField
+                                                sx={{ width: '50%' }}
+                                                id='userId'
+                                                select
+                                                label='Customer'
+                                                variant='standard'
+                                                value={selectedUserId}
+                                                onChange={(e) => setSelectedUserId(e.target.value)}
+                                            >
+                                                {userReducer.users.map((user) => (
+                                                    <MenuItem key={user.uid} value={user.uid}>
+                                                        {`${user.displayName} - ${user.email}`}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                            <Button
+                                                variant='contained'
+                                                disabled={!selectedUserId}
+                                                onClick={handleSellToCustomer}
+                                            >
+                                                Sell
+                                            </Button>
+                                        </>
+                                    )
+                                }
                             </>
                         )}
                     </Paper>

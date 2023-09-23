@@ -81,6 +81,8 @@ function ChangeOwnership() {
         }));
     };
 
+    const userList = userReducer.users.filter((user) => user.uid !== authReducer.user?.uid);
+
     return (
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
@@ -117,29 +119,33 @@ function ChangeOwnership() {
                                     Show Product History
                                 </Button>
 
-                                <TextField
-                                    sx={{ width: '50%' }}
-                                    id='userId'
-                                    select
-                                    label='Customer'
-                                    variant='standard'
-                                    value={selectedUserId}
-                                    onChange={(e) => setSelectedUserId(e.target.value)}
-                                >
-                                    {userReducer.users.map((user) => (
-                                        <MenuItem key={user.uid} value={user.uid}>
-                                            {`${user.displayName} - ${user.email}`}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-
-                                <Button
-                                    variant='contained'
-                                    disabled={!selectedUserId}
-                                    onClick={handleChangeOwnership}
-                                >
-                                    Change
-                                </Button>
+                                {productReducer.product?.customerEmail === authReducer.user?.email
+                                    && (
+                                        <>
+                                            <TextField
+                                                sx={{ width: '50%' }}
+                                                id='userId'
+                                                select
+                                                label='Customer'
+                                                variant='standard'
+                                                value={selectedUserId}
+                                                onChange={(e) => setSelectedUserId(e.target.value)}
+                                            >
+                                                {userList.map((user) => (
+                                                    <MenuItem key={user.uid} value={user.uid}>
+                                                        {`${user.displayName} - ${user.email}`}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                            <Button
+                                                variant='contained'
+                                                disabled={!selectedUserId}
+                                                onClick={handleChangeOwnership}
+                                            >
+                                                Change
+                                            </Button>
+                                        </>
+                                    )}
                             </>
                         )}
                     </Paper>

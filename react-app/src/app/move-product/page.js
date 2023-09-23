@@ -114,29 +114,35 @@ function MoveProduct() {
                                     Show Product History
                                 </Button>
 
-                                <TextField
-                                    sx={{ width: '50%' }}
-                                    id='userId'
-                                    select
-                                    label='Retailer'
-                                    variant='standard'
-                                    value={selectedUserId}
-                                    onChange={(e) => setSelectedUserId(e.target.value)}
-                                >
-                                    {userReducer.users.map((user) => (
-                                        <MenuItem key={user.uid} value={user.uid}>
-                                            {`${user.displayName} - ${user.email}`}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-
-                                <Button
-                                    variant='contained'
-                                    disabled={!selectedUserId}
-                                    onClick={handleMoveToRetailer}
-                                >
-                                    Move
-                                </Button>
+                                {
+                                    !productReducer.product?.retailerEmail
+                                    && (
+                                        <>
+                                            <TextField
+                                                sx={{ width: '50%' }}
+                                                id='userId'
+                                                select
+                                                label='Retailer'
+                                                variant='standard'
+                                                value={selectedUserId}
+                                                onChange={(e) => setSelectedUserId(e.target.value)}
+                                            >
+                                                {userReducer.users.map((user) => (
+                                                    <MenuItem key={user.uid} value={user.uid}>
+                                                        {`${user.displayName} - ${user.email}`}
+                                                    </MenuItem>
+                                                ))}
+                                            </TextField>
+                                            <Button
+                                                variant='contained'
+                                                disabled={!selectedUserId}
+                                                onClick={handleMoveToRetailer}
+                                            >
+                                                Move
+                                            </Button>
+                                        </>
+                                    )
+                                }
                             </>
                         )}
                     </Paper>
