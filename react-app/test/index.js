@@ -388,6 +388,25 @@ describe('FPIS Smart Contract', () => {
         await expect(tx).to.be.revertedWith('New customer does not exist');
     });
 
+    it('should not allow changing customer if the caller is not the current owner', async () => {
+        const productID = '888';
+        const manufactoryEmail = manufactoryTestEmail;
+        const retailerEmail = retailerTestEmail;
+        const oldCustomerEmail = customer1TestEmail;
+        const newCustomerEmail = customer2TestEmail;
+        const changeDate = '2023-09-26';
+
+        await fpisContract.createProduct(productID, 'Model 888', 'Description 888', manufactoryEmail, '2023-09-25');
+        await fpisContract.moveToRetailer(productID, retailerEmail, '2023-09-25');
+        await fpisContract.sellToFirstCustomer(productID, retailerEmail, oldCustomerEmail, '2023-09-25');
+
+        const tx = fpisContract.changeCustomer(productID, newCustomerEmail, oldCustomerEmail, changeDate);
+        await expect(tx).to.be.revertedWith('Only the current owner can change the customer');
+
+        const product= await fpisContract.getProductDetail(productID);
+        expect(product[4]).to.equal(oldCustomerEmail);
+    });
+
     it('Should get product details', async () => {
         const productID = '123';
         const [model, description, manufactoryEmail] = await fpisContract.getProductDetail(productID);
@@ -399,7 +418,7 @@ describe('FPIS Smart Contract', () => {
     it('Should get products by retailer', async () => {
         const retailerEmail = retailerTestEmail;
         const [products, productIds] = await fpisContract.getProductsByRetailer(retailerEmail);
-        expect(products.length).to.equal(3);
-        expect(productIds.length).to.equal(3);
+        expect(products.length).to.equal(4);
+        expect(productIds.length).to.equal(4);
     });
 });

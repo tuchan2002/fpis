@@ -126,13 +126,12 @@ contract FPIS {
     require(oldCustomer.isExist, "Old customer does not exist");
     require(newCustomer.isExist, "New customer does not exist");
     require(product.status == 1, "Product status must be 1 to change customer");
+    require(compareTwoStrings(product.customerEmail, _oldCustomerEmail), "Only the current owner can change the customer");
 
     for (uint i = 0; i < oldCustomer.products.length; i++) {
       if (compareTwoStrings(oldCustomer.products[i], _productID)) {
-        if (compareTwoStrings(product.customerEmail, _oldCustomerEmail)) {
-          product.customerEmail = _newCustomerEmail;
-        }
-
+        product.customerEmail = _newCustomerEmail;
+        
         HistoryItem memory historyItem;
         historyItem.timestamp = block.timestamp;
         historyItem.action = "Changed Customer";
