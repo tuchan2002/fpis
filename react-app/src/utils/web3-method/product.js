@@ -205,7 +205,7 @@ export const moveToRetailer = async (
     }
 };
 
-export const sellToFirstCustomer = async (
+export const sellToCustomer = async (
     {
         productID,
         retailerEmail,
@@ -217,7 +217,7 @@ export const sellToFirstCustomer = async (
 ) => {
     try {
         return await contract.methods
-            .sellToFirstCustomer(
+            .sellToCustomer(
                 productID,
                 retailerEmail,
                 customerEmail,

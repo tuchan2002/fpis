@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { getUsersByRole, userSelector } from '../../redux/reducers/userSlice';
-import { getProductById, productSelector, sellProductToRetailer } from '../../redux/reducers/productSlice';
+import { getProductById, productSelector, sellProductToCustomer } from '../../redux/reducers/productSlice';
 import { authSelector } from '../../redux/reducers/authSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
 import QRCodeScanner from '../../components/qr-code-scanner';
@@ -67,7 +67,7 @@ function SellProduct() {
             (user) => user.uid === selectedUserId
         );
 
-        dispatch(sellProductToRetailer({
+        dispatch(sellProductToCustomer({
             data: {
                 productID,
                 retailerEmail: authReducer.user.email,

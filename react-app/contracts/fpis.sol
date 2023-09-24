@@ -52,6 +52,7 @@ contract FPIS {
   }
 
   function createProduct(string memory _productID, string memory _model, string memory _description, string memory _manufactoryEmail, string memory _productionDate) public payable returns (bool)  {
+    require(bytes(manufactoryList[_manufactoryEmail].name).length > 0, "Manufactory does not exist");
     require(bytes(_productID).length > 0, "ProductID cannot be empty");
     require(bytes(_model).length > 0, "Model cannot be empty");
     require(!productExists(_productID), "Product with the same ID already exists");
@@ -78,8 +79,8 @@ contract FPIS {
     Product storage product = productList[_productID];
     
     require(productExists(_productID), "Product does not exist");
-    require(bytes(product.customerEmail).length == 0, "Product is already sold");
     require(bytes(retailerList[_retailerEmail].name).length > 0, "Retailer does not exist");
+    require(bytes(product.customerEmail).length == 0, "Product is already sold");
     require(bytes(_movingDate).length > 0, "Moving date cannot be empty");
     
     product.retailerEmail = _retailerEmail;
@@ -94,7 +95,7 @@ contract FPIS {
     return true;
   }
 
-  function sellToFirstCustomer(string memory _productID, string memory _retailerEmail, string memory _customerEmail, string memory _saleDate) public payable returns(bool) {
+  function sellToCustomer(string memory _productID, string memory _retailerEmail, string memory _customerEmail, string memory _saleDate) public payable returns(bool) {
     Product storage product = productList[_productID];
 
     require(productExists(_productID), "Product does not exist");
@@ -131,7 +132,7 @@ contract FPIS {
     for (uint i = 0; i < oldCustomer.products.length; i++) {
       if (compareTwoStrings(oldCustomer.products[i], _productID)) {
         product.customerEmail = _newCustomerEmail;
-        
+
         HistoryItem memory historyItem;
         historyItem.timestamp = block.timestamp;
         historyItem.action = "Changed Customer";
