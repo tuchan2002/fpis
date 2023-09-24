@@ -62,7 +62,7 @@ export const toggleActiveAccount = createAsyncThunk(
                 } else if (userData.role === 1) {
                     await createRetailer({name: userData.displayName, email: userData.email}, contract, accountAddress);
                 } else if (userData.role === 2) {
-                    await createCustomer({name: userData.displayName, email: userData.email, phone_number: ''}, contract, accountAddress);
+                    await createCustomer({name: userData.displayName, email: userData.email}, contract, accountAddress);
                 }
             }
 

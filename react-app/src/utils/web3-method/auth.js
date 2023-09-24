@@ -27,11 +27,11 @@ export const createRetailer = async ({
 };
 
 export const createCustomer = async ({
-    email, name, phone_number
+    email, name
 }, contract, accountAddress) => {
     try {
         return await contract.methods
-            .createCustomer(email, name, phone_number)
+            .createCustomer(email, name)
             .send({
                 from: accountAddress
             });
