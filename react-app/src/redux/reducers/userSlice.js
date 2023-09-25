@@ -46,33 +46,52 @@ export const getUsersByRole = createAsyncThunk(
     }
 );
 
-export const toggleActiveAccount = createAsyncThunk(
-    'user/toggleActiveAccount',
+export const activateAccount = createAsyncThunk(
+    'user/activateAccount',
     async ({
         userData,
+        roleOption,
         contract,
         accountAddress
     }, {dispatch}) => {
         try {
             dispatch(showAlert({ loading: true }));
 
-            if (userData.isActive === false) {
-                if (userData.role === 0) {
-                    await createManufactory({name: userData.displayName, email: userData.email}, contract, accountAddress);
-                } else if (userData.role === 1) {
-                    await createRetailer({name: userData.displayName, email: userData.email}, contract, accountAddress);
-                } else if (userData.role === 2) {
-                    await createCustomer({name: userData.displayName, email: userData.email}, contract, accountAddress);
-                }
+            if (roleOption === 0) {
+                await createManufactory({name: userData.displayName, email: userData.email}, contract, accountAddress);
+            } else if (roleOption === 1) {
+                await createRetailer({name: userData.displayName, email: userData.email}, contract, accountAddress);
+            } else if (roleOption === 2) {
+                await createCustomer({name: userData.displayName, email: userData.email}, contract, accountAddress);
             }
 
-            await updateDocument('users', { isActive: !userData.isActive }, 'uid', userData.uid);
+            await updateDocument('users', { isActive: true, role: roleOption }, 'uid', userData.uid);
 
-            dispatch(showAlert({ success: `Account ${!userData.isActive ? 'activation' : 'deactivation'} successful.` }));
+            dispatch(showAlert({ success: 'Account activation successful.' }));
 
-            return !userData.isActive;
+            return roleOption;
         } catch (error) {
-            dispatch(showAlert({ error: `Account ${!userData.isActive ? 'activation' : 'deactivation'} failed.` }));
+            dispatch(showAlert({ error: 'Account activation failed.' }));
+        }
+    }
+);
+
+export const deactivateAccount = createAsyncThunk(
+    'user/deactivateAccount',
+    async ({
+        userId
+    }, {dispatch}) => {
+        const guestRole = -1;
+        try {
+            dispatch(showAlert({ loading: true }));
+
+            await updateDocument('users', { isActive: false, role: guestRole }, 'uid', userId);
+
+            dispatch(showAlert({ success: 'Account deactivation successful.' }));
+
+            return guestRole;
+        } catch (error) {
+            dispatch(showAlert({ error: 'Account deactivation failed.' }));
         }
     }
 );
@@ -99,9 +118,16 @@ const userSlice = createSlice({
             state.users = action.payload;
         });
 
-        builder.addCase(toggleActiveAccount.fulfilled, (state, action) => {
+        builder.addCase(activateAccount.fulfilled, (state, action) => {
             console.log('fulfilled');
-            state.user = {...state.user, isActive: action.payload};
+            state.user.isActive = true;
+            state.user.role = action.payload;
+        });
+
+        builder.addCase(deactivateAccount.fulfilled, (state, action) => {
+            console.log('fulfilled');
+            state.user.isActive = false;
+            state.user.role = action.payload;
         });
     }
 });

@@ -42,7 +42,7 @@ function Login() {
                     photoURL: user.photoURL,
                     uid: user.uid,
                     providerId: details.providerId,
-                    role: 2,
+                    role: -1,
                     isActive: false
                 });
             }
