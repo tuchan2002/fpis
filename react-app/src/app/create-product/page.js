@@ -11,6 +11,7 @@ import { authSelector } from '../../redux/reducers/authSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
 import { createProduct } from '../../redux/reducers/productSlice';
 import { imageDb } from '../../firebase/config';
+import connectWallet from '../../utils/connectWallet';
 
 function CreateProduct() {
     const dispatch = useDispatch();
@@ -53,6 +54,11 @@ function CreateProduct() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!web3Reducer.account) {
+            connectWallet(web3Reducer, dispatch);
+            return;
+        }
 
         html2canvas(qrCodeRef.current).then((canvas) => {
             const qrCodeImage = canvas.toDataURL('image/png');

@@ -1,5 +1,5 @@
 import { Box, Button, Paper, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { authSelector } from '../../redux/reducers/authSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
@@ -7,7 +7,6 @@ import QRCodeScanner from '../../components/qr-code-scanner';
 import ProductInfoTable from '../../components/product-info-table';
 import { getProductDetail } from '../../utils/web3-method/product';
 import { web3Selector } from '../../redux/reducers/web3Slice';
-import { showAlert } from '../../redux/reducers/alertSlice';
 import connectWallet from '../../utils/connectWallet';
 import showSweetAlert from '../../utils/show-swal';
 import { getProductById, productSelector } from '../../redux/reducers/productSlice';
@@ -26,6 +25,10 @@ function VerifyProduct() {
     const [productScannerData, setProductScannerData] = useState(null);
     const [isRealStatus, setIsRealStatus] = useState(false);
     const [openModalTimeline, setOpenModalTimeline] = useState(false);
+
+    useEffect(() => {
+        console.log('Scan');
+    }, [productScannerData]);
 
     const handleVerify = async () => {
         if (!productScannerData) {
@@ -74,11 +77,7 @@ function VerifyProduct() {
             }
         } catch (error) {
             console.log(error);
-            dispatch(
-                showAlert({
-                    error: 'Failed retrieved product information.'
-                })
-            );
+            await showSweetAlert('error', 'This product is fake.');
         }
     };
 
