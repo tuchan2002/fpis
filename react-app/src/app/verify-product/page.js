@@ -1,4 +1,4 @@
-import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { authSelector } from '../../redux/reducers/authSlice';
@@ -10,10 +10,13 @@ import { web3Selector } from '../../redux/reducers/web3Slice';
 import { showAlert } from '../../redux/reducers/alertSlice';
 import connectWallet from '../../utils/connectWallet';
 import showSweetAlert from '../../utils/show-swal';
+import { getProductById, productSelector } from '../../redux/reducers/productSlice';
+import ProductTimeline from '../../components/product-timeline';
 
 function VerifyProduct() {
     const dispatch = useDispatch();
 
+    const productReducer = useSelector(productSelector);
     const web3Reducer = useSelector(web3Selector);
     const authReducer = useSelector(authSelector);
     const currentUserRole = authReducer.user && authReducer.user?.role;
@@ -21,7 +24,8 @@ function VerifyProduct() {
     useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
     const [productScannerData, setProductScannerData] = useState(null);
-    const [customerEmailInputData, setCustomerEmailInputData] = useState('');
+    const [isRealStatus, setIsRealStatus] = useState(false);
+    const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
     const handleVerify = async () => {
         if (!productScannerData) {
@@ -47,8 +51,7 @@ function VerifyProduct() {
                     if (
                         productInBlockchain[key]
                                 !== {
-                                    ...productScannerData,
-                                    customerEmail: customerEmailInputData
+                                    ...productScannerData
                                 }[key]
                     ) {
                         isReal = false;
@@ -58,6 +61,14 @@ function VerifyProduct() {
 
             if (isReal) {
                 await showSweetAlert('success', 'This product is genuine.');
+                setIsRealStatus(true);
+                dispatch(
+                    getProductById({
+                        productID: productScannerData?.productID,
+                        contract: web3Reducer.contract,
+                        accountAddress: web3Reducer.account
+                    })
+                );
             } else {
                 await showSweetAlert('error', 'This product is fake.');
             }
@@ -89,32 +100,45 @@ function VerifyProduct() {
                 >
                     <QRCodeScanner setResult={setProductScannerData} />
                     <Typography variant='h5'>
-                        Product Information from QR code
+                        {isRealStatus ? 'Product Information' : 'Product Information from QR code'}
                     </Typography>
                     {productScannerData && (
                         <>
                             <ProductInfoTable
-                                productInfo={productScannerData}
+                                productInfo={isRealStatus ? productReducer.product : productScannerData}
                             />
-                            <TextField
-                                sx={{ width: '50%' }}
-                                label='Owned customer email'
-                                variant='standard'
-                                value={customerEmailInputData}
-                                onChange={(e) => setCustomerEmailInputData(e.target.value)}
-                            />
-                            <Button
-                                variant='contained'
-                                disabled={
-                                    !customerEmailInputData.trim()
-                                }
-                                onClick={handleVerify}
-                            >
-                                Verify
-                            </Button>
+                            { !isRealStatus && (
+                                <Button
+                                    variant='contained'
+                                    onClick={handleVerify}
+                                >
+                                    Verify
+                                </Button>
+                            )}
+                            { isRealStatus && (
+                                <Button
+                                    variant='text'
+                                    onClick={() => setOpenModalTimeline(true)}
+                                >
+                                    Show Product History
+                                </Button>
+                            )}
+                            {isRealStatus && (
+                                <ProductTimeline
+                                    productHistory={
+                                        productReducer.product?.history
+                                            ? productReducer.product?.history
+                                            : []
+                                    }
+                                    open={openModalTimeline}
+                                    onClose={() => setOpenModalTimeline(false)}
+                                />
+                            )}
                         </>
                     )}
+
                 </Paper>
+
             </Box>
         )
     );
