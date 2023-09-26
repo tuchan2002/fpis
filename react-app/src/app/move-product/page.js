@@ -103,7 +103,7 @@ function MoveProduct() {
                             <>
                                 {productReducer.product && (
                                     <ProductInfoTable
-                                        productInfo={productReducer.product}
+                                        productInfo={{...productReducer.product, description: productScannerData.description}}
                                     />
                                 )}
 

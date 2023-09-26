@@ -219,6 +219,8 @@ export const moveProductToRetailer = createAsyncThunk(
 
             return product;
         } catch (error) {
+            console.error(error);
+            dispatch(showAlert({ loading: false }));
             await showSweetAlert('error', 'Failed to move the product to the retailer.');
         }
     }

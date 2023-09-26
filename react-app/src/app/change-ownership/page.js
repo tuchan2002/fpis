@@ -108,7 +108,7 @@ function ChangeOwnership() {
                             <>
                                 {productReducer.product && (
                                     <ProductInfoTable
-                                        productInfo={productReducer.product}
+                                        productInfo={{...productReducer.product, description: productScannerData.description}}
                                     />
                                 )}
 

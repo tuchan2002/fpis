@@ -26,14 +26,16 @@ function ProductInfoTable({ productInfo }) {
                         </TableCell>
                         <TableCell align='right'>{productInfo.model}</TableCell>
                     </TableRow>
-                    <TableRow>
-                        <TableCell component='th' scope='row'>
-                            Description
-                        </TableCell>
-                        <TableCell align='right'>
-                            {productInfo.description}
-                        </TableCell>
-                    </TableRow>
+                    { productInfo.description && (
+                        <TableRow>
+                            <TableCell component='th' scope='row'>
+                                Description
+                            </TableCell>
+                            <TableCell align='right'>
+                                {productInfo.description}
+                            </TableCell>
+                        </TableRow>
+                    )}
                     <TableRow>
                         <TableCell component='th' scope='row'>
                             Manufactory Email

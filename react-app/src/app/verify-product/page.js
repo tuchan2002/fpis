@@ -39,10 +39,11 @@ function VerifyProduct() {
                 web3Reducer.contract,
                 web3Reducer.accountAddress
             );
+            console.log(productScannerData, productInBlockchain);
 
             let isReal = true;
             Object.keys(productInBlockchain).forEach((key) => {
-                if (key !== 'retailerEmail' && key !== 'history') {
+                if (key === 'productID' || key === 'model' || key === 'manufactoryEmail') {
                     if (
                         productInBlockchain[key]
                                 !== {
