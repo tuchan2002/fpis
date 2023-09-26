@@ -172,10 +172,13 @@ export const getProductById = createAsyncThunk(
                 accountAddress
             );
 
+            console.log('productproduct', product);
+
             dispatch(showAlert({ loading: false }));
 
             return product;
         } catch (error) {
+            console.log(error);
             dispatch(
                 showAlert({
                     error: 'Failed retrieved product information.'

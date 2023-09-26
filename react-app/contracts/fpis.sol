@@ -6,11 +6,10 @@ import "hardhat/console.sol";
 contract FPIS {
   struct Product {
     string model;
-    string description;
     string manufactoryEmail;
     string retailerEmail;
     string customerEmail;
-    uint status;
+    string imageURL;
     HistoryItem[] history;
   }
 
@@ -51,7 +50,7 @@ contract FPIS {
     return bytes(productList[_productID].model).length > 0;
   }
 
-  function createProduct(string memory _productID, string memory _model, string memory _description, string memory _manufactoryEmail, string memory _productionDate) public payable returns (bool)  {
+  function createProduct(string memory _productID, string memory _model, string memory _manufactoryEmail, string memory _productionDate, string memory _imageURL) public payable returns (bool)  {
     require(bytes(manufactoryList[_manufactoryEmail].name).length > 0, "Manufactory does not exist");
     require(bytes(_productID).length > 0, "ProductID cannot be empty");
     require(bytes(_model).length > 0, "Model cannot be empty");
@@ -59,7 +58,7 @@ contract FPIS {
 
     Product storage newProduct = productList[_productID];
     newProduct.model = _model;
-    newProduct.description = _description;
+    newProduct.imageURL = _imageURL;
     newProduct.manufactoryEmail = _manufactoryEmail;
 
     HistoryItem memory historyItem;
@@ -104,7 +103,6 @@ contract FPIS {
     require(customerList[_customerEmail].isExist, "Customer does not exist");
 
     product.customerEmail = _customerEmail;
-    product.status = 1;
     customerList[_customerEmail].products.push(_productID);
 
     HistoryItem memory historyItem;
@@ -126,7 +124,6 @@ contract FPIS {
     require(productExists(_productID), "Product does not exist");
     require(oldCustomer.isExist, "Old customer does not exist");
     require(newCustomer.isExist, "New customer does not exist");
-    require(product.status == 1, "Product status must be 1 to change customer");
     require(compareTwoStrings(product.customerEmail, _oldCustomerEmail), "Only the current owner can change the customer");
 
     for (uint i = 0; i < oldCustomer.products.length; i++) {
@@ -214,8 +211,8 @@ contract FPIS {
     return (matchingProducts, matchingProductIds);
   }
 
-  function getProductDetail(string memory _productID) public view returns (string memory, string memory, string memory, string memory, string memory,  HistoryItem[] memory) {
-    return (productList[_productID].model, productList[_productID].description, productList[_productID].manufactoryEmail, productList[_productID].retailerEmail, productList[_productID].customerEmail, productList[_productID].history);
+  function getProductDetail(string memory _productID) public view returns (string memory, string memory, string memory, string memory,  HistoryItem[] memory, string memory) {
+    return (productList[_productID].model, productList[_productID].manufactoryEmail, productList[_productID].retailerEmail, productList[_productID].customerEmail, productList[_productID].history, productList[_productID].imageURL);
   }
 
   function getCustomerDetail(string memory _customerEmail) public view returns (string memory, string memory) {

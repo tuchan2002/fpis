@@ -1,8 +1,9 @@
 import { Box, Button, Paper } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate, useParams } from 'react-router-dom';
+import DownloadIcon from '@mui/icons-material/Download';
 import { web3Selector } from '../../../redux/reducers/web3Slice';
 import { getProductById, productSelector } from '../../../redux/reducers/productSlice';
 import { authSelector } from '../../../redux/reducers/authSlice';
@@ -24,17 +25,26 @@ function ProductDetails() {
     const allowedRolesList = [0, 1, 2, 3];
     useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
+    const qrCodeRef = useRef(null);
     const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
     useEffect(() => {
-        dispatch(
-            getProductById({
-                productID: params.id ? params.id : '',
-                contract: web3Reducer.contract,
-                accountAddress: web3Reducer.account
-            })
-        );
+        console.log('test', params.id, web3Reducer.contract, web3Reducer.account);
+        if (web3Reducer.account) {
+            dispatch(
+                getProductById({
+                    productID: params.id ? params.id : '',
+                    contract: web3Reducer.contract,
+                    accountAddress: web3Reducer.account
+                })
+            );
+        }
     }, [web3Reducer.contract, web3Reducer.account]);
+
+    const downloadQRcode = () => {
+        const qrCodeImageATag = document.getElementById('qrCodeImage');
+        qrCodeImageATag.click();
+    };
 
     return (
         currentUserRole !== null
@@ -67,6 +77,26 @@ function ProductDetails() {
                                 onClick={() => setOpenModalTimeline(true)}
                             >
                                 Show Product History
+                            </Button>
+
+                        </Box>
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            marginTop: 1
+                        }}
+                        >
+                            <a style={{width: 198, height: 198}} target='_blank' id='qrCodeImage' href={productReducer.product?.imageURL} rel='noreferrer'>
+                                <img ref={qrCodeRef} alt={productReducer.product} src={productReducer.product?.imageURL} />
+                            </a>
+                            <Button
+                                variant='contained'
+                                onClick={downloadQRcode}
+                                startIcon={<DownloadIcon />}
+                                sx={{marginTop: 1}}
+                            >
+                                Download
                             </Button>
                         </Box>
                     </Paper>

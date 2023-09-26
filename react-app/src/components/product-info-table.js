@@ -47,7 +47,7 @@ function ProductInfoTable({ productInfo }) {
                             Retailer Email
                         </TableCell>
                         <TableCell align='right'>
-                            {productInfo.retailerEmail}
+                            {productInfo.retailerEmail ? productInfo.retailerEmail : 'None'}
                         </TableCell>
                     </TableRow>
                     <TableRow>
@@ -55,7 +55,7 @@ function ProductInfoTable({ productInfo }) {
                             Customer Email
                         </TableCell>
                         <TableCell align='right'>
-                            {productInfo.customerEmail}
+                            {productInfo.customerEmail ? productInfo.customerEmail : 'None'}
                         </TableCell>
                     </TableRow>
                 </TableBody>

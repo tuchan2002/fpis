@@ -16,11 +16,11 @@ export const getAllProducts = async (contract, accountAddress) => {
                 return {
                     productID: data[1][index],
                     model: product[0],
-                    description: product[1],
-                    manufactoryEmail: product[2],
-                    retailerEmail: product[3],
-                    customerEmail: product[4],
-                    history: productHistory
+                    manufactoryEmail: product[1],
+                    retailerEmail: product[2],
+                    customerEmail: product[3],
+                    history: productHistory,
+                    imageURL: product[5]
                 };
             }
         );
@@ -34,9 +34,9 @@ export const createProductOnBlockchain = async (
     {
         productID,
         model,
-        description,
         manufactoryEmail,
-        productionDate
+        productionDate,
+        imageURL
     },
     contract,
     accountAddress
@@ -46,9 +46,9 @@ export const createProductOnBlockchain = async (
             .createProduct(
                 productID,
                 model,
-                description,
                 manufactoryEmail,
-                productionDate
+                productionDate,
+                imageURL
             )
             .send({
                 from: accountAddress
@@ -68,21 +68,24 @@ export const getProductDetail = async (
             .getProductDetail(productID)
             .call({ from: accountAddress });
 
+        console.log(productDetail);
+
         return {
             productID,
             model: productDetail[0],
-            description: productDetail[1],
-            manufactoryEmail: productDetail[2],
-            retailerEmail: productDetail[3],
-            customerEmail: productDetail[4],
-            history: productDetail[5].map((item) => ({
+            manufactoryEmail: productDetail[1],
+            retailerEmail: productDetail[2],
+            customerEmail: productDetail[3],
+            history: productDetail[4].map((item) => ({
                 timestamp: item.timestamp.toString(),
                 action: item.action,
                 details: item.details,
                 date: item.date
-            }))
+            })),
+            imageURL: productDetail[5]
         };
     } catch (error) {
+        console.log('error', error);
         throw error;
     }
 };
@@ -100,16 +103,16 @@ export const getProductsByCustomer = async (customerEmail, contract, accountAddr
         const productsResult = Promise.all(productDetailListPromise).then((productDetailList) => productDetailList.map((productDetail, index) => ({
             productID: productIdList[index],
             model: productDetail[0],
-            description: productDetail[1],
-            manufactoryEmail: productDetail[2],
-            retailerEmail: productDetail[3],
-            customerEmail: productDetail[4],
-            history: productDetail[5].map((item) => ({
+            manufactoryEmail: productDetail[1],
+            retailerEmail: productDetail[2],
+            customerEmail: productDetail[3],
+            history: productDetail[4].map((item) => ({
                 timestamp: item.timestamp.toString(),
                 action: item.action,
                 details: item.details,
                 date: item.date
-            }))
+            })),
+            imageURL: productDetail[5]
         })));
 
         return productsResult;
@@ -135,11 +138,11 @@ export const getProductsByManufactory = async (manufactoryEmail, contract,
             return {
                 productID: data[1][index],
                 model: product[0],
-                description: product[1],
-                manufactoryEmail: product[2],
-                retailerEmail: product[3],
-                customerEmail: product[4],
-                history: productHistory
+                manufactoryEmail: product[1],
+                retailerEmail: product[2],
+                customerEmail: product[3],
+                history: productHistory,
+                imageURL: product[5]
             };
         });
 
@@ -167,11 +170,11 @@ export const getProductsByRetailer = async (retailerEmail, contract,
             return {
                 productID: data[1][index],
                 model: product[0],
-                description: product[1],
-                manufactoryEmail: product[2],
-                retailerEmail: product[3],
-                customerEmail: product[4],
-                history: productHistory
+                manufactoryEmail: product[1],
+                retailerEmail: product[2],
+                customerEmail: product[3],
+                history: productHistory,
+                imageURL: product[5]
             };
         });
 

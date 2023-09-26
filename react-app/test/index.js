@@ -159,13 +159,15 @@ describe('Product Management', () => {
         const description = 'Description 123';
         const manufactoryEmail = manufactory1TestEmail;
         const productionDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
         const tx = await fpisContract.createProduct(
             productID,
             model,
             description,
             manufactoryEmail,
-            productionDate
+            productionDate,
+            imageURL
         );
 
         await tx.wait();
@@ -185,13 +187,15 @@ describe('Product Management', () => {
         const description = 'New Description';
         const manufactoryEmail = manufactory1TestEmail;
         const productionDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
         const tx = fpisContract.createProduct(
             productID,
             model,
             description,
             manufactoryEmail,
-            productionDate
+            productionDate,
+            imageURL
         );
         await expect(tx).to.be.revertedWith('Product with the same ID already exists');
     });
@@ -202,13 +206,15 @@ describe('Product Management', () => {
         const description = 'Description 123';
         const manufactoryEmail = manufactory1TestEmail;
         const productionDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
         const tx = fpisContract.createProduct(
             productID,
             model,
             description,
             manufactoryEmail,
-            productionDate
+            productionDate,
+            imageURL
         );
         await expect(tx).to.be.revertedWith('ProductID cannot be empty');
     });
@@ -219,13 +225,15 @@ describe('Product Management', () => {
         const description = 'Description 456';
         const manufactoryEmail = manufactory1TestEmail;
         const productionDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
         const tx = fpisContract.createProduct(
             productID,
             model,
             description,
             manufactoryEmail,
-            productionDate
+            productionDate,
+            imageURL
         );
         await expect(tx).to.be.revertedWith('Model cannot be empty');
     });
@@ -236,13 +244,15 @@ describe('Product Management', () => {
         const description = 'Description 456';
         const nonExistentManufactoryEmail = 'nonexistent@example.com';
         const productionDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
         const tx = fpisContract.createProduct(
             productID,
             model,
             description,
             nonExistentManufactoryEmail,
-            productionDate
+            productionDate,
+            imageURL
         );
 
         await expect(tx).to.be.revertedWith('Manufactory does not exist');
@@ -270,8 +280,9 @@ describe('Product Movements', () => {
         const manufactoryEmail = manufactory1TestEmail;
         const retailerEmail = retailer1TestEmail;
         const movingDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
-        await fpisContract.createProduct(productID, 'Model 123', 'Description 123', manufactoryEmail, '2023-09-25');
+        await fpisContract.createProduct(productID, 'Model 123', 'Description 123', manufactoryEmail, '2023-09-25', imageURL);
         const tx = await fpisContract.moveToRetailer(productID, retailerEmail, movingDate);
         await tx.wait();
 
@@ -299,13 +310,15 @@ describe('Product Movements', () => {
         const productID = '456';
         const nonExistentRetailerEmail = 'nonexistent@example.com';
         const movingDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
         await fpisContract.createProduct(
             productID,
             'Model 456',
             'Description 456',
             manufactory1TestEmail,
-            '2023-09-25'
+            '2023-09-25',
+            imageURL
         );
 
         const tx = fpisContract.moveToRetailer(productID, nonExistentRetailerEmail, movingDate);
@@ -335,8 +348,9 @@ describe('Product Sales', () => {
         const retailerEmail = retailer1TestEmail;
         const customerEmail = customer1TestEmail;
         const saleDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
-        await fpisContract.createProduct(productID, 'Model 123', 'Description 123', manufactory1TestEmail, '2023-09-25');
+        await fpisContract.createProduct(productID, 'Model 123', 'Description 123', manufactory1TestEmail, '2023-09-25', imageURL);
         await fpisContract.moveToRetailer(productID, retailerEmail, '2023-09-25');
         const tx = await fpisContract.sellToCustomer(productID, retailerEmail, customerEmail, saleDate);
         await tx.wait();
@@ -376,13 +390,15 @@ describe('Product Sales', () => {
         const retailerEmail = retailer1TestEmail;
         const nonExistentCustomerEmail = 'nonexistent@example.com';
         const saleDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
         await fpisContract.createProduct(
             productID,
             'Model 456',
             'Description 456',
             manufactory1TestEmail,
-            '2023-09-25'
+            '2023-09-25',
+            imageURL
         );
 
         await fpisContract.moveToRetailer(productID, retailerEmail, '2023-09-25');
@@ -397,13 +413,15 @@ describe('Product Sales', () => {
         const retailerEmail = retailer1TestEmail;
         const customerEmail = customer1TestEmail;
         const saleDate = '2023-09-27';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
         await fpisContract.createProduct(
             productID,
             'Model 789',
             'Description 789',
             manufactory1TestEmail,
-            '2023-09-25'
+            '2023-09-25',
+            imageURL
         );
 
         await fpisContract.moveToRetailer(productID, retailerEmail, '2023-09-25');
@@ -438,8 +456,9 @@ describe('Customer Changes', () => {
         const oldCustomerEmail = customer1TestEmail;
         const newCustomerEmail = customer2TestEmail;
         const changeDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
-        await fpisContract.createProduct(productID, 'Model 123', 'Description 123', manufactory1TestEmail, '2023-09-25');
+        await fpisContract.createProduct(productID, 'Model 123', 'Description 123', manufactory1TestEmail, '2023-09-25', imageURL);
         await fpisContract.moveToRetailer(productID, retailerEmail, '2023-09-25');
         await fpisContract.sellToCustomer(productID, retailerEmail, oldCustomerEmail, '2023-09-25');
         const tx = await fpisContract.changeCustomer(productID, oldCustomerEmail, newCustomerEmail, changeDate);
@@ -465,29 +484,21 @@ describe('Customer Changes', () => {
         await expect(tx).to.be.revertedWith('Product does not exist');
     });
 
-    it('Should not change customer for a product with status not equal to 1', async () => {
+    it('Should not change customer if old customer does not exist', async () => {
         const productID = '456';
-        const oldCustomerEmail = customer1TestEmail;
+        const oldCustomerEmail = 'nonExistentCustomerEmail';
         const newCustomerEmail = customer2TestEmail;
         const changeDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
         await fpisContract.createProduct(
             productID,
             'Model 456',
             'Description 456',
             manufactory1TestEmail,
-            '2023-09-25'
+            '2023-09-25',
+            imageURL
         );
-        const tx = fpisContract.changeCustomer(productID, oldCustomerEmail, newCustomerEmail, changeDate);
-
-        await expect(tx).to.be.revertedWith('Product status must be 1 to change customer');
-    });
-
-    it('Should not change customer if old customer does not exist', async () => {
-        const productID = '456';
-        const oldCustomerEmail = 'nonExistentCustomerEmail';
-        const newCustomerEmail = customer2TestEmail;
-        const changeDate = '2023-09-25';
 
         const tx = fpisContract.changeCustomer(productID, oldCustomerEmail, newCustomerEmail, changeDate);
 
@@ -512,8 +523,9 @@ describe('Customer Changes', () => {
         const oldCustomerEmail = customer1TestEmail;
         const newCustomerEmail = customer2TestEmail;
         const changeDate = '2023-09-25';
+        const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
-        await fpisContract.createProduct(productID, 'Model 789', 'Description 789', manufactoryEmail, '2023-09-25');
+        await fpisContract.createProduct(productID, 'Model 789', 'Description 789', manufactoryEmail, '2023-09-25', imageURL);
         await fpisContract.moveToRetailer(productID, retailerEmail, '2023-09-25');
         await fpisContract.sellToCustomer(productID, retailerEmail, oldCustomerEmail, '2023-09-25');
         const tx = fpisContract.changeCustomer(productID, newCustomerEmail, oldCustomerEmail, changeDate);
