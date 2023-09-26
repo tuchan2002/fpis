@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getDocument, getDocumentsCondition, updateDocument } from '../../firebase/services';
 import { showAlert } from './alertSlice';
-import { createCustomer, createManufactory, createRetailer } from '../../utils/web3-method/auth';
+import { createCustomer, createManufactory, createRetailer, removeCustomer, removeManufactory, removeRetailer } from '../../utils/web3-method/auth';
 
 const initialState = {
     users: [],
@@ -79,13 +79,23 @@ export const activateAccount = createAsyncThunk(
 export const deactivateAccount = createAsyncThunk(
     'user/deactivateAccount',
     async ({
-        userId
+        userData,
+        contract,
+        accountAddress
     }, {dispatch}) => {
         const guestRole = -1;
         try {
             dispatch(showAlert({ loading: true }));
 
-            await updateDocument('users', { isActive: false, role: guestRole }, 'uid', userId);
+            if (userData.role === 0) {
+                await removeManufactory({ email: userData.email}, contract, accountAddress);
+            } else if (userData.role === 1) {
+                await removeRetailer({ email: userData.email}, contract, accountAddress);
+            } else if (userData.role === 2) {
+                await removeCustomer({ email: userData.email}, contract, accountAddress);
+            }
+
+            await updateDocument('users', { isActive: false, role: guestRole }, 'uid', userData.uid);
 
             dispatch(showAlert({ success: 'Account deactivation successful.' }));
 

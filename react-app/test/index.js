@@ -31,6 +31,16 @@ describe('Manufactory Management', () => {
         await expect(tx).to.be.revertedWith('Email already exists');
     });
 
+    it('Should remove Manufactory', async () => {
+        const manufactoryEmail = manufactory1TestEmail;
+
+        const tx = await fpisContract.removeManufactory(manufactoryEmail);
+        await tx.wait();
+
+        const manufactoryDetail = await fpisContract.getManufactoryDetail(manufactoryEmail);
+        expect(manufactoryDetail[0]).to.be.empty;
+    });
+
     it('Should fail to create a manufactory with empty email', async () => {
         const manufactoryEmail = '';
         const manufactoryName = 'Manufactory 2';
@@ -73,6 +83,16 @@ describe('Retailer Management', () => {
 
         const tx = fpisContract.createRetailer(retailerEmail, retailerName);
         await expect(tx).to.be.revertedWith('Email already exists');
+    });
+
+    it('Should remove Retailer', async () => {
+        const retailerEmail = retailer1TestEmail;
+
+        const tx = await fpisContract.removeRetailer(retailerEmail);
+        await tx.wait();
+
+        const retailerDetail = await fpisContract.getRetailerDetail(retailerEmail);
+        expect(retailerDetail[0]).to.be.empty;
     });
 
     it('Should fail to create a retailer with empty email', async () => {
@@ -118,6 +138,16 @@ describe('Customer Management', () => {
 
         const tx = fpisContract.createCustomer(customerEmail, customerName);
         await expect(tx).to.be.revertedWith('Email already exists');
+    });
+
+    it('Should remove customer', async () => {
+        const customerEmail = customer1TestEmail;
+
+        const tx = await fpisContract.removeCustomer(customerEmail);
+        await tx.wait();
+
+        const customerDetail = await fpisContract.getCustomerDetail(customerEmail);
+        expect(customerDetail[0]).to.be.empty;
     });
 
     it('Should fail to create a customer with empty email', async () => {

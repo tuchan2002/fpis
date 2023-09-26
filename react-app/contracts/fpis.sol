@@ -271,6 +271,30 @@ contract FPIS {
     return true;
   }
 
+  function removeManufactory(string memory _manufactoryEmail) public returns (bool) {
+    require(bytes(manufactoryList[_manufactoryEmail].name).length > 0, "Manufactory does not exist");
+    
+    delete manufactoryList[_manufactoryEmail];
+    
+    return true;
+  }
+
+  function removeRetailer(string memory _retailerEmail) public returns (bool) {
+    require(bytes(retailerList[_retailerEmail].name).length > 0, "Retailer does not exist");
+    
+    delete retailerList[_retailerEmail];
+    
+    return true;
+  }
+
+  function removeCustomer(string memory _customerEmail) public returns (bool) {
+    require(customerList[_customerEmail].isExist, "Customer does not exist");
+    
+    delete customerList[_customerEmail];
+    
+    return true;
+  }
+
   function compareTwoStrings(string memory str1, string memory str2) internal pure returns (bool) {
     return keccak256(abi.encodePacked(str1)) == keccak256(abi.encodePacked(str2));
   }

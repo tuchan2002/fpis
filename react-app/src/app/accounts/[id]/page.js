@@ -70,7 +70,12 @@ function AccountDetails() {
     };
 
     const handleDeactivateAccount = () => {
-        dispatch(deactivateAccount({userId: userReducer.user.uid}));
+        if (!web3Reducer.account) {
+            connectWallet(web3Reducer, dispatch);
+            return;
+        }
+
+        dispatch(deactivateAccount({userData: userReducer.user, contract: web3Reducer.contract, accountAddress: web3Reducer.account}));
     };
 
     return (
