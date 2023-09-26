@@ -3,6 +3,7 @@ const { expect } = require('chai');
 const { it, describe, before } = require('mocha');
 const { ethers } = require('hardhat');
 /* eslint-enable */
+/* eslint-disable no-unused-expressions */
 
 describe('Manufactory Management', () => {
     const manufactory1TestEmail = 'manufactory1@example.com';

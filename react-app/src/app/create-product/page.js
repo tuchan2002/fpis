@@ -121,7 +121,7 @@ function CreateProduct() {
                                 gap: 1
                             }}
                         >
-                            {(model.trim() !== '' || description.trim() !== '')
+                            {(model.trim() !== '' && description.trim() !== '')
                                 && (
                                     <div
                                         ref={qrCodeRef}
