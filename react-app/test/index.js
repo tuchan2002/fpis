@@ -19,7 +19,7 @@ describe('Smart Contract Deployment', () => {
     });
 });
 
-describe('Manufactory Management', () => {
+describe('Manufactory Creation', () => {
     const manufactory1TestEmail = 'manufactory1@example.com';
     let fpisContract;
 
@@ -46,16 +46,6 @@ describe('Manufactory Management', () => {
         await expect(tx).to.be.revertedWith('Email already exists');
     });
 
-    it('Should remove Manufactory', async () => {
-        const manufactoryEmail = manufactory1TestEmail;
-
-        const tx = await fpisContract.removeManufactory(manufactoryEmail);
-        await tx.wait();
-
-        const manufactoryDetail = await fpisContract.getManufactoryDetail(manufactoryEmail);
-        expect(manufactoryDetail[0]).to.be.empty;
-    });
-
     it('Should fail to create a manufactory with empty email', async () => {
         const manufactoryEmail = '';
         const manufactoryName = 'Manufactory 2';
@@ -73,7 +63,32 @@ describe('Manufactory Management', () => {
     });
 });
 
-describe('Retailer Management', () => {
+describe('Manufactory Removal', () => {
+    const manufactory1TestEmail = 'manufactory1@example.com';
+    let fpisContract;
+
+    before(async () => {
+        fpisContract = await ethers.deployContract('FPIS');
+
+        await fpisContract.createManufactory(manufactory1TestEmail, 'Manufactory 1');
+    });
+
+    it('Should remove a manufactory', async () => {
+        const tx = await fpisContract.removeManufactory(manufactory1TestEmail);
+        await tx.wait();
+
+        const manufactoryDetail = await fpisContract.getManufactoryDetail(manufactory1TestEmail);
+        expect(manufactoryDetail[0]).to.be.empty;
+    });
+
+    it('Should fail to remove a non-existing manufactory', async () => {
+        const tx = fpisContract.removeManufactory('nonexistent@example.com');
+
+        await expect(tx).to.be.revertedWith('Manufactory does not exist');
+    });
+});
+
+describe('Retailer Creation', () => {
     const retailer1TestEmail = 'retailer1@example.com';
     let fpisContract;
 
@@ -100,16 +115,6 @@ describe('Retailer Management', () => {
         await expect(tx).to.be.revertedWith('Email already exists');
     });
 
-    it('Should remove Retailer', async () => {
-        const retailerEmail = retailer1TestEmail;
-
-        const tx = await fpisContract.removeRetailer(retailerEmail);
-        await tx.wait();
-
-        const retailerDetail = await fpisContract.getRetailerDetail(retailerEmail);
-        expect(retailerDetail[0]).to.be.empty;
-    });
-
     it('Should fail to create a retailer with empty email', async () => {
         const retailerEmail = '';
         const retailerName = 'Retailer 2';
@@ -127,7 +132,32 @@ describe('Retailer Management', () => {
     });
 });
 
-describe('Customer Management', () => {
+describe('Retailer Removal', () => {
+    const retailer1TestEmail = 'retailer1@example.com';
+    let fpisContract;
+
+    before(async () => {
+        fpisContract = await ethers.deployContract('FPIS');
+
+        await fpisContract.createRetailer(retailer1TestEmail, 'Retailer 1');
+    });
+
+    it('Should remove a retailer', async () => {
+        const tx = await fpisContract.removeRetailer(retailer1TestEmail);
+        await tx.wait(); 
+        
+        const retailerDetail = await fpisContract.getRetailerDetail(retailer1TestEmail);
+        expect(retailerDetail[0]).to.be.empty;
+    });
+
+    it('Should fail to remove a non-existing retailer', async () => {
+        const tx = fpisContract.removeRetailer('nonexistent@example.com');
+
+        await expect(tx).to.be.revertedWith('Retailer does not exist');
+    });
+});
+
+describe('Customer Creation', () => {
     const customer1TestEmail = 'customer1@example.com';
     const customer2TestEmail = 'customer2@example.com';
     let fpisContract;
@@ -155,16 +185,6 @@ describe('Customer Management', () => {
         await expect(tx).to.be.revertedWith('Email already exists');
     });
 
-    it('Should remove customer', async () => {
-        const customerEmail = customer1TestEmail;
-
-        const tx = await fpisContract.removeCustomer(customerEmail);
-        await tx.wait();
-
-        const customerDetail = await fpisContract.getCustomerDetail(customerEmail);
-        expect(customerDetail[0]).to.be.empty;
-    });
-
     it('Should fail to create a customer with empty email', async () => {
         const customerEmail = '';
         const customerName = 'Customer 2';
@@ -173,7 +193,7 @@ describe('Customer Management', () => {
         await expect(tx).to.be.revertedWith('Customer email cannot be empty');
     });
 
-    it('Should fail to create a customer with empty email', async () => {
+    it('Should fail to create a customer with empty name', async () => {
         const customerEmail = customer2TestEmail;
         const customerName = '';
 
@@ -182,7 +202,32 @@ describe('Customer Management', () => {
     });
 });
 
-describe('Product Management', () => {
+describe('Customer Removal', () => {
+    const customer1TestEmail = 'customer1@example.com';
+    let fpisContract;
+
+    before(async () => {
+        fpisContract = await ethers.deployContract('FPIS');
+
+        await fpisContract.createCustomer(customer1TestEmail, 'Customer 1');
+    });
+
+    it('Should remove a customer', async () => {
+        const tx = await fpisContract.removeCustomer(customer1TestEmail);
+        await tx.wait(); 
+
+        const customerDetail = await fpisContract.getCustomerDetail(customer1TestEmail);
+        expect(customerDetail[0]).to.be.empty;
+    });
+
+    it('Should fail to remove a non-existing customer', async () => {
+        const tx = fpisContract.removeCustomer('nonexistent@example.com');
+
+        await expect(tx).to.be.revertedWith('Customer does not exist');
+    });
+});
+
+describe('Product Creation', () => {
     const manufactory1TestEmail = 'manufactory1@example.com';
     const retailer1TestEmail = 'retailer1@example.com';
     const customer1TestEmail = 'customer1@example.com';
