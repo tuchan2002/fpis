@@ -37,8 +37,10 @@ function Accounts() {
             return 'Retailer';
         case 2:
             return 'Customer';
-        default:
+        case 3:
             return 'Admin';
+        default:
+            return 'Guest';
         }
     };
 
@@ -58,29 +60,29 @@ function Accounts() {
                     <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Email</TableCell>
+                                <TableCell>No</TableCell>
+                                <TableCell align='left'>Email</TableCell>
                                 <TableCell align='left'>Name</TableCell>
-                                <TableCell align='left'>Phone Number</TableCell>
                                 <TableCell align='left'>Role</TableCell>
                                 <TableCell align='left'>Detail</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            { userReducer.users.map((user) => {
+                            { userReducer.users.map((user, index) => {
                                 if (user.role === 3) {
                                     return;
                                 }
 
                                 return (
                                     <TableRow key={user.uid}>
+                                        <TableCell>
+                                            {index + 1}
+                                        </TableCell>
                                         <TableCell component='th' scope='row'>
                                             {user.email}
                                         </TableCell>
                                         <TableCell align='left'>
                                             {user.displayName}
-                                        </TableCell>
-                                        <TableCell align='left'>
-                                            {user.email}
                                         </TableCell>
                                         <TableCell align='left'>
                                             {convertRoleToText(user.role)}

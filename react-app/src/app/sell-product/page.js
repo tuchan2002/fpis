@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { getUsersByRole, userSelector } from '../../redux/reducers/userSlice';
-import { getProductById, productSelector, sellProductToRetailer } from '../../redux/reducers/productSlice';
+import { getProductById, productSelector, sellProductToCustomer } from '../../redux/reducers/productSlice';
 import { authSelector } from '../../redux/reducers/authSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
 import QRCodeScanner from '../../components/qr-code-scanner';
@@ -18,6 +18,7 @@ import ProductInfoTable from '../../components/product-info-table';
 import ProductTimeline from '../../components/product-timeline';
 import { web3Selector } from '../../redux/reducers/web3Slice';
 import connectWallet from '../../utils/connectWallet';
+import showSweetAlert from '../../utils/show-swal';
 
 function SellProduct() {
     const dispatch = useDispatch();
@@ -41,6 +42,13 @@ function SellProduct() {
     }, [authReducer.user]);
 
     useEffect(() => {
+        const showSweetAlertInvalidQRCode = async () => {
+            if (productScannerData && !productScannerData.productID && !productScannerData.model && !productScannerData.manufactoryEmail) {
+                await showSweetAlert('error', 'Invalid QR code.');
+                window.location.reload();
+            }
+        };
+
         if (productScannerData && productScannerData.productID) {
             dispatch(
                 getProductById({
@@ -50,7 +58,9 @@ function SellProduct() {
                 })
             );
         }
-    }, [productScannerData?.productID]);
+
+        showSweetAlertInvalidQRCode();
+    }, [productScannerData, productScannerData?.productID]);
 
     const handleSellToCustomer = async () => {
         if (!productScannerData) {
@@ -67,7 +77,7 @@ function SellProduct() {
             (user) => user.uid === selectedUserId
         );
 
-        dispatch(sellProductToRetailer({
+        dispatch(sellProductToCustomer({
             data: {
                 productID,
                 retailerEmail: authReducer.user.email,
@@ -103,17 +113,19 @@ function SellProduct() {
                         {productScannerData && (
                             <>
                                 {productReducer.product && (
-                                    <ProductInfoTable
-                                        productInfo={productReducer.product}
-                                    />
+                                    <>
+                                        <ProductInfoTable
+                                            productInfo={{...productReducer.product, description: productScannerData.description}}
+                                        />
+                                        <Button
+                                            variant='text'
+                                            onClick={() => setOpenModalTimeline(true)}
+                                        >
+                                            Show Product History
+                                        </Button>
+                                    </>
                                 )}
 
-                                <Button
-                                    variant='text'
-                                    onClick={() => setOpenModalTimeline(true)}
-                                >
-                                    Show Product History
-                                </Button>
                                 {
                                     !productReducer.product?.customerEmail
                                     && (

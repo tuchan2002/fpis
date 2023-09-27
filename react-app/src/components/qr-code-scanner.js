@@ -22,9 +22,13 @@ function QRCodeScanner({
         );
 
         const onScanSuccess = (scanData) => {
-            if (scanData && typeof JSON.parse(scanData) === 'object') {
-                setResult(JSON.parse(scanData));
-                scanner.clear();
+            try {
+                if (scanData && typeof JSON.parse(scanData) === 'object') {
+                    setResult(JSON.parse(scanData));
+                    scanner.clear();
+                }
+            } catch (error) {
+                throw new Error('Invalid QR code.');
             }
         };
 

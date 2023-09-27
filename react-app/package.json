@@ -40,7 +40,7 @@
     "lint-fix": "npx eslint . --fix",
     "compile": "npx hardhat compile",
     "deploy:testnet": "npx hardhat run --network bscTestnet scripts/deploy.js",
-    "test-contract": "npx hardhat test"
+    "test-smc": "npx hardhat test"
   },
   "eslintConfig": {
     "extends": [

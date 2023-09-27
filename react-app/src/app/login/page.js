@@ -28,26 +28,26 @@ function Login() {
     }, [authReducer.user]);
 
     const handleLoginWithGoogle = async () => {
-        const result = await signInWithPopup(auth, googleProvider);
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
 
-        const { user } = result;
-        const details = getAdditionalUserInfo(result);
+            const { user } = result;
+            const details = getAdditionalUserInfo(result);
 
-        console.log(details, result.user);
-        if (details?.isNewUser) {
-            try {
+            console.log(details, result.user);
+            if (details?.isNewUser) {
                 await addDocument('users', {
                     displayName: user.displayName,
                     email: user.email,
                     photoURL: user.photoURL,
                     uid: user.uid,
                     providerId: details.providerId,
-                    role: 2,
+                    role: -1,
                     isActive: false
                 });
-            } catch (error) {
-                console.log(error);
             }
+        } catch (error) {
+            console.error(error);
         }
     };
 

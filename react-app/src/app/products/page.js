@@ -164,7 +164,7 @@ function Products() {
                                         {product.model}
                                     </TableCell>
                                     <TableCell align='left'>
-                                        {product.manufactoryEmail}
+                                        {product.manufactoryEmail ? product.manufactoryEmail : 'None'}
                                     </TableCell>
                                     <TableCell align='left'>
                                         {product.retailerEmail ? product.retailerEmail : 'None'}

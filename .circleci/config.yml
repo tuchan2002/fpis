@@ -26,46 +26,8 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          command: npm run test-contract
+          command: npm run test-smc
           name: Testing Smart Contract
-
-  deploy-contract: 
-    working_directory: ~/fpis/react-app
-    executor: node/default
-    steps:
-      - checkout:
-          path: ~/fpis
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          name: Create .env file
-          command: |
-            echo "PRIVATE_KEY=$METAMASK_PRIVATE_KEY" > ~/fpis/react-app/.env
-            cat .env
-      - run:
-          name: Checking the change in smart contract code
-          command: |
-            cd ..
-            previous_commit=$(git rev-parse HEAD^)
-            changes=$(git diff $previous_commit -- react-app/contracts/)
-
-            git diff $previous_commit -- react-app/contracts/
-            if [ -z "$changes" ]; then
-              echo "There are no changes in the smart contract code."
-              cd react-app/
-              ls
-              cat src/contract-info.json
-            else
-              echo "There are changes in the smart contract code."
-              cd react-app/
-              npm run compile
-              npm run deploy:testnet
-              cat src/contract-info.json
-            fi
-      - persist_to_workspace:
-          root: ~/fpis/react-app/src
-          paths:
-            - contract-info.json
 
   build-and-push:
     working_directory: ~/fpis/react-app
@@ -77,17 +39,6 @@ jobs:
       - setup_remote_docker
       - checkout:
           path: ~/fpis
-      - attach_workspace:
-          at: ~/fpis/react-app/src
-      - run:
-          name: Use Persisted File
-          command: |
-            mv ~/fpis/react-app/src/contract-info.json ~/fpis/react-app/src/contract-info-old.json
-            cp ~/fpis/react-app/src/contract-info-old.json ./src/contract-info.json
-            cat src/contract-info.json
-            ls
-            ls src/
-            pwd
       - docker/check:
           docker-username: DOCKER_USERNAME
           docker-password: DOCKER_PASSWORD
@@ -119,17 +70,10 @@ workflows:
     jobs:
       - eslint
       - smart-contract-testing
-      - deploy-contract:
+      - build-and-push:
           requires:
             - eslint
             - smart-contract-testing
-          filters:
-            branches:
-              only:
-                - master
-      - build-and-push:
-          requires:
-            - deploy-contract
           filters:
             branches:
               only:

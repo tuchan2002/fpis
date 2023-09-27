@@ -4,18 +4,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import QRCode from 'qrcode.react';
 import { v4 as uuidv4 } from 'uuid';
 import html2canvas from 'html2canvas';
-import DownloadIcon from '@mui/icons-material/Download';
 import moment from 'moment';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { web3Selector } from '../../redux/reducers/web3Slice';
 import { authSelector } from '../../redux/reducers/authSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
 import { createProduct } from '../../redux/reducers/productSlice';
+import { imageDb } from '../../firebase/config';
+import connectWallet from '../../utils/connectWallet';
 
 function CreateProduct() {
     const dispatch = useDispatch();
 
     const web3Reducer = useSelector(web3Selector);
-    console.log('web3Reducerweb3Reducer', web3Reducer);
 
     const authReducer = useSelector(authSelector);
     const currentUserRole = authReducer.user && authReducer.user?.role;
@@ -28,11 +29,11 @@ function CreateProduct() {
         model: '',
         description: '',
         manufactoryEmail: authReducer.user ? authReducer.user.email : '',
-        productionDate: ''
+        productionDate: '',
+        imageURL: ''
     });
 
-    const [showQRcode, setShowQRcode] = useState(false);
-    const { productID, model, description } = productInputData;
+    const { model, description } = productInputData;
 
     const onChangeProductInputData = (e) => {
         setProductInputData({
@@ -41,30 +42,44 @@ function CreateProduct() {
         });
     };
 
-    const downloadQRcode = () => {
-        html2canvas(qrCodeRef.current).then((canvas) => {
-            const qrCodeImage = canvas.toDataURL('image/png');
-            const a = document.createElement('a');
-            a.href = qrCodeImage;
-            a.download = `${productID}_${model}.png`;
-            a.click();
-        });
+    const dataURLToBlob = (dataURL) => {
+        const byteString = atob(dataURL.split(',')[1]);
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: 'image/png' });
     };
 
     const handleSubmit = async (e) => {
-        console.log('handleSubmit > web3Reducer', web3Reducer);
         e.preventDefault();
 
-        dispatch(
-            createProduct({
-                data: {
-                    ...productInputData,
-                    productionDate: moment().format('LLL')
-                },
-                contract: web3Reducer.contract,
-                accountAddress: web3Reducer.account
-            })
-        );
+        if (!web3Reducer.account) {
+            connectWallet(web3Reducer, dispatch);
+            return;
+        }
+
+        html2canvas(qrCodeRef.current).then((canvas) => {
+            const qrCodeImage = canvas.toDataURL('image/png');
+            const blob = dataURLToBlob(qrCodeImage);
+
+            const imgRef = ref(imageDb, `qrcode/${productInputData.productID}`);
+            uploadBytes(imgRef, blob).then((snapshot) => getDownloadURL(snapshot.ref))
+                .then((downloadURL) => {
+                    dispatch(
+                        createProduct({
+                            data: {
+                                ...productInputData,
+                                productionDate: moment().format('LLL'),
+                                imageURL: `${downloadURL}`
+                            },
+                            contract: web3Reducer.contract,
+                            accountAddress: web3Reducer.account
+                        })
+                    );
+                });
+        });
     };
 
     return (
@@ -103,61 +118,45 @@ function CreateProduct() {
                             value={description}
                             onChange={onChangeProductInputData}
                         />
-                        <Button
-                            variant='contained'
-                            sx={{ alignSelf: 'center' }}
-                            onClick={() => setShowQRcode(true)}
-                            disabled={
-                                !(model.trim() && description.trim())
-                            }
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: 1
+                            }}
                         >
-                            Generate QR code
+                            {(model.trim() !== '' && description.trim() !== '')
+                                && (
+                                    <div
+                                        ref={qrCodeRef}
+                                        style={{
+                                            width: 180,
+                                            height: 180,
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        <QRCode
+                                            value={JSON.stringify(productInputData)}
+                                            size={160}
+                                        />
+                                    </div>
+                                )}
+
+                        </Box>
+
+                        <Button
+                            type='submit'
+                            variant='contained'
+                            sx={{ alignSelf: 'flex-end' }}
+                            disabled={!(model.trim() !== '' && description.trim() !== '')}
+                        >
+                            Create
                         </Button>
 
-                        {showQRcode && (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    gap: 1
-                                }}
-                            >
-                                <div
-                                    ref={qrCodeRef}
-                                    style={{
-                                        width: 180,
-                                        height: 180,
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center'
-                                    }}
-                                >
-                                    <QRCode
-                                        value={JSON.stringify(productInputData)}
-                                        size={160}
-                                    />
-                                </div>
-
-                                <Button
-                                    variant='contained'
-                                    onClick={downloadQRcode}
-                                    startIcon={<DownloadIcon />}
-                                >
-                                    Download
-                                </Button>
-                            </Box>
-                        )}
-
-                        {showQRcode && (
-                            <Button
-                                type='submit'
-                                variant='contained'
-                                sx={{ alignSelf: 'flex-end' }}
-                            >
-                                Create
-                            </Button>
-                        )}
                     </Box>
                 </Paper>
             </Box>

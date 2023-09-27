@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { showAlert } from './alertSlice';
-import { changeCustomer, createProductOnBlockchain, getAllProducts, getProductDetail, getProductsByCustomer, getProductsByManufactory, getProductsByRetailer, moveToRetailer, sellToFirstCustomer } from '../../utils/web3-method/product';
+import { changeCustomer, createProductOnBlockchain, getAllProducts, getProductDetail, getProductsByCustomer, getProductsByManufactory, getProductsByRetailer, moveToRetailer, sellToCustomer } from '../../utils/web3-method/product';
 import showSweetAlert from '../../utils/show-swal';
 
 const initialState = {
@@ -172,10 +172,13 @@ export const getProductById = createAsyncThunk(
                 accountAddress
             );
 
+            console.log('productproduct', product);
+
             dispatch(showAlert({ loading: false }));
 
             return product;
         } catch (error) {
+            console.log(error);
             dispatch(
                 showAlert({
                     error: 'Failed retrieved product information.'
@@ -216,13 +219,15 @@ export const moveProductToRetailer = createAsyncThunk(
 
             return product;
         } catch (error) {
+            console.error(error);
+            dispatch(showAlert({ loading: false }));
             await showSweetAlert('error', 'Failed to move the product to the retailer.');
         }
     }
 );
 
-export const sellProductToRetailer = createAsyncThunk(
-    'product/sellProductToRetailer',
+export const sellProductToCustomer = createAsyncThunk(
+    'product/sellProductToCustomer',
     async (
         {
             data,
@@ -234,7 +239,7 @@ export const sellProductToRetailer = createAsyncThunk(
         try {
             dispatch(showAlert({ loading: true }));
 
-            await sellToFirstCustomer(
+            await sellToCustomer(
                 data,
                 contract,
                 accountAddress
@@ -322,7 +327,7 @@ const productSlice = createSlice({
             state.product = action.payload;
         });
 
-        builder.addCase(sellProductToRetailer.fulfilled, (state, action) => {
+        builder.addCase(sellProductToCustomer.fulfilled, (state, action) => {
             state.product = action.payload;
         });
 

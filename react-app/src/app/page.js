@@ -13,7 +13,7 @@ function Home() {
 
     const authReducer = useSelector(authSelector);
     const currentUserRole = authReducer.user && authReducer.user?.role;
-    const allowedRolesList = [0, 1, 2, 3];
+    const allowedRolesList = [0, 1, 2, 3, -1];
     useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
     return (
@@ -21,19 +21,26 @@ function Home() {
         && allowedRolesList.includes(currentUserRole) && (
             <Box sx={{ p: 3 }}>
                 <Container>
-                    <Paper style={{ padding: '20px' }}>
-                        <Typography variant='h4'>{`${roleNameList[currentUserRole]} Home page`}</Typography>
-                        <Typography variant='h6' color='textSecondary'>
-                            {`Welcome to ${roleNameList[currentUserRole]} page`}
-                        </Typography>
-                        <Button
-                            sx={{ mt: 2 }}
-                            variant='contained'
-                            onClick={() => connectWallet(web3Reducer, dispatch)}
-                        >
-                            Connect Wallet
-                        </Button>
-                    </Paper>
+                    { currentUserRole !== -1
+                        ? (
+                            <Paper style={{ padding: '20px' }}>
+                                <Typography variant='h4'>{`${roleNameList[currentUserRole]} Home page`}</Typography>
+                                <Typography variant='h6' color='textSecondary'>
+                                    {`Welcome to ${roleNameList[currentUserRole]} page`}
+                                </Typography>
+                                <Button
+                                    sx={{ mt: 2 }}
+                                    variant='contained'
+                                    onClick={() => connectWallet(web3Reducer, dispatch)}
+                                >
+                                    Connect Wallet
+                                </Button>
+                            </Paper>
+                        ) : (
+                            <Paper style={{ padding: '20px' }}>
+                                <Typography variant='h4'>Hello World !</Typography>
+                            </Paper>
+                        )}
                 </Container>
             </Box>
         )
