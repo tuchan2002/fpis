@@ -5,6 +5,20 @@ const { ethers } = require('hardhat');
 /* eslint-enable */
 /* eslint-disable no-unused-expressions */
 
+describe('Smart Contract Deployment', () => {
+    it('Should deploy the contract', async () => {
+        const fpisContract = await ethers.deployContract('FPIS');
+
+        const customerEmail = 'customer1@gmail.com';
+        const customerName = 'customer 1';
+        const tx = await fpisContract.createCustomer(customerEmail, customerName);
+        await tx.wait();
+
+        const customerDetail = await fpisContract.getCustomerDetail(customerEmail);
+        expect(customerDetail[0]).to.equal(customerName);
+    });
+});
+
 describe('Manufactory Management', () => {
     const manufactory1TestEmail = 'manufactory1@example.com';
     let fpisContract;
