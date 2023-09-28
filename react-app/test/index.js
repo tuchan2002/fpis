@@ -560,10 +560,10 @@ describe('Customer Changes', () => {
         await expect(tx).to.be.revertedWith('Product does not exist');
     });
 
-    it('Should not change customer if old customer does not exist', async () => {
+    it('Should not change customer if new customer does not exist', async () => {
         const productID = '456';
-        const oldCustomerEmail = 'nonExistentCustomerEmail';
-        const newCustomerEmail = customer2TestEmail;
+        const oldCustomerEmail = customer1TestEmail;
+        const newCustomerEmail = 'nonExistentCustomerEmail';
         const changeDate = '2023-09-25';
         const imageURL = 'https://i.pinimg.com/564x/76/0b/4e/760b4e14921fc52336ce43ad39757f41.jpg';
 
@@ -574,17 +574,6 @@ describe('Customer Changes', () => {
             '2023-09-25',
             imageURL
         );
-
-        const tx = fpisContract.changeCustomer(productID, oldCustomerEmail, newCustomerEmail, changeDate);
-
-        await expect(tx).to.be.revertedWith('Old customer does not exist');
-    });
-
-    it('Should not change customer if new customer does not exist', async () => {
-        const productID = '456';
-        const oldCustomerEmail = customer1TestEmail;
-        const newCustomerEmail = 'nonExistentCustomerEmail';
-        const changeDate = '2023-09-25';
 
         const tx = fpisContract.changeCustomer(productID, oldCustomerEmail, newCustomerEmail, changeDate);
 

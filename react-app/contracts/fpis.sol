@@ -122,7 +122,6 @@ contract FPIS {
     Customer storage newCustomer = customerList[_newCustomerEmail];
 
     require(productExists(_productID), "Product does not exist");
-    require(oldCustomer.isExist, "Old customer does not exist");
     require(newCustomer.isExist, "New customer does not exist");
     require(compareTwoStrings(product.customerEmail, _oldCustomerEmail), "Only the current owner can change the customer");
 
