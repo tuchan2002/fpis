@@ -144,8 +144,8 @@ describe('Retailer Removal', () => {
 
     it('Should remove a retailer', async () => {
         const tx = await fpisContract.removeRetailer(retailer1TestEmail);
-        await tx.wait(); 
-        
+        await tx.wait();
+
         const retailerDetail = await fpisContract.getRetailerDetail(retailer1TestEmail);
         expect(retailerDetail[0]).to.be.empty;
     });
@@ -214,7 +214,7 @@ describe('Customer Removal', () => {
 
     it('Should remove a customer', async () => {
         const tx = await fpisContract.removeCustomer(customer1TestEmail);
-        await tx.wait(); 
+        await tx.wait();
 
         const customerDetail = await fpisContract.getCustomerDetail(customer1TestEmail);
         expect(customerDetail[0]).to.be.empty;
