@@ -13,6 +13,10 @@ import { createProduct } from '../../redux/reducers/productSlice';
 import { imageDb } from '../../firebase/config';
 import connectWallet from '../../utils/connectWallet';
 
+const initialFieldValidator = {
+    model: '',
+    description: ''
+};
 function CreateProduct() {
     const dispatch = useDispatch();
 
@@ -41,6 +45,19 @@ function CreateProduct() {
             [e.target.name]: e.target.value
         });
     };
+    const [fieldValidator, setFieldValidator] = useState(initialFieldValidator);
+
+    const validateField = () => {
+        if (model.trim() === '' || description.trim() === '') {
+            setFieldValidator({
+                ...fieldValidator,
+                model: model.trim() === '' ? 'This field cannot be left blank' : '',
+                description: description.trim() === '' ? 'This field cannot be left blank' : ''
+            });
+            return true;
+        }
+        return false;
+    };
 
     const dataURLToBlob = (dataURL) => {
         const byteString = atob(dataURL.split(',')[1]);
@@ -54,6 +71,9 @@ function CreateProduct() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (validateField()) {
+            return;
+        }
 
         if (!web3Reducer.account) {
             connectWallet(web3Reducer, dispatch);
@@ -107,6 +127,8 @@ function CreateProduct() {
                             name='model'
                             value={model}
                             onChange={onChangeProductInputData}
+                            error={!!fieldValidator.model}
+                            helperText={fieldValidator.model}
                         />
                         <TextField
                             variant='standard'
@@ -117,6 +139,8 @@ function CreateProduct() {
                             name='description'
                             value={description}
                             onChange={onChangeProductInputData}
+                            error={!!fieldValidator.description}
+                            helperText={fieldValidator.description}
                         />
 
                         <Box
@@ -152,7 +176,6 @@ function CreateProduct() {
                             type='submit'
                             variant='contained'
                             sx={{ alignSelf: 'flex-end' }}
-                            disabled={!(model.trim() !== '' && description.trim() !== '')}
                         >
                             Create
                         </Button>
