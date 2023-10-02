@@ -222,6 +222,13 @@ export const moveProductToRetailer = createAsyncThunk(
             console.error(error);
             dispatch(showAlert({ loading: false }));
             await showSweetAlert('error', 'Failed to move the product to the retailer.');
+
+            const product = await getProductDetail(
+                data.productID,
+                contract,
+                accountAddress
+            );
+            return product;
         }
     }
 );
@@ -258,6 +265,13 @@ export const sellProductToCustomer = createAsyncThunk(
             return product;
         } catch (error) {
             await showSweetAlert('error', 'Failed to sell the product to the customer.');
+
+            const product = await getProductDetail(
+                data.productID,
+                contract,
+                accountAddress
+            );
+            return product;
         }
     }
 );
@@ -294,6 +308,13 @@ export const changeCustomerOfProduct = createAsyncThunk(
             return product;
         } catch (error) {
             await showSweetAlert('error', 'Failed to change the product.');
+
+            const product = await getProductDetail(
+                data.productID,
+                contract,
+                accountAddress
+            );
+            return product;
         }
     }
 );

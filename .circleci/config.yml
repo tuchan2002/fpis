@@ -63,7 +63,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh -oStrictHostKeyChecking=no -vv 'tuchanvnu-testgitpod-gb0khs8e87p@tuchanvnu-testgitpod-gb0khs8e87p.ssh.ws-us104.gitpod.io' "./deploy.sh"
+            ssh -oStrictHostKeyChecking=no -vv 'tuchanvnu-gitpodtest-hf9oufykvco@tuchanvnu-gitpodtest-hf9oufykvco.ssh.ws-us105.gitpod.io' "./deploy.sh"
 
 workflows:
   test-build-deploy:
