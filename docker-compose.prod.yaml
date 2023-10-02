@@ -6,4 +6,4 @@ services:
     image: tuchan17/fpis_app:latest
     restart: always
     ports:
-      - "8080:80"
+      - "5000:3000"
