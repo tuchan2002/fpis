@@ -12,7 +12,7 @@ function QRCodeScanner({
                     width: 225,
                     height: 225
                 },
-                fps: 5,
+                fps: 10,
                 supportedScanTypes: [
                     Html5QrcodeScanType.SCAN_TYPE_CAMERA,
                     Html5QrcodeScanType.SCAN_TYPE_FILE
