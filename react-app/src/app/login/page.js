@@ -188,10 +188,6 @@ function Login() {
                         >
                             Hệ thống nhận dạng sản phẩm giả cho doanh nghiệp.
                         </Typography>
-                        {/* <img
-                            alt=''
-                            src=
-                        /> */}
                     </Box>
                 </Grid>
             </Grid>
