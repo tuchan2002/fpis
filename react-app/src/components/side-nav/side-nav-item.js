@@ -1,7 +1,10 @@
 import { Box, ButtonBase } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function SideNavItem(props) {
-    const { active = false, disabled, icon, title } = props;
+    const navigate = useNavigate();
+
+    const { active = false, disabled, icon, title, path } = props;
 
     return (
         <li>
@@ -23,6 +26,7 @@ function SideNavItem(props) {
                         backgroundColor: 'rgba(255, 255, 255, 0.04)'
                     }
                 }}
+                onClick={() => navigate(path)}
             >
                 {icon && (
                     <Box

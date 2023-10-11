@@ -7,13 +7,18 @@ import {
     SvgIcon,
     Typography
 } from '@mui/material';
+import { useSelector } from 'react-redux';
 import ChevronUpDownIcon from '@heroicons/react/24/solid/ChevronUpDownIcon';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import items from './config';
 import SideNavItem from './side-nav-item';
+import { authSelector } from '../../redux/reducers/authSlice';
 
 function SideNav() {
     const {pathname} = useLocation();
+
+    const authReducer = useSelector(authSelector);
+    const currentUserRole = authReducer.user && authReducer.user?.role;
 
     const content = (
         <Box
@@ -25,6 +30,7 @@ function SideNav() {
         >
             <Box sx={{ p: 3 }}>
                 <Box
+                    component={Link}
                     href='/'
                     sx={{
                         display: 'inline-flex',
@@ -32,7 +38,23 @@ function SideNav() {
                         width: 32
                     }}
                 >
-                    FPISystem
+                    <svg
+                        fill='none'
+                        height='100%'
+                        viewBox='0 0 24 24'
+                        width='100%'
+                        xmlns='http://www.w3.org/2000/svg'
+                    >
+                        <path
+                            opacity={0.16}
+                            d='M7.242 11.083c.449-1.674 2.17-3.394 3.843-3.843l10.434-2.796c1.673-.448 2.666.545 2.218 2.218L20.94 17.096c-.449 1.674-2.17 3.394-3.843 3.843L6.664 23.735c-1.673.448-2.666-.545-2.218-2.218l2.796-10.434Z'
+                            fill='#3f50b5'
+                        />
+                        <path
+                            d='M3.06 6.9c.448-1.674 2.168-3.394 3.842-3.843L17.336.261c1.673-.448 2.667.545 2.218 2.218l-2.796 10.434c-.449 1.674-2.169 3.394-3.843 3.843L2.481 19.552C.808 20-.185 19.007.263 17.334L3.06 6.9Z'
+                            fill='#3f50b5'
+                        />
+                    </svg>
                 </Box>
                 <Box
                     sx={{
@@ -51,7 +73,7 @@ function SideNav() {
                             color='inherit'
                             variant='subtitle1'
                         >
-                            Devias
+                            FPISystem
                         </Typography>
                         <Typography
                             color='#9DA4AE'
@@ -89,17 +111,23 @@ function SideNav() {
                     {items.map((item) => {
                         const active = item.path ? (pathname === item.path) : false;
 
-                        return (
-                            <SideNavItem
-                                active={active}
-                                disabled={item.disabled}
-                                external={item.external}
-                                icon={item.icon}
-                                key={item.title}
-                                path={item.path}
-                                title={item.title}
-                            />
-                        );
+                        if (authReducer.user?.isActive && currentUserRole !== null
+                            && item.allowedRolesList.includes(
+                                currentUserRole
+                            )) {
+                            return (
+                                <SideNavItem
+                                    active={active}
+                                    disabled={item.disabled}
+                                    external={item.external}
+                                    icon={item.icon}
+                                    key={item.title}
+                                    path={item.path}
+                                    title={item.title}
+                                />
+                            );
+                        }
+                        return null;
                     })}
                 </Stack>
             </Box>
@@ -107,22 +135,24 @@ function SideNav() {
     );
 
     return (
-        <Drawer
-            anchor='left'
-            onClose={() => console.log('close')}
-            open
-            PaperProps={{
-                sx: {
-                    backgroundColor: '#1C2536',
-                    color: 'common.white',
-                    width: 280
-                }
-            }}
-            sx={{ zIndex: 110 }}
-            variant='permanent'
-        >
-            {content}
-        </Drawer>
+        (
+            <Drawer
+                anchor='left'
+                onClose={() => console.log('close')}
+                open
+                PaperProps={{
+                    sx: {
+                        backgroundColor: '#1C2536',
+                        color: 'common.white',
+                        width: 280
+                    }
+                }}
+                sx={{ zIndex: 110 }}
+                variant='permanent'
+            >
+                {content}
+            </Drawer>
+        )
     );
 }
 

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import Web3 from 'web3';
 import detectEthereumProvider from '@metamask/detect-provider';
@@ -10,7 +10,6 @@ import { handleAuthStateChanged } from './redux/reducers/authSlice';
 import { auth } from './firebase/config';
 import { showAlert } from './redux/reducers/alertSlice';
 import GlobalAlert from './components/global-alert';
-// import NavbarMenu from './components/navbar-menu';
 import Login from './app/login/page';
 import Home from './app/page';
 import Products from './app/products/page';
@@ -29,6 +28,9 @@ import SideNav from './components/side-nav';
 import TopNav from './components/top-nav';
 
 function App() {
+    const location = useLocation();
+    const {pathname} = location;
+
     const contractAbi = contractInfo.contractABI;
     const contractAddress = contractInfo.contractAddress;
 
@@ -36,7 +38,6 @@ function App() {
     const navigate = useNavigate();
 
     const web3Reducer = useSelector(web3Selector);
-    console.log('web3Reducer', web3Reducer);
 
     useEffect(() => {
         const unsubcribed = onAuthStateChanged(auth, async (user) => {
@@ -114,10 +115,13 @@ function App() {
     return (
         <>
             <GlobalAlert />
-            {/* <NavbarMenu /> */}
-            <TopNav />
-            <SideNav />
-            <Box sx={{ paddingLeft: '280px', maxWidth: '100%', width: '100%' }}>
+            {pathname !== '/login' && (
+                <>
+                    <TopNav />
+                    <SideNav />
+                </>
+            )}
+            <Box sx={{ paddingLeft: pathname !== '/login' ? '280px' : '', maxWidth: '100%', width: '100%' }}>
                 <Routes>
                     <Route path='/' element={<Home />} />
                     <Route
