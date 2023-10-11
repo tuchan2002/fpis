@@ -33,7 +33,7 @@ function Home() {
                                     variant='contained'
                                     onClick={() => connectWallet(web3Reducer, dispatch)}
                                 >
-                                    Connect Wallet
+                                    Connect MetaMask
                                 </Button>
                             </Paper>
                         ) : (

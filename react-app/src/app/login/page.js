@@ -118,13 +118,12 @@ function Login() {
                                     spacing={1}
                                     sx={{ mb: 3 }}
                                 >
-                                    <Typography variant='h4'>
-                                        Đăng nhập
+                                    <Typography variant='h1' sx={{fontFamily: 'monospace'}}>
+                                        Get Started
                                     </Typography>
                                 </Stack>
                                 <Box
                                     sx={{
-                                        marginTop: 8,
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center'
@@ -134,7 +133,6 @@ function Login() {
                                         startIcon={<GoogleIcon />}
                                         fullWidth
                                         size='large'
-                                        sx={{ mt: 3 }}
                                         variant='contained'
                                         onClick={handleLoginWithGoogle}
                                     >
@@ -165,8 +163,8 @@ function Login() {
                             align='center'
                             color='inherit'
                             sx={{
-                                fontSize: '24px',
-                                lineHeight: '32px',
+                                fontSize: '32px',
+                                lineHeight: '46px',
                                 mb: 1
                             }}
                             variant='h1'
@@ -183,7 +181,7 @@ function Login() {
                         </Typography>
                         <Typography
                             align='center'
-                            sx={{ mb: 3 }}
+                            sx={{ mb: 3, fontSize: '18px' }}
                             variant='subtitle1'
                         >
                             Hệ thống nhận dạng sản phẩm giả cho doanh nghiệp.

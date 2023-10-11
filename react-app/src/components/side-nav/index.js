@@ -61,7 +61,7 @@ function SideNav() {
                             FPISystem
                         </Typography>
                         <Typography
-                            color='#9DA4AE'
+                            color='neutral.400'
                             variant='body2'
                         >
                             Production
@@ -69,13 +69,13 @@ function SideNav() {
                     </div>
                     <SvgIcon
                         fontSize='small'
-                        sx={{ color: '#6C737F' }}
+                        sx={{ color: 'neutral.500' }}
                     >
                         <ChevronUpDownIcon />
                     </SvgIcon>
                 </Box>
             </Box>
-            <Divider sx={{ borderColor: '#2F3746' }} />
+            <Divider sx={{ borderColor: 'neutral.700' }} />
             <Box
                 component='nav'
                 sx={{
@@ -127,7 +127,7 @@ function SideNav() {
                 open
                 PaperProps={{
                     sx: {
-                        backgroundColor: '#1C2536',
+                        backgroundColor: 'neutral.800',
                         color: 'common.white',
                         width: 280
                     }

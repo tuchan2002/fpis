@@ -1,10 +1,10 @@
 import BellIcon from '@heroicons/react/24/solid/BellIcon';
-import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
 import QuestionMarkCircleIcon from '@heroicons/react/24/solid/QuestionMarkCircleIcon';
 import {
     Avatar,
     Badge,
     Box,
+    Button,
     IconButton,
     Stack,
     SvgIcon,
@@ -12,14 +12,19 @@ import {
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AccountPopover from './account-popover';
 import { authSelector } from '../../redux/reducers/authSlice';
+import { web3Selector } from '../../redux/reducers/web3Slice';
+import connectWallet from '../../utils/connectWallet';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
 function TopNav() {
+    const dispatch = useDispatch();
+
+    const web3Reducer = useSelector(web3Selector);
     const authReducer = useSelector(authSelector);
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -56,7 +61,7 @@ function TopNav() {
                 <Stack
                     alignItems='center'
                     direction='row'
-                    justifyContent='space-between'
+                    justifyContent='flex-end'
                     spacing={2}
                     sx={{
                         minHeight: TOP_NAV_HEIGHT,
@@ -68,19 +73,12 @@ function TopNav() {
                         direction='row'
                         spacing={2}
                     >
-                        <Tooltip title='Tìm kiếm'>
-                            <IconButton>
-                                <SvgIcon fontSize='small'>
-                                    <MagnifyingGlassIcon />
-                                </SvgIcon>
-                            </IconButton>
-                        </Tooltip>
-                    </Stack>
-                    <Stack
-                        alignItems='center'
-                        direction='row'
-                        spacing={2}
-                    >
+                        <Button
+                            variant='contained'
+                            onClick={() => connectWallet(web3Reducer, dispatch)}
+                        >
+                            Connect Wallet
+                        </Button>
                         <Tooltip title='Thông tin'>
                             <IconButton>
                                 <SvgIcon fontSize='small'>

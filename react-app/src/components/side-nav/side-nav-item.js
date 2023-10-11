@@ -33,7 +33,7 @@ function SideNavItem(props) {
                         component='span'
                         sx={{
                             alignItems: 'center',
-                            color: '#9DA4AE',
+                            color: 'neutral.400',
                             display: 'inline-flex',
                             justifyContent: 'center',
                             mr: 2,
@@ -48,7 +48,7 @@ function SideNavItem(props) {
                 <Box
                     component='span'
                     sx={{
-                        color: '#9DA4AE',
+                        color: 'neutral.400',
                         flexGrow: 1,
                         fontFamily: (theme) => theme.typography.fontFamily,
                         fontSize: 14,
