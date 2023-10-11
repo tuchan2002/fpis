@@ -51,8 +51,8 @@ function CreateProduct() {
         if (model.trim() === '' || description.trim() === '') {
             setFieldValidator({
                 ...fieldValidator,
-                model: model.trim() === '' ? 'This field cannot be left blank' : '',
-                description: description.trim() === '' ? 'This field cannot be left blank' : ''
+                model: model.trim() === '' ? 'Không được bỏ trống trường này' : '',
+                description: description.trim() === '' ? 'Không được bỏ trống trường này' : ''
             });
             return true;
         }
@@ -117,7 +117,7 @@ function CreateProduct() {
                             gap: 3
                         }}
                     >
-                        <Typography variant='h4'>Create Product</Typography>
+                        <Typography variant='h4'>Thêm sản phẩm</Typography>
                         <TextField
                             variant='standard'
                             required
@@ -135,7 +135,7 @@ function CreateProduct() {
                             required
                             fullWidth
                             id='description'
-                            label='Description'
+                            label='Mô tả sản phẩm'
                             name='description'
                             value={description}
                             onChange={onChangeProductInputData}
@@ -177,7 +177,7 @@ function CreateProduct() {
                             variant='contained'
                             sx={{ alignSelf: 'flex-end' }}
                         >
-                            Create
+                            Thêm
                         </Button>
 
                     </Box>

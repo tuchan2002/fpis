@@ -107,21 +107,22 @@ function MoveProduct() {
                         }}
                     >
                         <QRCodeScanner setResult={setProductScannerData} />
-                        <Typography variant='h5'>
-                            Product Information
-                        </Typography>
                         {productScannerData && (
                             <>
                                 {productReducer.product && (
                                     <>
+                                        <Typography variant='h5'>
+                                            Thông tin sản phẩm
+                                        </Typography>
                                         <ProductInfoTable
                                             productInfo={{...productReducer.product, description: productScannerData.description}}
                                         />
                                         <Button
-                                            variant='text'
+                                            color='info'
+                                            variant='contained'
                                             onClick={() => setOpenModalTimeline(true)}
                                         >
-                                            Show Product History
+                                            Xem lịch sử sản phẩm
                                         </Button>
                                     </>
                                 )}
@@ -134,7 +135,7 @@ function MoveProduct() {
                                                 sx={{ width: '50%' }}
                                                 id='userId'
                                                 select
-                                                label='Retailer'
+                                                label='Chọn đại lý bán lẻ'
                                                 variant='standard'
                                                 value={selectedUserId}
                                                 onChange={(e) => setSelectedUserId(e.target.value)}
@@ -150,7 +151,7 @@ function MoveProduct() {
                                                 disabled={!selectedUserId}
                                                 onClick={handleMoveToRetailer}
                                             >
-                                                Move
+                                                Di chuyển
                                             </Button>
                                         </>
                                     )

@@ -126,21 +126,21 @@ function AccountDetails() {
                         ? (
                             <Button
                                 sx={{alignSelf: 'center', marginTop: 4}}
-                                variant='text'
+                                variant='contained'
                                 color='success'
                                 onClick={() => setOpenPopup(true)}
                             >
-                                Activate Account
+                                Kích hoạt tài khoản
                             </Button>
                         )
                         : (
                             <Button
                                 sx={{alignSelf: 'center', marginTop: 4}}
-                                variant='text'
+                                variant='contained'
                                 color='error'
                                 onClick={handleDeactivateAccount}
                             >
-                                Deactivate Account
+                                Vô hiệu hóa tài khoản
                             </Button>
                         )}
                 </Paper>
@@ -152,7 +152,7 @@ function AccountDetails() {
                     scroll='body'
                 >
                     <DialogTitle>
-                        Active Account
+                        Kích hoạt tài khoản
                     </DialogTitle>
 
                     <DialogContent>
@@ -175,7 +175,7 @@ function AccountDetails() {
                     <DialogActions>
                         <Button onClick={closePopup}>Cancel</Button>
                         <Button onClick={handleActivateAccount} autoFocus>
-                            Save
+                            OK
                         </Button>
                     </DialogActions>
                 </Dialog>

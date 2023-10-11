@@ -1,12 +1,12 @@
 import {Box,
+    Button,
     Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow,
-    IconButton } from '@mui/material';
+    TableRow} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -89,9 +89,13 @@ function Accounts() {
                                         </TableCell>
                                         <TableCell align='left'>
                                             <Link to={`/accounts/${user.uid}`}>
-                                                <IconButton>
+                                                <Button
+                                                    variant='contained'
+                                                    color='info'
+                                                    size='small'
+                                                >
                                                     <VisibilityIcon />
-                                                </IconButton>
+                                                </Button>
                                             </Link>
                                         </TableCell>
                                     </TableRow>

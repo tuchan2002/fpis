@@ -98,11 +98,12 @@ function VerifyProduct() {
                     }}
                 >
                     <QRCodeScanner setResult={setProductScannerData} />
-                    <Typography variant='h5'>
-                        {isRealStatus ? 'Product Information' : 'Product Information from QR code'}
-                    </Typography>
+
                     {productScannerData && (
                         <>
+                            <Typography variant='h5'>
+                                {isRealStatus ? 'Thông tin sản phẩm' : 'Thông tin từ mã QR'}
+                            </Typography>
                             <ProductInfoTable
                                 productInfo={isRealStatus ? productReducer.product : productScannerData}
                             />
@@ -111,15 +112,16 @@ function VerifyProduct() {
                                     variant='contained'
                                     onClick={handleVerify}
                                 >
-                                    Verify
+                                    Xác minh
                                 </Button>
                             )}
                             { isRealStatus && (
                                 <Button
-                                    variant='text'
+                                    color='info'
+                                    variant='contained'
                                     onClick={() => setOpenModalTimeline(true)}
                                 >
-                                    Show Product History
+                                    Xem lịch sử sản phẩm
                                 </Button>
                             )}
                             {isRealStatus && (

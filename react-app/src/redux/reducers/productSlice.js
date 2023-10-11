@@ -215,13 +215,13 @@ export const moveProductToRetailer = createAsyncThunk(
 
             dispatch(showAlert({ loading: false }));
 
-            await showSweetAlert('success', 'Successfully moved the product to the retailer.');
+            await showSweetAlert('success', 'Di chuyển sản phẩm sang đại lý thành công.');
 
             return product;
         } catch (error) {
             console.error(error);
             dispatch(showAlert({ loading: false }));
-            await showSweetAlert('error', 'Failed to move the product to the retailer.');
+            await showSweetAlert('error', 'Di chuyển sản phẩm sang đại lý thất bại.');
 
             const product = await getProductDetail(
                 data.productID,
@@ -260,11 +260,11 @@ export const sellProductToCustomer = createAsyncThunk(
 
             dispatch(showAlert({ loading: false }));
 
-            await showSweetAlert('success', 'Successfully sold the product to the customer.');
+            await showSweetAlert('success', 'Bán sản phẩm thành công.');
 
             return product;
         } catch (error) {
-            await showSweetAlert('error', 'Failed to sell the product to the customer.');
+            await showSweetAlert('error', 'Bán sản phẩm thất bại.');
 
             const product = await getProductDetail(
                 data.productID,
@@ -303,11 +303,11 @@ export const changeCustomerOfProduct = createAsyncThunk(
 
             dispatch(showAlert({ loading: false }));
 
-            await showSweetAlert('success', 'Successfully changed the product to another customer.');
+            await showSweetAlert('success', 'Thay đổi quyền sở hữu cho khách hàng khách thành công.');
 
             return product;
         } catch (error) {
-            await showSweetAlert('error', 'Failed to change the product.');
+            await showSweetAlert('error', 'Thay đổi quyền sở hữu cho khách hàng khách thất bại.');
 
             const product = await getProductDetail(
                 data.productID,

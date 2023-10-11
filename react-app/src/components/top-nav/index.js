@@ -68,17 +68,12 @@ function TopNav() {
                         px: 2
                     }}
                 >
+
                     <Stack
                         alignItems='center'
                         direction='row'
                         spacing={2}
                     >
-                        <Button
-                            variant='contained'
-                            onClick={() => connectWallet(web3Reducer, dispatch)}
-                        >
-                            Connect Wallet
-                        </Button>
                         <Tooltip title='Thông tin'>
                             <IconButton>
                                 <SvgIcon fontSize='small'>
@@ -99,6 +94,23 @@ function TopNav() {
                                 </Badge>
                             </IconButton>
                         </Tooltip>
+                        {!web3Reducer.account ? (
+                            <Button
+                                size='small'
+                                variant='contained'
+                                onClick={() => connectWallet(web3Reducer, dispatch)}
+                            >
+                                Connect Wallet
+                            </Button>
+                        ) : (
+                            <Button
+                                size='small'
+                                variant='contained'
+                                sx={{pointerEvents: 'none'}}
+                            >
+                                {`${web3Reducer.account.substring(0, 5)}...${web3Reducer.account.substring(web3Reducer.account.length - 4)}`}
+                            </Button>
+                        )}
                         <Avatar
                             onClick={handleOpenPopover}
                             sx={{

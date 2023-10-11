@@ -7,7 +7,6 @@ import {Box,
     TableContainer,
     TableHead,
     TableRow,
-    IconButton,
     ToggleButtonGroup,
     ToggleButton} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -70,7 +69,10 @@ function Products() {
         event,
         newOption,
     ) => {
-        setOption(newOption);
+        console.log('new option', newOption, option);
+        if (newOption !== null) {
+            setOption(newOption);
+        }
     };
 
     const generateProductListFilter = (products = [], optionFilter = 'total') => {
@@ -107,18 +109,18 @@ function Products() {
                             size='small'
                         >
                             <ToggleButton value='total'>
-                                {` Total (${generateProductListFilter(productReducer.products, 'total').length}) `}
+                                {` Tổng (${generateProductListFilter(productReducer.products, 'total').length}) `}
                             </ToggleButton>
                             {currentUserRole !== 1 && (
                                 <ToggleButton value='atManufactory'>
-                                    {` At Manufactory (${generateProductListFilter(productReducer.products, 'atManufactory').length}) `}
+                                    {` Tại nhà máy (${generateProductListFilter(productReducer.products, 'atManufactory').length}) `}
                                 </ToggleButton>
                             )}
                             <ToggleButton value='atRetailer'>
-                                {` At Retailer (${generateProductListFilter(productReducer.products, 'atRetailer').length}) `}
+                                {` Tại đại lý (${generateProductListFilter(productReducer.products, 'atRetailer').length}) `}
                             </ToggleButton>
                             <ToggleButton value='sold'>
-                                {` Sold (${generateProductListFilter(productReducer.products, 'sold').length}) `}
+                                {` Đã bán (${generateProductListFilter(productReducer.products, 'sold').length}) `}
                             </ToggleButton>
                         </ToggleButtonGroup>
                     )}
@@ -127,8 +129,9 @@ function Products() {
                             startIcon={<AddIcon />}
                             variant='contained'
                             onClick={() => navigate('/create-product')}
+                            size='small'
                         >
-                            Create Product
+                            Thêm sản phẩm
                         </Button>
                     )}
                 </Box>
@@ -173,9 +176,13 @@ function Products() {
                                         <Link
                                             to={`/products/${product.productID}`}
                                         >
-                                            <IconButton>
+                                            <Button
+                                                variant='contained'
+                                                color='info'
+                                                size='small'
+                                            >
                                                 <VisibilityIcon />
-                                            </IconButton>
+                                            </Button>
                                         </Link>
                                     </TableCell>
                                 </TableRow>

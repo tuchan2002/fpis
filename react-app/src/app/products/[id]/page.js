@@ -73,10 +73,11 @@ function ProductDetails() {
                             }}
                         >
                             <Button
-                                variant='text'
+                                color='info'
+                                variant='contained'
                                 onClick={() => setOpenModalTimeline(true)}
                             >
-                                Show Product History
+                                Xem lịch sử sản phẩm
                             </Button>
 
                         </Box>
@@ -96,7 +97,7 @@ function ProductDetails() {
                                 startIcon={<DownloadIcon />}
                                 sx={{marginTop: 1}}
                             >
-                                Download
+                                Tải xuống
                             </Button>
                         </Box>
                     </Paper>
