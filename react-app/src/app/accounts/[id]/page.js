@@ -2,6 +2,7 @@ import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 import { authSelector } from '../../../redux/reducers/authSlice';
 import useAuthEffect from '../../../customHook/useAuthEffect';
@@ -78,6 +79,21 @@ function AccountDetails() {
         dispatch(deactivateAccount({userData: userReducer.user, contract: web3Reducer.contract, accountAddress: web3Reducer.account}));
     };
 
+    const handleShowPopupConfirm = () => {
+        Swal.fire({
+            text: 'Bạn có chắc chắn muốn vô hiệu hóa tài khoản này?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handleDeactivateAccount();
+            }
+        });
+    };
+
     return (
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
@@ -138,7 +154,7 @@ function AccountDetails() {
                                 sx={{alignSelf: 'center', marginTop: 4}}
                                 variant='contained'
                                 color='error'
-                                onClick={handleDeactivateAccount}
+                                onClick={handleShowPopupConfirm}
                             >
                                 Vô hiệu hóa tài khoản
                             </Button>
