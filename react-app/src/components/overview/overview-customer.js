@@ -44,7 +44,7 @@ function OverviewCustomer() {
                     lg={6}
                 >
                     <OverviewCardItem
-                        title='Tổng sản phẩm được bán trong tháng'
+                        title='Tổng sản phẩm đã được bán'
                         icon={<TagIcon />}
                         sx={{ height: '100%' }}
                         value='32'

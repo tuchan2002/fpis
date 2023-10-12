@@ -3,6 +3,7 @@ import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import ShoppingBagIcon from '@heroicons/react/24/solid/ShoppingBagIcon';
 import BuildingStorefrontIcon from '@heroicons/react/24/solid/BuildingStorefrontIcon';
 import BuildingOfficeIcon from '@heroicons/react/24/solid/BuildingOfficeIcon';
+import TagIcon from '@heroicons/react/24/solid/TagIcon';
 import { Container, Grid } from '@mui/material';
 import OverviewCardItem from './overview-card-item';
 
@@ -24,6 +25,19 @@ function OverviewAdmin() {
                         sx={{ height: '100%' }}
                         value='32'
                         iconColor='error.main'
+                    />
+                </Grid>
+                <Grid
+                    item
+                    xs={12}
+                    lg={6}
+                >
+                    <OverviewCardItem
+                        title='Tổng sản phẩm đã được bán'
+                        icon={<TagIcon />}
+                        sx={{ height: '100%' }}
+                        value='32'
+                        iconColor='primary.main'
                     />
                 </Grid>
                 <Grid
