@@ -99,7 +99,7 @@ function SellProduct() {
                     </Typography>
                     <Paper
                         sx={{
-                            p: 3,
+                            px: 3,
                             maxWidth: 720,
                             width: '100%',
                             display: 'flex',
