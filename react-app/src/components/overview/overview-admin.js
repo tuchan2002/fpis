@@ -37,7 +37,7 @@ function OverviewAdmin() {
                         icon={<TagIcon />}
                         sx={{ height: '100%' }}
                         value='32'
-                        iconColor='primary.main'
+                        iconColor='secondary.main'
                     />
                 </Grid>
                 <Grid
