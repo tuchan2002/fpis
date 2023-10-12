@@ -9,14 +9,13 @@ import OverviewRetailer from '../components/overview/overview-retailer';
 import OverviewCustomer from '../components/overview/overview-customer';
 import { getAllOfUsers, userSelector } from '../redux/reducers/userSlice';
 import { web3Selector } from '../redux/reducers/web3Slice';
-import { getAllOfProducts, getAllProductsByCustomer, getAllProductsByManufactory, getAllProductsByRetailer, productSelector } from '../redux/reducers/productSlice';
+import { getAllOfProducts, getAllProductsByManufactory, getAllProductsByRetailer, productSelector } from '../redux/reducers/productSlice';
 
 function Home() {
     const dispatch = useDispatch();
 
     const web3Reducer = useSelector(web3Selector);
     const userReducer = useSelector(userSelector);
-    console.log(userReducer);
     const productReducer = useSelector(productSelector);
 
     const authReducer = useSelector(authSelector);
@@ -40,8 +39,7 @@ function Home() {
                 }));
             } else if (currentUserRole === 2) {
                 dispatch(
-                    getAllProductsByCustomer({
-                        customerEmail: authReducer.user?.email,
+                    getAllOfProducts({
                         contract: web3Reducer.contract,
                         accountAddress: web3Reducer.account
                     })
@@ -59,6 +57,8 @@ function Home() {
         }
     }, [authReducer.user, web3Reducer.contract, web3Reducer.account]);
 
+    const generateUserByRole = (users = [], userRole = 0) => users.filter((user) => user?.role === userRole);
+
     const generateProductListFilter = (products = [], optionFilter = 'total') => {
         if (optionFilter === 'atManufactory') {
             return products.filter((prod) => prod?.retailerEmail.trim() === '');
@@ -75,15 +75,18 @@ function Home() {
         const totalSoldProduct = generateProductListFilter(productReducer.products, 'sold').length;
         // const totalAtManufactoryProduct = generateProductListFilter(productReducer.products, 'atManufactory').length;
         const totalAtRetailerProduct = generateProductListFilter(productReducer.products, 'atRetailer').length;
+        const totalManufactory = generateUserByRole(userReducer.users, 0).length;
+        const totalRetailer = generateUserByRole(userReducer.users, 1).length;
+        const totalCustomer = generateUserByRole(userReducer.users, 2).length;
 
         if (userRole === 0) {
             return <OverviewManufactory totalCreatedProduct={totalProduct} totalMovedProduct={totalAtRetailerProduct + totalSoldProduct} />;
         } if (userRole === 1) {
             return <OverviewRetailer totalReceivedProduct={totalProduct} totalSoldProduct={totalSoldProduct} />;
         } if (userRole === 2) {
-            return <OverviewCustomer totalSoldProduct={totalSoldProduct} />;
+            return <OverviewCustomer totalSoldProduct={totalSoldProduct} totalManufactory={totalManufactory} totalRetailer={totalRetailer} />;
         } if (userRole === 3) {
-            return <OverviewAdmin totalProduct={totalProduct} totalSoldProduct={totalSoldProduct} />;
+            return <OverviewAdmin totalProduct={totalProduct} totalSoldProduct={totalSoldProduct} totalManufactory={totalManufactory} totalRetailer={totalRetailer} totalCustomer={totalCustomer} />;
         }
     };
 

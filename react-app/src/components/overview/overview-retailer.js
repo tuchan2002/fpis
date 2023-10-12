@@ -1,5 +1,4 @@
 import React from 'react';
-import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import ShoppingBagIcon from '@heroicons/react/24/solid/ShoppingBagIcon';
 import TagIcon from '@heroicons/react/24/solid/TagIcon';
 import ArchiveBoxIcon from '@heroicons/react/24/solid/ArchiveBoxIcon';
@@ -50,19 +49,6 @@ function OverviewRetailer({totalReceivedProduct, totalSoldProduct}) {
                         sx={{ height: '100%' }}
                         value={totalReceivedProduct - totalSoldProduct}
                         iconColor='warning.main'
-                    />
-                </Grid>
-                <Grid
-                    item
-                    xs={12}
-                    lg={6}
-                >
-                    <OverviewCardItem
-                        title='Tổng số khách hàng'
-                        icon={<UsersIcon />}
-                        sx={{ height: '100%' }}
-                        value='6'
-                        iconColor='primary.main'
                     />
                 </Grid>
             </Grid>

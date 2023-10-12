@@ -2,12 +2,15 @@ import React from 'react';
 import BuildingStorefrontIcon from '@heroicons/react/24/solid/BuildingStorefrontIcon';
 import BuildingOfficeIcon from '@heroicons/react/24/solid/BuildingOfficeIcon';
 import TagIcon from '@heroicons/react/24/solid/TagIcon';
-import { Container, Grid } from '@mui/material';
+import { Container, Grid, Typography } from '@mui/material';
 import OverviewCardItem from './overview-card-item';
 
-function OverviewCustomer({totalSoldProduct}) {
+function OverviewCustomer({totalSoldProduct, totalManufactory, totalRetailer}) {
     return (
         <Container maxWidth='xl'>
+            <Typography variant='h4' sx={{marginBottom: 3}}>
+                Tổng quan về doanh nghiệp
+            </Typography>
             <Grid
                 container
                 spacing={3}
@@ -21,7 +24,7 @@ function OverviewCustomer({totalSoldProduct}) {
                         title='Tổng số cơ sở sản xuất'
                         icon={<BuildingOfficeIcon />}
                         sx={{ height: '100%' }}
-                        value='3'
+                        value={totalManufactory}
                         iconColor='success.main'
                     />
                 </Grid>
@@ -34,7 +37,7 @@ function OverviewCustomer({totalSoldProduct}) {
                         title='Tổng số đại lý'
                         icon={<BuildingStorefrontIcon />}
                         sx={{ height: '100%' }}
-                        value='5'
+                        value={totalRetailer}
                         iconColor='warning.main'
                     />
                 </Grid>
