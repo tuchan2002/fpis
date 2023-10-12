@@ -100,6 +100,20 @@ function SideNav() {
                             && item.allowedRolesList.includes(
                                 currentUserRole
                             )) {
+                            if (currentUserRole === 2 && item.path === '/products') {
+                                return (
+                                    <SideNavItem
+                                        active={active}
+                                        disabled={item.disabled}
+                                        external={item.external}
+                                        icon={item.icon}
+                                        key={item.title}
+                                        path={item.path}
+                                        title='Sản phẩm đang sở hữu'
+                                    />
+                                );
+                            }
+
                             return (
                                 <SideNavItem
                                     active={active}
