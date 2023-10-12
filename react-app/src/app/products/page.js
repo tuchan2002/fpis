@@ -8,7 +8,9 @@ import {Box,
     TableHead,
     TableRow,
     ToggleButtonGroup,
-    ToggleButton} from '@mui/material';
+    ToggleButton,
+    Stack,
+    Typography} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -91,15 +93,23 @@ function Products() {
         && allowedRolesList.includes(currentUserRole) && (
             <Box
                 sx={{
-                    p: 3,
+                    px: 3,
+                    py: 8,
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 3,
-                    alignItems: 'flex-end'
+                    gap: 3
                 }}
             >
-                <Box sx={{display: 'flex', gap: 4, alignItems: 'center'}}>
-                    {[0, 1, 3].includes(currentUserRole)
+                <Stack
+                    direction='row'
+                    justifyContent='space-between'
+                    spacing={4}
+                >
+                    <Typography variant='h4'>
+                        Danh sách sản phẩm
+                    </Typography>
+                    <Box sx={{display: 'flex', gap: 4, alignItems: 'center'}}>
+                        {[0, 1, 3].includes(currentUserRole)
                     && (
                         <ToggleButtonGroup
                             color='secondary'
@@ -124,17 +134,19 @@ function Products() {
                             </ToggleButton>
                         </ToggleButtonGroup>
                     )}
-                    {currentUserRole === 0 && (
-                        <Button
-                            startIcon={<AddIcon />}
-                            variant='contained'
-                            onClick={() => navigate('/create-product')}
-                            size='small'
-                        >
-                            Thêm sản phẩm
-                        </Button>
-                    )}
-                </Box>
+                        {currentUserRole === 0 && (
+                            <Button
+                                startIcon={<AddIcon />}
+                                variant='contained'
+                                onClick={() => navigate('/create-product')}
+                                size='small'
+                            >
+                                Thêm sản phẩm
+                            </Button>
+                        )}
+                    </Box>
+                </Stack>
+
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                         <TableHead>

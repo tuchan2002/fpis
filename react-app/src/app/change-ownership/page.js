@@ -97,7 +97,10 @@ function ChangeOwnership() {
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
             <>
-                <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+                <Box sx={{ px: 3, py: 8, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+                    <Typography variant='h4'>
+                        Thay đổi quyền sở hữu
+                    </Typography>
                     <Paper
                         sx={{
                             p: 3,

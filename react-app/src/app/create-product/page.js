@@ -105,7 +105,7 @@ function CreateProduct() {
     return (
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
-            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ px: 3, py: 8, display: 'flex', justifyContent: 'center' }}>
                 <Paper sx={{ p: 3, maxWidth: 720, width: '100%' }}>
                     <Box
                         component='form'
