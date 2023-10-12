@@ -7,7 +7,7 @@ import TagIcon from '@heroicons/react/24/solid/TagIcon';
 import { Container, Grid } from '@mui/material';
 import OverviewCardItem from './overview-card-item';
 
-function OverviewAdmin() {
+function OverviewAdmin({totalProduct, totalSoldProduct}) {
     return (
         <Container maxWidth='xl'>
             <Grid
@@ -23,7 +23,7 @@ function OverviewAdmin() {
                         title='Tổng sản phẩm'
                         icon={<ShoppingBagIcon />}
                         sx={{ height: '100%' }}
-                        value='32'
+                        value={totalProduct}
                         iconColor='error.main'
                     />
                 </Grid>
@@ -36,7 +36,7 @@ function OverviewAdmin() {
                         title='Tổng sản phẩm đã được bán'
                         icon={<TagIcon />}
                         sx={{ height: '100%' }}
-                        value='32'
+                        value={totalSoldProduct}
                         iconColor='secondary.main'
                     />
                 </Grid>

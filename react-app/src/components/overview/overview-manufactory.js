@@ -5,7 +5,7 @@ import ArchiveBoxIcon from '@heroicons/react/24/solid/ArchiveBoxIcon';
 import { Container, Grid } from '@mui/material';
 import OverviewCardItem from './overview-card-item';
 
-function OverviewManufactory() {
+function OverviewManufactory({totalCreatedProduct, totalMovedProduct}) {
     return (
         <Container maxWidth='xl'>
             <Grid
@@ -21,7 +21,7 @@ function OverviewManufactory() {
                         title='Tổng sản phẩm đã sản xuất'
                         icon={<ShoppingBagIcon />}
                         sx={{ height: '100%' }}
-                        value='32'
+                        value={totalCreatedProduct}
                         iconColor='error.main'
                     />
                 </Grid>
@@ -34,7 +34,7 @@ function OverviewManufactory() {
                         title='Tổng sản phẩm đã chuyển đi'
                         icon={<TruckIcon />}
                         sx={{ height: '100%' }}
-                        value='24'
+                        value={totalMovedProduct}
                         iconColor='success.main'
                     />
                 </Grid>
@@ -47,7 +47,7 @@ function OverviewManufactory() {
                         title='Tổng sản phẩm còn lại'
                         icon={<ArchiveBoxIcon />}
                         sx={{ height: '100%' }}
-                        value='12'
+                        value={totalCreatedProduct - totalMovedProduct}
                         iconColor='warning.main'
                     />
                 </Grid>

@@ -5,7 +5,7 @@ import TagIcon from '@heroicons/react/24/solid/TagIcon';
 import { Container, Grid } from '@mui/material';
 import OverviewCardItem from './overview-card-item';
 
-function OverviewCustomer() {
+function OverviewCustomer({totalSoldProduct}) {
     return (
         <Container maxWidth='xl'>
             <Grid
@@ -47,7 +47,7 @@ function OverviewCustomer() {
                         title='Tổng sản phẩm đã được bán'
                         icon={<TagIcon />}
                         sx={{ height: '100%' }}
-                        value='32'
+                        value={totalSoldProduct}
                         iconColor='primary.main'
                     />
                 </Grid>
