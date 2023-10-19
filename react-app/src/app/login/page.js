@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -66,7 +66,7 @@ function Login() {
             >
                 <Grid
                     xs={12}
-                    lg={6}
+                    md={6}
                     sx={{
                         backgroundColor: 'background.paper',
                         display: 'flex',
@@ -75,34 +75,12 @@ function Login() {
                     }}
                 >
                     <Box
-                        component='header'
-                        sx={{
-                            left: 0,
-                            p: 3,
-                            position: 'fixed',
-                            top: 0,
-                            width: '100%'
-                        }}
-                    >
-                        <Box
-                            component={Link}
-                            href='/'
-                            sx={{
-                                display: 'inline-flex',
-                                height: 32,
-                                width: 32
-                            }}
-                        >
-                            <LogoIcon />
-                        </Box>
-                    </Box>
-                    <Box
                         sx={{
                             backgroundColor: 'background.paper',
                             flex: '1 1 auto',
-                            alignItems: 'center',
                             display: 'flex',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            alignItems: 'center'
                         }}
                     >
                         <Box
@@ -110,18 +88,40 @@ function Login() {
                                 maxWidth: 550,
                                 px: 3,
                                 py: '100px',
-                                width: '100%'
+                                width: '100%',
+                                marginBottom: 15
                             }}
                         >
                             <div>
-                                <Stack
-                                    spacing={1}
-                                    sx={{ mb: 3 }}
-                                >
-                                    <Typography variant='h1' sx={{fontFamily: 'monospace'}}>
-                                        Get Started
+                                <Box sx={{ p: 3 }}>
+                                    <Typography
+                                        align='center'
+                                        color='inherit'
+                                        sx={{
+                                            fontSize: '32px',
+                                            lineHeight: '46px',
+                                            mb: 1
+                                        }}
+                                        variant='h1'
+                                    >
+                                        Welcome to
+                                        {' '}
+                                        <Box
+                                            component='a'
+                                            sx={{ color: '#15B79E' }}
+                                            target='_blank'
+                                        >
+                                            FPISystem
+                                        </Box>
                                     </Typography>
-                                </Stack>
+                                    <Typography
+                                        align='center'
+                                        sx={{ mb: 3, fontSize: '18px' }}
+                                        variant='subtitle1'
+                                    >
+                                        Hệ thống nhận dạng hàng giả áp dụng BlockChain và QR Code.
+                                    </Typography>
+                                </Box>
                                 <Box
                                     sx={{
                                         display: 'flex',
@@ -146,7 +146,7 @@ function Login() {
 
                 <Grid
                     xs={12}
-                    lg={6}
+                    md={6}
                     sx={{
                         alignItems: 'center',
                         background: 'radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)',
@@ -158,34 +158,17 @@ function Login() {
                         }
                     }}
                 >
-                    <Box sx={{ p: 3 }}>
-                        <Typography
-                            align='center'
-                            color='inherit'
-                            sx={{
-                                fontSize: '32px',
-                                lineHeight: '46px',
-                                mb: 1
-                            }}
-                            variant='h1'
-                        >
-                            Welcome to
-                            {' '}
-                            <Box
-                                component='a'
-                                sx={{ color: '#15B79E' }}
-                                target='_blank'
-                            >
-                                FPISystem
-                            </Box>
-                        </Typography>
-                        <Typography
-                            align='center'
-                            sx={{ mb: 3, fontSize: '18px' }}
-                            variant='subtitle1'
-                        >
-                            Hệ thống nhận dạng sản phẩm giả cho doanh nghiệp.
-                        </Typography>
+
+                    <Box
+                        component={Link}
+                        href='/'
+                        sx={{
+                            display: 'inline-flex',
+                            height: 220,
+                            width: 220
+                        }}
+                    >
+                        <LogoIcon />
                     </Box>
                 </Grid>
             </Grid>
