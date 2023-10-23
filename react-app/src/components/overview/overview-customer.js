@@ -8,7 +8,7 @@ import OverviewCardItem from './overview-card-item';
 function OverviewCustomer({totalSoldProduct, totalManufactory, totalRetailer}) {
     return (
         <Container maxWidth='xl'>
-            <Typography variant='h4' sx={{marginBottom: 30}}>
+            <Typography variant='h4' sx={{marginBottom: 5}}>
                 Tổng quan về doanh nghiệp
             </Typography>
             <Grid

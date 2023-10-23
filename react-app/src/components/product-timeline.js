@@ -19,6 +19,8 @@ function ProductTimeline({
     open,
     onClose
 }) {
+    console.log('ProductTimeline: re-render');
+
     const generateTimelineDot = (index) => {
         if (index === 0) {
             return (

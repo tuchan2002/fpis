@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableRow, TextField } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Paper, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -9,6 +9,7 @@ import useAuthEffect from '../../../customHook/useAuthEffect';
 import { activateAccount, deactivateAccount, getUserById, userSelector } from '../../../redux/reducers/userSlice';
 import { web3Selector } from '../../../redux/reducers/web3Slice';
 import connectWallet from '../../../utils/connectWallet';
+import UserInfo from './user-info';
 
 const roleOptionList = [
     {value: 0, label: 'Manufactory'},
@@ -43,21 +44,6 @@ function AccountDetails() {
     };
 
     const [roleOption, setRoleOption] = useState(2);
-
-    const convertRoleToText = (role) => {
-        switch (role) {
-        case 0:
-            return 'Manufactory';
-        case 1:
-            return 'Retailer';
-        case 2:
-            return 'Customer';
-        case 3:
-            return 'Admin';
-        default:
-            return 'Guest';
-        }
-    };
 
     const handleActivateAccount = () => {
         if (!web3Reducer.account) {
@@ -107,41 +93,11 @@ function AccountDetails() {
                     >
                         Back
                     </Button>
-                    <Avatar alt={userReducer.user?.displayName} src={userReducer.user?.photoURL} sx={{width: 100, height: 100, alignSelf: 'center'}} />
-                    <TableContainer>
-                        <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell component='th' scope='row'>
-                                        Email
-                                    </TableCell>
-                                    <TableCell align='right'>
-                                        {userReducer.user?.email}
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell component='th' scope='row'>
-                                        Name
-                                    </TableCell>
-                                    <TableCell align='right'>{userReducer.user?.displayName}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell component='th' scope='row'>
-                                        Role
-                                    </TableCell>
-                                    <TableCell align='right'>
-                                        {convertRoleToText(
-                                            userReducer.user?.role
-                                        )}
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    {userReducer.user && <UserInfo userDetailInfo={userReducer.user} />}
                     {!userReducer.user?.isActive
                         ? (
                             <Button
-                                sx={{alignSelf: 'center', marginTop: 4}}
+                                sx={{alignSelf: 'center', marginY: 4}}
                                 variant='contained'
                                 color='success'
                                 onClick={() => setOpenPopup(true)}
@@ -151,7 +107,7 @@ function AccountDetails() {
                         )
                         : (
                             <Button
-                                sx={{alignSelf: 'center', marginTop: 4}}
+                                sx={{alignSelf: 'center', marginY: 4}}
                                 variant='contained'
                                 color='error'
                                 onClick={handleShowPopupConfirm}

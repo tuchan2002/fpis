@@ -84,12 +84,13 @@ function VerifyProduct() {
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
             <Box sx={{ px: 3, py: 8, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
-                <Typography variant='h4'>
+                <Typography variant='h4' sx={{mb: 2}}>
                     Xác minh sản phẩm
                 </Typography>
                 <Paper
                     sx={{
                         px: 3,
+                        pb: 3,
                         maxWidth: 720,
                         width: '100%',
                         display: 'flex',

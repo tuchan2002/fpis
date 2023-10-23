@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 
 function ProductInfoTable({ productInfo }) {
+    console.log('ProductInfoTable: re-render');
     return (
         productInfo && (
             <TableContainer>
@@ -68,4 +69,4 @@ function ProductInfoTable({ productInfo }) {
     );
 }
 
-export default ProductInfoTable;
+export default React.memo(ProductInfoTable, (oldProps, newProps) => oldProps.productID === newProps.productID);

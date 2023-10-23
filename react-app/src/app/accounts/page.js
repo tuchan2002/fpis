@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import { authSelector } from '../../redux/reducers/authSlice';
 import { getAllOfUsers, userSelector } from '../../redux/reducers/userSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
+import convertRoleToText from '../../utils/convertRoleToText';
 
 function Accounts() {
     const dispatch = useDispatch();
@@ -29,21 +30,6 @@ function Accounts() {
     useEffect(() => {
         dispatch(getAllOfUsers());
     }, []);
-
-    const convertRoleToText = (role) => {
-        switch (role) {
-        case 0:
-            return 'Manufactory';
-        case 1:
-            return 'Retailer';
-        case 2:
-            return 'Customer';
-        case 3:
-            return 'Admin';
-        default:
-            return 'Guest';
-        }
-    };
 
     return (
         currentUserRole !== null

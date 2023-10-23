@@ -94,7 +94,7 @@ function ProductDetails() {
                                 variant='contained'
                                 onClick={downloadQRcode}
                                 startIcon={<DownloadIcon />}
-                                sx={{marginTop: 1}}
+                                sx={{marginTop: 1, marginBottom: 4}}
                             >
                                 Tải xuống
                             </Button>

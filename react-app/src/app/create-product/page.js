@@ -175,7 +175,7 @@ function CreateProduct() {
                         <Button
                             type='submit'
                             variant='contained'
-                            sx={{ alignSelf: 'flex-end' }}
+                            sx={{ alignSelf: 'flex-end', mb: 4 }}
                         >
                             Thêm
                         </Button>
