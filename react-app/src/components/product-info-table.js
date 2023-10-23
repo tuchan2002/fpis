@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 
 function ProductInfoTable({ productInfo }) {
-    console.log('ProductInfoTable: re-render');
     return (
         productInfo && (
             <TableContainer>
