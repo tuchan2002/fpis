@@ -26,6 +26,10 @@ function VerifyProduct() {
     const [isRealStatus, setIsRealStatus] = useState(false);
     const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
+    useEffect(() => {
+        console.log('Scan');
+    }, [productScannerData]);
+
     const handleVerify = async () => {
         if (!productScannerData) {
             return;

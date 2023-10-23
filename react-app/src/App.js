@@ -87,7 +87,6 @@ function App() {
                     };
 
                     dispatch(setWeb3State(data));
-
                 } else {
                     dispatch(showAlert({ error: 'Please, Install Metamask' }));
                 }
