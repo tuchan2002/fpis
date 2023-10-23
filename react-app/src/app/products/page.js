@@ -162,44 +162,52 @@ function Products() {
                                 <TableCell align='left'>Detail</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>
-                            {generateProductListFilter(productReducer.products, option).map((product) => (
-                                <TableRow
-                                    key={product.productID}
-                                    sx={{
-                                        '&:last-child td, &:last-child th': {
-                                            border: 0
-                                        }
-                                    }}
-                                >
-                                    <TableCell component='th' scope='row'>
-                                        {product.productID}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        {product.model}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        {product.manufactoryEmail ? product.manufactoryEmail : 'None'}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        {product.retailerEmail ? product.retailerEmail : 'None'}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        <Link
-                                            to={`/products/${product.productID}`}
-                                        >
-                                            <Button
-                                                variant='contained'
-                                                color='info'
-                                                size='small'
+                        {web3Reducer.account ? (
+                            <TableBody>
+                                { generateProductListFilter(productReducer.products, option).map((product) => (
+                                    <TableRow
+                                        key={product.productID}
+                                        sx={{
+                                            '&:last-child td, &:last-child th': {
+                                                border: 0
+                                            }
+                                        }}
+                                    >
+                                        <TableCell component='th' scope='row'>
+                                            {product.productID}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            {product.model}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            {product.manufactoryEmail ? product.manufactoryEmail : 'None'}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            {product.retailerEmail ? product.retailerEmail : 'None'}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            <Link
+                                                to={`/products/${product.productID}`}
                                             >
-                                                <VisibilityIcon />
-                                            </Button>
-                                        </Link>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
+                                                <Button
+                                                    variant='contained'
+                                                    color='info'
+                                                    size='small'
+                                                >
+                                                    <VisibilityIcon />
+                                                </Button>
+                                            </Link>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        ) : (
+                            <div style={{width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <Typography variant='h6'>
+                                    Hãy kết nối với ví MetaMask
+                                </Typography>
+                            </div>
+                        )}
                     </Table>
                 </TableContainer>
             </Box>
