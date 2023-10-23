@@ -34,7 +34,6 @@ function Login() {
             const { user } = result;
             const details = getAdditionalUserInfo(result);
 
-            console.log(details, result.user);
             if (details?.isNewUser) {
                 await addDocument('users', {
                     displayName: user.displayName,

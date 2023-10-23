@@ -68,8 +68,6 @@ export const getProductDetail = async (
             .getProductDetail(productID)
             .call({ from: accountAddress });
 
-        console.log(productDetail);
-
         return {
             productID,
             model: productDetail[0],

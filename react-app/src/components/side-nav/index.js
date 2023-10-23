@@ -137,7 +137,7 @@ function SideNav() {
         (
             <Drawer
                 anchor='left'
-                onClose={() => console.log('close')}
+                onClose={() => {}}
                 open
                 PaperProps={{
                     sx: {

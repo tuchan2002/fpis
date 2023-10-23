@@ -43,7 +43,6 @@ function App() {
         const unsubcribed = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDoc = await getDocument('users', 'uid', user.uid);
-                console.log('userDoc', userDoc);
 
                 const { displayName, email, uid, photoURL } = user;
                 dispatch(
@@ -78,7 +77,6 @@ function App() {
 
                 if (provider) {
                     provider.on('accountsChanged', (accounts) => {
-                        console.log('accountsChanged', accounts);
                         dispatch(setAccount(accounts[0]));
                     });
 
@@ -90,7 +88,6 @@ function App() {
 
                     dispatch(setWeb3State(data));
 
-                    console.log(data);
                 } else {
                     dispatch(showAlert({ error: 'Please, Install Metamask' }));
                 }

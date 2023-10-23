@@ -112,30 +112,23 @@ const userSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(getAllOfUsers.fulfilled, (state, action) => {
-            console.log('fulfilled');
-
             state.users = action.payload;
         });
 
         builder.addCase(getUserById.fulfilled, (state, action) => {
-            console.log('fulfilled');
-
             state.user = action.payload;
         });
 
         builder.addCase(getUsersByRole.fulfilled, (state, action) => {
-            console.log('fulfilled');
             state.users = action.payload;
         });
 
         builder.addCase(activateAccount.fulfilled, (state, action) => {
-            console.log('fulfilled');
             state.user.isActive = true;
             state.user.role = action.payload;
         });
 
         builder.addCase(deactivateAccount.fulfilled, (state, action) => {
-            console.log('fulfilled');
             state.user.isActive = false;
             state.user.role = action.payload;
         });

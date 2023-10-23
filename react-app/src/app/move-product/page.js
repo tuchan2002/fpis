@@ -88,7 +88,6 @@ function MoveProduct() {
         }));
     };
 
-    console.log(productReducer.product);
     return (
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (

@@ -26,10 +26,6 @@ function VerifyProduct() {
     const [isRealStatus, setIsRealStatus] = useState(false);
     const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
-    useEffect(() => {
-        console.log('Scan');
-    }, [productScannerData]);
-
     const handleVerify = async () => {
         if (!productScannerData) {
             return;
@@ -46,7 +42,6 @@ function VerifyProduct() {
                 web3Reducer.contract,
                 web3Reducer.accountAddress
             );
-            console.log(productScannerData, productInBlockchain);
 
             let isReal = true;
             Object.keys(productInBlockchain).forEach((key) => {

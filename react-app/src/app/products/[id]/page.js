@@ -29,7 +29,6 @@ function ProductDetails() {
     const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
     useEffect(() => {
-        console.log('test', params.id, web3Reducer.contract, web3Reducer.account);
         if (web3Reducer.account) {
             dispatch(
                 getProductById({

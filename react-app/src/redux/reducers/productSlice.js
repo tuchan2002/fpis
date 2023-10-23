@@ -54,7 +54,6 @@ export const getAllOfProducts = createAsyncThunk(
             dispatch(showAlert({ loading: true }));
 
             const products = await getAllProducts(contract, accountAddress);
-            console.log('products', products);
 
             dispatch(showAlert({ loading: false }));
 
@@ -171,8 +170,6 @@ export const getProductById = createAsyncThunk(
                 contract,
                 accountAddress
             );
-
-            console.log('productproduct', product);
 
             dispatch(showAlert({ loading: false }));
 

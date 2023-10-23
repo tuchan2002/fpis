@@ -71,7 +71,6 @@ function Products() {
         event,
         newOption,
     ) => {
-        console.log('new option', newOption, option);
         if (newOption !== null) {
             setOption(newOption);
         }
