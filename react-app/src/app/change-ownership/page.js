@@ -159,7 +159,7 @@ function ChangeOwnership() {
                                                 disabled={!selectedUserId}
                                                 onClick={handleChangeOwnership}
                                             >
-                                                Change
+                                                Xác nhận
                                             </Button>
                                         </>
                                     )}
