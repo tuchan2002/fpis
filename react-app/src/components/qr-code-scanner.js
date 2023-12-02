@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Html5QrcodeScanType, Html5QrcodeScanner } from 'html5-qrcode';
 
 function QRCodeScanner({
-    setResult
+    setResult, isResetScanner
 }) {
     useEffect(() => {
         const scanner = new Html5QrcodeScanner(
@@ -40,7 +40,7 @@ function QRCodeScanner({
         return () => {
             scanner.clear();
         };
-    }, []);
+    }, [isResetScanner]);
 
     return (
         <div id='reader' style={{ width: 400 }} />

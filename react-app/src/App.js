@@ -88,7 +88,7 @@ function App() {
 
                     dispatch(setWeb3State(data));
                 } else {
-                    dispatch(showAlert({ error: 'Please, Install Metamask' }));
+                    dispatch(showAlert({ error: 'Xin hãy cài đặt Metamask.' }));
                 }
             } catch (error) {
                 console.log(error);

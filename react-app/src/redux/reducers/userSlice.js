@@ -68,11 +68,11 @@ export const activateAccount = createAsyncThunk(
             success = true;
         } catch (error) {
             success = false;
-            dispatch(showAlert({ error: 'Account activation failed.' }));
+            dispatch(showAlert({ error: 'Kích hoạt tài khoản thất bại.' }));
         } finally {
             if (success) {
                 await updateDocument('users', { isActive: true, role: roleOption }, 'uid', userData.uid);
-                dispatch(showAlert({ success: 'Account activation successful.' }));
+                dispatch(showAlert({ success: 'Kích hoạt tài khoản thành công.' }));
             }
         }
         return {roleOption, success};
@@ -102,11 +102,11 @@ export const deactivateAccount = createAsyncThunk(
             success = true;
         } catch (error) {
             success = false;
-            dispatch(showAlert({ error: 'Account deactivation failed.' }));
+            dispatch(showAlert({ error: 'Vô hiệu hóa tài khoản thất bại.' }));
         } finally {
             if (success) {
                 await updateDocument('users', { isActive: false, role: guestRole }, 'uid', userData.uid);
-                dispatch(showAlert({ success: 'Account deactivation successful.' }));
+                dispatch(showAlert({ success: 'Vô hiệu hóa tài khoản thành công.' }));
             }
         }
 

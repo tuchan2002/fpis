@@ -1,6 +1,7 @@
 import { Box, Button, Paper, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { authSelector } from '../../redux/reducers/authSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
 import QRCodeScanner from '../../components/qr-code-scanner';
@@ -23,6 +24,7 @@ function VerifyProduct() {
     useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
     const [productScannerData, setProductScannerData] = useState(null);
+    const [isResetScanner, setIsResetScanner] = useState(false);
     const [isRealStatus, setIsRealStatus] = useState(false);
     const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
@@ -80,10 +82,16 @@ function VerifyProduct() {
         }
     };
 
+    const handleContinueScan = () => {
+        setProductScannerData(null);
+        setIsResetScanner(!isResetScanner);
+        setIsRealStatus(false);
+    };
+
     return (
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
-            <Box sx={{ px: 3, py: 8, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
                 <Typography variant='h4' sx={{mb: 2}}>
                     Xác minh sản phẩm
                 </Typography>
@@ -100,7 +108,7 @@ function VerifyProduct() {
                         gap: 3
                     }}
                 >
-                    <QRCodeScanner setResult={setProductScannerData} />
+                    <QRCodeScanner setResult={setProductScannerData} isResetScanner={isResetScanner} />
 
                     {productScannerData && (
                         <>
@@ -118,7 +126,7 @@ function VerifyProduct() {
                                     Xác minh
                                 </Button>
                             )}
-                            { isRealStatus && (
+                            {isRealStatus && (
                                 <Button
                                     color='info'
                                     variant='contained'
@@ -138,6 +146,16 @@ function VerifyProduct() {
                                     onClose={() => setOpenModalTimeline(false)}
                                 />
                             )}
+                            <Button
+                                startIcon={<NavigateNextIcon />}
+                                variant='contained'
+                                onClick={handleContinueScan}
+                                size='small'
+                                sx={{alignSelf: 'flex-end'}}
+                                color='success'
+                            >
+                                Tiếp tục quét
+                            </Button>
                         </>
                     )}
 

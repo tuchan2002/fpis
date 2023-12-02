@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { getUsersByRole, userSelector } from '../../redux/reducers/userSlice';
 import { getProductById, moveProductToRetailer, productSelector } from '../../redux/reducers/productSlice';
 import { authSelector } from '../../redux/reducers/authSlice';
@@ -33,7 +34,7 @@ function MoveProduct() {
     useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
     const [productScannerData, setProductScannerData] = useState(null);
-
+    const [isResetScanner, setIsResetScanner] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState('');
     const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
@@ -88,11 +89,16 @@ function MoveProduct() {
         }));
     };
 
+    const handleContinueScan = () => {
+        setProductScannerData(null);
+        setIsResetScanner(!isResetScanner);
+    };
+
     return (
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
             <>
-                <Box sx={{ px: 3, py: 8, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+                <Box sx={{ p: 3, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
                     <Typography variant='h4' sx={{mb: 2}}>
                         Di chuyển sản phẩm
                     </Typography>
@@ -109,7 +115,7 @@ function MoveProduct() {
                             gap: 3
                         }}
                     >
-                        <QRCodeScanner setResult={setProductScannerData} />
+                        <QRCodeScanner setResult={setProductScannerData} isResetScanner={isResetScanner} />
                         {productScannerData && (
                             <>
                                 {productReducer.product && (
@@ -159,6 +165,16 @@ function MoveProduct() {
                                         </>
                                     )
                                 }
+                                <Button
+                                    startIcon={<NavigateNextIcon />}
+                                    variant='contained'
+                                    onClick={handleContinueScan}
+                                    size='small'
+                                    sx={{alignSelf: 'flex-end'}}
+                                    color='success'
+                                >
+                                    Tiếp tục quét
+                                </Button>
                             </>
                         )}
                     </Paper>
