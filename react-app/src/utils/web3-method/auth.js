@@ -8,7 +8,7 @@ export const createManufactory = async ({
                 from: accountAddress
             });
     } catch (error) {
-        console.error(error);
+        throw error;
     }
 };
 
@@ -22,7 +22,7 @@ export const createRetailer = async ({
                 from: accountAddress
             });
     } catch (error) {
-        console.error(error);
+        throw error;
     }
 };
 
@@ -36,7 +36,7 @@ export const createCustomer = async ({
                 from: accountAddress
             });
     } catch (error) {
-        console.error(error);
+        throw error;
     }
 };
 
@@ -50,7 +50,7 @@ export const removeManufactory = async ({
                 from: accountAddress
             });
     } catch (error) {
-        console.error(error);
+        throw error;
     }
 };
 
@@ -64,7 +64,7 @@ export const removeRetailer = async ({
                 from: accountAddress
             });
     } catch (error) {
-        console.error(error);
+        throw error;
     }
 };
 
@@ -78,6 +78,6 @@ export const removeCustomer = async ({
                 from: accountAddress
             });
     } catch (error) {
-        console.error(error);
+        throw error;
     }
 };

@@ -54,6 +54,7 @@ export const activateAccount = createAsyncThunk(
         contract,
         accountAddress
     }, {dispatch}) => {
+        let success = false;
         try {
             dispatch(showAlert({ loading: true }));
 
@@ -64,15 +65,17 @@ export const activateAccount = createAsyncThunk(
             } else if (roleOption === 2) {
                 await createCustomer({name: userData.displayName, email: userData.email}, contract, accountAddress);
             }
-
-            await updateDocument('users', { isActive: true, role: roleOption }, 'uid', userData.uid);
-
-            dispatch(showAlert({ success: 'Account activation successful.' }));
-
-            return roleOption;
+            success = true;
         } catch (error) {
+            success = false;
             dispatch(showAlert({ error: 'Account activation failed.' }));
+        } finally {
+            if (success) {
+                await updateDocument('users', { isActive: true, role: roleOption }, 'uid', userData.uid);
+                dispatch(showAlert({ success: 'Account activation successful.' }));
+            }
         }
+        return {roleOption, success};
     }
 );
 
@@ -84,6 +87,8 @@ export const deactivateAccount = createAsyncThunk(
         accountAddress
     }, {dispatch}) => {
         const guestRole = -1;
+        let success = false;
+
         try {
             dispatch(showAlert({ loading: true }));
 
@@ -94,15 +99,18 @@ export const deactivateAccount = createAsyncThunk(
             } else if (userData.role === 2) {
                 await removeCustomer({ email: userData.email}, contract, accountAddress);
             }
-
-            await updateDocument('users', { isActive: false, role: guestRole }, 'uid', userData.uid);
-
-            dispatch(showAlert({ success: 'Account deactivation successful.' }));
-
-            return guestRole;
+            success = true;
         } catch (error) {
+            success = false;
             dispatch(showAlert({ error: 'Account deactivation failed.' }));
+        } finally {
+            if (success) {
+                await updateDocument('users', { isActive: false, role: guestRole }, 'uid', userData.uid);
+                dispatch(showAlert({ success: 'Account deactivation successful.' }));
+            }
         }
+
+        return {guestRole, success};
     }
 );
 
@@ -124,13 +132,13 @@ const userSlice = createSlice({
         });
 
         builder.addCase(activateAccount.fulfilled, (state, action) => {
-            state.user.isActive = true;
-            state.user.role = action.payload;
+            state.user.isActive = action.payload.success;
+            state.user.role = action.payload.roleOption;
         });
 
         builder.addCase(deactivateAccount.fulfilled, (state, action) => {
-            state.user.isActive = false;
-            state.user.role = action.payload;
+            state.user.isActive = !action.payload.success;
+            state.user.role = action.payload.guestRole;
         });
     }
 });
