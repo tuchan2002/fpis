@@ -88,7 +88,7 @@ function ProductDetails() {
                         }}
                         >
                             <a style={{width: 198, height: 198}} target='_blank' id='qrCodeImage' href={productReducer.product?.imageURL} rel='noreferrer'>
-                                <img ref={qrCodeRef} alt={productReducer.product} src={productReducer.product?.imageURL} />
+                                <img style={{width: '100%', height: '100%'}} ref={qrCodeRef} alt={productReducer.product} src={productReducer.product?.imageURL} />
                             </a>
                             <Button
                                 variant='contained'

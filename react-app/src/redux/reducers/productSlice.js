@@ -261,6 +261,7 @@ export const sellProductToCustomer = createAsyncThunk(
 
             return product;
         } catch (error) {
+            dispatch(showAlert({ loading: false }));
             await showSweetAlert('error', 'Bán sản phẩm thất bại.');
 
             const product = await getProductDetail(
@@ -299,11 +300,12 @@ export const changeCustomerOfProduct = createAsyncThunk(
             );
 
             dispatch(showAlert({ loading: false }));
-
             await showSweetAlert('success', 'Thay đổi quyền sở hữu cho khách hàng khách thành công.');
 
             return product;
         } catch (error) {
+            dispatch(showAlert({ loading: false }));
+            dispatch(showAlert({ loading: false }));
             await showSweetAlert('error', 'Thay đổi quyền sở hữu cho khách hàng khách thất bại.');
 
             const product = await getProductDetail(

@@ -104,9 +104,8 @@ function Products() {
                     justifyContent='space-between'
                     spacing={4}
                 >
-                    <Typography variant='h4'>
+                    <Typography variant='h4' sx={{fontSize: 28}}>
                         {`${currentUserRole === 2 ? 'Sản phẩm đang sở hữu' : 'Danh sách sản phẩm'}`}
-
                     </Typography>
                     <Box sx={{display: 'flex', gap: 4, alignItems: 'center'}}>
                         {[0, 1, 3].includes(currentUserRole)

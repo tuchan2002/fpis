@@ -14,8 +14,8 @@ function QRCodeScanner({
                 },
                 fps: 10,
                 supportedScanTypes: [
-                    Html5QrcodeScanType.SCAN_TYPE_CAMERA,
-                    Html5QrcodeScanType.SCAN_TYPE_FILE
+                    Html5QrcodeScanType.SCAN_TYPE_FILE,
+                    Html5QrcodeScanType.SCAN_TYPE_CAMERA
                 ]
             },
             false
