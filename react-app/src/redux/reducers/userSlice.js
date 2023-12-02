@@ -132,13 +132,17 @@ const userSlice = createSlice({
         });
 
         builder.addCase(activateAccount.fulfilled, (state, action) => {
-            state.user.isActive = action.payload.success;
-            state.user.role = action.payload.roleOption;
+            if (action.payload.success) {
+                state.user.isActive = true;
+                state.user.role = action.payload.roleOption;
+            }
         });
 
         builder.addCase(deactivateAccount.fulfilled, (state, action) => {
-            state.user.isActive = !action.payload.success;
-            state.user.role = action.payload.guestRole;
+            if (action.payload.success) {
+                state.user.isActive = false;
+                state.user.role = action.payload.guestRole;
+            }
         });
     }
 });
