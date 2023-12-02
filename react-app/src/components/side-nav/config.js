@@ -5,7 +5,6 @@ import ShoppingBagIcon from '@heroicons/react/24/solid/ShoppingBagIcon';
 import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import TruckIcon from '@heroicons/react/24/solid/TruckIcon';
 import TagIcon from '@heroicons/react/24/solid/TagIcon';
-import CogIcon from '@heroicons/react/24/solid/CogIcon';
 
 import { SvgIcon } from '@mui/material';
 
@@ -79,16 +78,6 @@ const items = [
             </SvgIcon>
         ),
         allowedRolesList: [2]
-    },
-    {
-        title: 'Cài đặt',
-        path: '/#',
-        icon: (
-            <SvgIcon fontSize='small'>
-                <CogIcon />
-            </SvgIcon>
-        ),
-        allowedRolesList: [0, 1, 2, 3]
     }
 ];
 

@@ -164,7 +164,7 @@ function Products() {
                         </TableHead>
                         {web3Reducer.account ? (
                             <TableBody>
-                                { generateProductListFilter(productReducer.products, option).map((product) => (
+                                { generateProductListFilter(productReducer.products, option).length > 0 ? generateProductListFilter(productReducer.products, option).map((product) => (
                                     <TableRow
                                         key={product.productID}
                                         sx={{
@@ -199,12 +199,18 @@ function Products() {
                                             </Link>
                                         </TableCell>
                                     </TableRow>
-                                ))}
+                                )) : (
+                                    <div style={{width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                        <Typography variant='h6'>
+                                            Không có sản phẩm nào.
+                                        </Typography>
+                                    </div>
+                                )}
                             </TableBody>
                         ) : (
                             <div style={{width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <Typography variant='h6'>
-                                    Hãy kết nối với ví MetaMask
+                                    Hãy kết nối ví MetaMask để xem thông tin các sản phẩm.
                                 </Typography>
                             </div>
                         )}

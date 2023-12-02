@@ -1,8 +1,6 @@
-import BellIcon from '@heroicons/react/24/solid/BellIcon';
 import QuestionMarkCircleIcon from '@heroicons/react/24/solid/QuestionMarkCircleIcon';
 import {
     Avatar,
-    Badge,
     Box,
     Button,
     IconButton,
@@ -79,19 +77,6 @@ function TopNav() {
                                 <SvgIcon fontSize='small'>
                                     <QuestionMarkCircleIcon />
                                 </SvgIcon>
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title='Thông báo'>
-                            <IconButton>
-                                <Badge
-                                    badgeContent={4}
-                                    color='success'
-                                    variant='dot'
-                                >
-                                    <SvgIcon fontSize='small'>
-                                        <BellIcon />
-                                    </SvgIcon>
-                                </Badge>
                             </IconButton>
                         </Tooltip>
                         {!web3Reducer.account ? (
