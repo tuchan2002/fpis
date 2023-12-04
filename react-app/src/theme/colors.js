@@ -1,4 +1,5 @@
 import { alpha } from '@mui/material/styles';
+import { red } from '@mui/material/colors';
 
 const withAlphas = (color) => ({
     ...color,
@@ -60,8 +61,8 @@ export const warning = withAlphas({
 
 export const error = withAlphas({
     lightest: '#FEF3F2',
-    light: '#FEE4E2',
-    main: '#F04438',
+    light: red[200],
+    main: red[500],
     dark: '#B42318',
     darkest: '#7A271A',
     contrastText: '#FFFFFF'

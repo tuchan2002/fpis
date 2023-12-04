@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -8,7 +8,6 @@ import { Box } from '@mui/material';
 import { getDocument } from './firebase/services';
 import { handleAuthStateChanged } from './redux/reducers/authSlice';
 import { auth } from './firebase/config';
-import { showAlert } from './redux/reducers/alertSlice';
 import GlobalAlert from './components/global-alert';
 import Login from './app/login/page';
 import Home from './app/page';
@@ -38,6 +37,8 @@ function App() {
     const navigate = useNavigate();
 
     const web3Reducer = useSelector(web3Selector);
+
+    const [isInstalledMetamask, setIsInstalledMetamask] = useState(false);
 
     useEffect(() => {
         const unsubcribed = onAuthStateChanged(auth, async (user) => {
@@ -87,8 +88,8 @@ function App() {
                     };
 
                     dispatch(setWeb3State(data));
-                } else {
-                    dispatch(showAlert({ error: 'Xin hãy cài đặt Metamask.' }));
+
+                    setIsInstalledMetamask(true);
                 }
             } catch (error) {
                 console.log(error);
@@ -113,7 +114,7 @@ function App() {
             <GlobalAlert />
             {pathname !== '/login' && (
                 <>
-                    <TopNav />
+                    <TopNav isInstalledMetamask={isInstalledMetamask} />
                     <SideNav />
                 </>
             )}

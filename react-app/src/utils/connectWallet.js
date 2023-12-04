@@ -17,7 +17,7 @@ const connectWallet = async (web3Reducer, dispatch) => {
             dispatch(setAccount(accounts[0]));
         } catch (error) {
             dispatch(
-                showAlert({ error: 'Kết nối ví Metamask thất bại.' })
+                showAlert({ error: 'Xin hãy bấm vào Extension MetaMask.' })
             );
         }
     }

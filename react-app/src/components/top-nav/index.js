@@ -9,6 +9,7 @@ import {
     Tooltip
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
+import WalletIcon from '@mui/icons-material/Wallet';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AccountPopover from './account-popover';
@@ -19,7 +20,7 @@ import connectWallet from '../../utils/connectWallet';
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
-function TopNav() {
+function TopNav({isInstalledMetamask}) {
     const dispatch = useDispatch();
 
     const web3Reducer = useSelector(web3Selector);
@@ -38,6 +39,13 @@ function TopNav() {
         setAnchorEl(null);
     };
 
+    const handleConnectMetamask = () => {
+        if (isInstalledMetamask) {
+            connectWallet(web3Reducer, dispatch);
+        } else {
+            window.open('https://metamask.io/download/', '_blank');
+        }
+    };
     return (
         (
             <Box
@@ -83,17 +91,20 @@ function TopNav() {
                             <Button
                                 size='small'
                                 variant='contained'
-                                onClick={() => connectWallet(web3Reducer, dispatch)}
+                                onClick={handleConnectMetamask}
+                                color='info'
+                                startIcon={<WalletIcon />}
                             >
-                                Connect Wallet
+                                Kết nối ví MetaMask
                             </Button>
                         ) : (
                             <Button
                                 size='small'
                                 variant='contained'
                                 sx={{pointerEvents: 'none'}}
+                                color='info'
                             >
-                                {`${web3Reducer.account.substring(0, 5)}...${web3Reducer.account.substring(web3Reducer.account.length - 4)}`}
+                                {`${web3Reducer.account.substring(0, 6)}...${web3Reducer.account.substring(web3Reducer.account.length - 5)}`}
                             </Button>
                         )}
                         <Avatar

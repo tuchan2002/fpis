@@ -20,7 +20,7 @@ function CustomAlert({
         >
             <Alert
                 severity={success ? 'success' : 'error'}
-                sx={{ minWidth: '380px' }}
+                sx={{ minWidth: '375px' }}
             >
                 <AlertTitle>{success ? 'Success' : 'Error'}</AlertTitle>
                 {message}
