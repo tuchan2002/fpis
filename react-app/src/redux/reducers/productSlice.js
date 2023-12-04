@@ -25,7 +25,7 @@ export const createProduct = createAsyncThunk(
 
             dispatch(
                 showAlert({
-                    success: 'Successfully saved product to the blockchain.'
+                    success: 'Lưu sản phẩm vào blockchain thành công.'
                 })
             );
             window.location.href = '/products';
@@ -34,7 +34,7 @@ export const createProduct = createAsyncThunk(
 
             dispatch(
                 showAlert({
-                    error: 'Failed to save product to the blockchain.'
+                    error: 'Lưu sản phẩm vào blockchain thất bại.'
                 })
             );
         }
@@ -61,7 +61,7 @@ export const getAllOfProducts = createAsyncThunk(
         } catch (error) {
             dispatch(
                 showAlert({
-                    error: 'Failed retrieved products information.'
+                    error: 'Lấy thông tin các sản phẩm thất bại.'
                 })
             );
         }
@@ -89,7 +89,7 @@ export const getAllProductsByManufactory = createAsyncThunk(
         } catch (error) {
             dispatch(
                 showAlert({
-                    error: 'Failed retrieved products information.'
+                    error: 'Lấy thông tin các sản phẩm thất bại.'
                 })
             );
         }
@@ -117,7 +117,7 @@ export const getAllProductsByRetailer = createAsyncThunk(
         } catch (error) {
             dispatch(
                 showAlert({
-                    error: 'Failed retrieved products information.'
+                    error: 'Lấy thông tin các sản phẩm thất bại.'
                 })
             );
         }
@@ -145,7 +145,7 @@ export const getAllProductsByCustomer = createAsyncThunk(
         } catch (error) {
             dispatch(
                 showAlert({
-                    error: 'Failed retrieved products information.'
+                    error: 'Lấy thông tin các sản phẩm thất bại.'
                 })
             );
         }
@@ -178,7 +178,7 @@ export const getProductById = createAsyncThunk(
             console.log(error);
             dispatch(
                 showAlert({
-                    error: 'Failed retrieved product information.'
+                    error: 'Lấy thông tin các sản phẩm thất bại.'
                 })
             );
         }

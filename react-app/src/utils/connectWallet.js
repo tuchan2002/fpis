@@ -9,7 +9,7 @@ const connectWallet = async (web3Reducer, dispatch) => {
             });
             dispatch(
                 showAlert({
-                    success: 'Successfully connected to metamask wallet.'
+                    success: 'Kết nối ví Metamask thành công.'
                 })
             );
 
@@ -17,7 +17,7 @@ const connectWallet = async (web3Reducer, dispatch) => {
             dispatch(setAccount(accounts[0]));
         } catch (error) {
             dispatch(
-                showAlert({ error: 'Connection failed to metamask wallet' })
+                showAlert({ error: 'Kết nối ví Metamask thất bại.' })
             );
         }
     }
