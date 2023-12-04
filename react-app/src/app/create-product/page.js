@@ -66,7 +66,7 @@ function CreateProduct() {
         for (let i = 0; i < byteString.length; i++) {
             ia[i] = byteString.charCodeAt(i);
         }
-        return new Blob([ab], { type: 'image/png' });
+        return new Blob([ab], { type: 'image/jpeg' });
     };
 
     const handleSubmit = async (e) => {
@@ -81,10 +81,10 @@ function CreateProduct() {
         }
 
         html2canvas(qrCodeRef.current).then((canvas) => {
-            const qrCodeImage = canvas.toDataURL('image/png');
+            const qrCodeImage = canvas.toDataURL('image/jpeg');
             const blob = dataURLToBlob(qrCodeImage);
 
-            const imgRef = ref(imageDb, `qrcode/${productInputData.productID}`);
+            const imgRef = ref(imageDb, `qrcode/${productInputData.productID}.jpg`);
             uploadBytes(imgRef, blob).then((snapshot) => getDownloadURL(snapshot.ref))
                 .then((downloadURL) => {
                     dispatch(
