@@ -84,7 +84,7 @@ function CreateProduct() {
             const qrCodeImage = canvas.toDataURL('image/jpeg');
             const blob = dataURLToBlob(qrCodeImage);
 
-            const imgRef = ref(imageDb, `qrcode/${productInputData.productID}.jpg`);
+            const imgRef = ref(imageDb, `qrcode/${productInputData.model}_${productInputData.productID}.jpg`);
             uploadBytes(imgRef, blob).then((snapshot) => getDownloadURL(snapshot.ref))
                 .then((downloadURL) => {
                     dispatch(
