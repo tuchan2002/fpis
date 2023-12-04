@@ -64,7 +64,7 @@ function VerifyProduct() {
             });
 
             if (isReal) {
-                await showSweetAlert('success', 'This product is genuine.');
+                await showSweetAlert('success', 'Sản phẩm này là thật.');
                 setIsRealStatus(true);
                 dispatch(
                     getProductById({
@@ -74,11 +74,11 @@ function VerifyProduct() {
                     })
                 );
             } else {
-                await showSweetAlert('error', 'This product is fake.');
+                await showSweetAlert('error', 'Sản phẩm này là giả.');
             }
         } catch (error) {
             console.log(error);
-            await showSweetAlert('error', 'This product is fake.');
+            await showSweetAlert('error', 'Sản phẩm này là giả.');
         }
     };
 
