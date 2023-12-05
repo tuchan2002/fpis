@@ -10,6 +10,7 @@ import OverviewCustomer from '../components/overview/overview-customer';
 import { getAllOfUsers, userSelector } from '../redux/reducers/userSlice';
 import { web3Selector } from '../redux/reducers/web3Slice';
 import { getAllOfProducts, getAllProductsByManufactory, getAllProductsByRetailer, productSelector } from '../redux/reducers/productSlice';
+import OverviewGuest from '../components/overview/overview-guest';
 
 function Home() {
     const dispatch = useDispatch();
@@ -87,6 +88,8 @@ function Home() {
             return <OverviewCustomer totalSoldProduct={totalSoldProduct} totalManufactory={totalManufactory} totalRetailer={totalRetailer} />;
         } if (userRole === 3) {
             return <OverviewAdmin totalProduct={totalProduct} totalSoldProduct={totalSoldProduct} totalManufactory={totalManufactory} totalRetailer={totalRetailer} totalCustomer={totalCustomer} />;
+        } if (userRole === -1) {
+            return <OverviewGuest />;
         }
     };
 
