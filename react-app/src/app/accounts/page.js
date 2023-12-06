@@ -41,6 +41,8 @@ function Accounts() {
             return users.filter((user) => user?.role === 1);
         } if (optionFilter === 'customer') {
             return users.filter((user) => user?.role === 2);
+        } if (optionFilter === 'guest') {
+            return users.filter((user) => user?.role === -1);
         }
         return users;
     };
@@ -98,6 +100,10 @@ function Accounts() {
                             </ToggleButton>
                             <ToggleButton value='customer'>
                                 {` Khách hàng (${generateUserListFilter(userReducer.users, 'customer').length}) `}
+                            </ToggleButton>
+                            {' '}
+                            <ToggleButton value='guest'>
+                                {` Guest (${generateUserListFilter(userReducer.users, 'guest').length}) `}
                             </ToggleButton>
                         </ToggleButtonGroup>
                     </Box>
