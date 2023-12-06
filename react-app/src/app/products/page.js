@@ -7,9 +7,10 @@ import {Box,
     TableContainer,
     TableHead,
     TableRow,
-    IconButton,
     ToggleButtonGroup,
-    ToggleButton} from '@mui/material';
+    ToggleButton,
+    Stack,
+    Typography} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -70,7 +71,9 @@ function Products() {
         event,
         newOption,
     ) => {
-        setOption(newOption);
+        if (newOption !== null) {
+            setOption(newOption);
+        }
     };
 
     const generateProductListFilter = (products = [], optionFilter = 'total') => {
@@ -89,15 +92,23 @@ function Products() {
         && allowedRolesList.includes(currentUserRole) && (
             <Box
                 sx={{
-                    p: 3,
+                    px: 3,
+                    py: 8,
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 3,
-                    alignItems: 'flex-end'
+                    gap: 3
                 }}
             >
-                <Box sx={{display: 'flex', gap: 4, alignItems: 'center'}}>
-                    {[0, 1, 3].includes(currentUserRole)
+                <Stack
+                    direction='row'
+                    justifyContent='space-between'
+                    spacing={4}
+                >
+                    <Typography variant='h4' sx={{fontSize: 28}}>
+                        {`${currentUserRole === 2 ? 'Sản phẩm đang sở hữu' : 'Danh sách sản phẩm'}`}
+                    </Typography>
+                    <Box sx={{display: 'flex', gap: 4, alignItems: 'center'}}>
+                        {[0, 1, 3].includes(currentUserRole)
                     && (
                         <ToggleButtonGroup
                             color='secondary'
@@ -107,31 +118,34 @@ function Products() {
                             size='small'
                         >
                             <ToggleButton value='total'>
-                                {` Total (${generateProductListFilter(productReducer.products, 'total').length}) `}
+                                {` Tổng (${generateProductListFilter(productReducer.products, 'total').length}) `}
                             </ToggleButton>
                             {currentUserRole !== 1 && (
                                 <ToggleButton value='atManufactory'>
-                                    {` At Manufactory (${generateProductListFilter(productReducer.products, 'atManufactory').length}) `}
+                                    {` Tại nhà máy (${generateProductListFilter(productReducer.products, 'atManufactory').length}) `}
                                 </ToggleButton>
                             )}
                             <ToggleButton value='atRetailer'>
-                                {` At Retailer (${generateProductListFilter(productReducer.products, 'atRetailer').length}) `}
+                                {` Tại đại lý (${generateProductListFilter(productReducer.products, 'atRetailer').length}) `}
                             </ToggleButton>
                             <ToggleButton value='sold'>
-                                {` Sold (${generateProductListFilter(productReducer.products, 'sold').length}) `}
+                                {` Đã bán (${generateProductListFilter(productReducer.products, 'sold').length}) `}
                             </ToggleButton>
                         </ToggleButtonGroup>
                     )}
-                    {currentUserRole === 0 && (
-                        <Button
-                            startIcon={<AddIcon />}
-                            variant='contained'
-                            onClick={() => navigate('/create-product')}
-                        >
-                            Create Product
-                        </Button>
-                    )}
-                </Box>
+                        {currentUserRole === 0 && (
+                            <Button
+                                startIcon={<AddIcon />}
+                                variant='contained'
+                                onClick={() => navigate('/create-product')}
+                                size='small'
+                            >
+                                Thêm sản phẩm
+                            </Button>
+                        )}
+                    </Box>
+                </Stack>
+
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                         <TableHead>
@@ -147,40 +161,58 @@ function Products() {
                                 <TableCell align='left'>Detail</TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>
-                            {generateProductListFilter(productReducer.products, option).map((product) => (
-                                <TableRow
-                                    key={product.productID}
-                                    sx={{
-                                        '&:last-child td, &:last-child th': {
-                                            border: 0
-                                        }
-                                    }}
-                                >
-                                    <TableCell component='th' scope='row'>
-                                        {product.productID}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        {product.model}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        {product.manufactoryEmail ? product.manufactoryEmail : 'None'}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        {product.retailerEmail ? product.retailerEmail : 'None'}
-                                    </TableCell>
-                                    <TableCell align='left'>
-                                        <Link
-                                            to={`/products/${product.productID}`}
-                                        >
-                                            <IconButton>
-                                                <VisibilityIcon />
-                                            </IconButton>
-                                        </Link>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
+                        {web3Reducer.account ? (
+                            <TableBody>
+                                { generateProductListFilter(productReducer.products, option).length > 0 ? generateProductListFilter(productReducer.products, option).map((product) => (
+                                    <TableRow
+                                        key={product.productID}
+                                        sx={{
+                                            '&:last-child td, &:last-child th': {
+                                                border: 0
+                                            }
+                                        }}
+                                    >
+                                        <TableCell component='th' scope='row'>
+                                            {product.productID}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            {product.model}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            {product.manufactoryEmail ? product.manufactoryEmail : 'None'}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            {product.retailerEmail ? product.retailerEmail : 'None'}
+                                        </TableCell>
+                                        <TableCell align='left'>
+                                            <Link
+                                                to={`/products/${product.productID}`}
+                                            >
+                                                <Button
+                                                    variant='contained'
+                                                    color='info'
+                                                    size='small'
+                                                >
+                                                    <VisibilityIcon />
+                                                </Button>
+                                            </Link>
+                                        </TableCell>
+                                    </TableRow>
+                                )) : (
+                                    <div style={{width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                        <Typography variant='h6'>
+                                            Không có sản phẩm nào.
+                                        </Typography>
+                                    </div>
+                                )}
+                            </TableBody>
+                        ) : (
+                            <div style={{width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <Typography variant='h6'>
+                                    Hãy kết nối ví MetaMask để xem thông tin các sản phẩm.
+                                </Typography>
+                            </div>
+                        )}
                     </Table>
                 </TableContainer>
             </Box>

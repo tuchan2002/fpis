@@ -29,7 +29,6 @@ function ProductDetails() {
     const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
     useEffect(() => {
-        console.log('test', params.id, web3Reducer.contract, web3Reducer.account);
         if (web3Reducer.account) {
             dispatch(
                 getProductById({
@@ -51,7 +50,7 @@ function ProductDetails() {
         && allowedRolesList.includes(currentUserRole) && (
             <>
                 <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-                    <Paper sx={{ p: 3, maxWidth: 720, width: '100%' }}>
+                    <Paper sx={{ px: 3, maxWidth: 720, width: '100%' }}>
                         <Button
                             variant='text'
                             onClick={() => navigate(-1)}
@@ -73,10 +72,11 @@ function ProductDetails() {
                             }}
                         >
                             <Button
-                                variant='text'
+                                color='info'
+                                variant='contained'
                                 onClick={() => setOpenModalTimeline(true)}
                             >
-                                Show Product History
+                                Xem lịch sử sản phẩm
                             </Button>
 
                         </Box>
@@ -88,15 +88,15 @@ function ProductDetails() {
                         }}
                         >
                             <a style={{width: 198, height: 198}} target='_blank' id='qrCodeImage' href={productReducer.product?.imageURL} rel='noreferrer'>
-                                <img ref={qrCodeRef} alt={productReducer.product} src={productReducer.product?.imageURL} />
+                                <img style={{width: '100%', height: '100%'}} ref={qrCodeRef} alt={productReducer.product} src={productReducer.product?.imageURL} />
                             </a>
                             <Button
                                 variant='contained'
                                 onClick={downloadQRcode}
                                 startIcon={<DownloadIcon />}
-                                sx={{marginTop: 1}}
+                                sx={{marginTop: 1, marginBottom: 4}}
                             >
-                                Download
+                                Tải xuống
                             </Button>
                         </Box>
                     </Paper>

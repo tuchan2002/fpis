@@ -68,4 +68,4 @@ function ProductInfoTable({ productInfo }) {
     );
 }
 
-export default ProductInfoTable;
+export default React.memo(ProductInfoTable, (oldProps, newProps) => oldProps?.productInfo.productID === newProps?.productInfo.productID);

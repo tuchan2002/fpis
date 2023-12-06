@@ -1,19 +1,24 @@
 import {Box,
+    Button,
     Paper,
+    Stack,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
-    IconButton } from '@mui/material';
+    ToggleButton,
+    ToggleButtonGroup,
+    Typography} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { authSelector } from '../../redux/reducers/authSlice';
 import { getAllOfUsers, userSelector } from '../../redux/reducers/userSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
+import convertRoleToText from '../../utils/convertRoleToText';
 
 function Accounts() {
     const dispatch = useDispatch();
@@ -29,18 +34,24 @@ function Accounts() {
         dispatch(getAllOfUsers());
     }, []);
 
-    const convertRoleToText = (role) => {
-        switch (role) {
-        case 0:
-            return 'Manufactory';
-        case 1:
-            return 'Retailer';
-        case 2:
-            return 'Customer';
-        case 3:
-            return 'Admin';
-        default:
-            return 'Guest';
+    const generateUserListFilter = (users = [], optionFilter = 'total') => {
+        if (optionFilter === 'manufactory') {
+            return users.filter((user) => user?.role === 0);
+        } if (optionFilter === 'retailer') {
+            return users.filter((user) => user?.role === 1);
+        } if (optionFilter === 'customer') {
+            return users.filter((user) => user?.role === 2);
+        }
+        return users;
+    };
+
+    const [option, setOption] = useState('total');
+    const handleChangeOption = (
+        event,
+        newOption,
+    ) => {
+        if (newOption !== null) {
+            setOption(newOption);
         }
     };
 
@@ -49,13 +60,49 @@ function Accounts() {
         && allowedRolesList.includes(currentUserRole) && (
             <Box
                 sx={{
-                    p: 3,
+                    px: 3,
+                    py: 8,
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: 3,
-                    alignItems: 'flex-end'
+                    gap: 3
                 }}
             >
+
+                <Stack
+                    direction='row'
+                    justifyContent='space-between'
+                    spacing={4}
+                >
+                    <Typography variant='h4'>
+                        Quản lý tài khoản
+                    </Typography>
+                    <Box sx={{display: 'flex', gap: 4, alignItems: 'center'}}>
+
+                        <ToggleButtonGroup
+                            color='secondary'
+                            value={option}
+                            exclusive
+                            onChange={handleChangeOption}
+                            size='small'
+                        >
+                            <ToggleButton value='total'>
+                                {` Tất cả (${generateUserListFilter(userReducer.users, 'total').length}) `}
+                            </ToggleButton>
+                            {currentUserRole !== 1 && (
+                                <ToggleButton value='manufactory'>
+                                    {` Nhà máy (${generateUserListFilter(userReducer.users, 'manufactory').length}) `}
+                                </ToggleButton>
+                            )}
+                            <ToggleButton value='retailer'>
+                                {` Đại lý (${generateUserListFilter(userReducer.users, 'retailer').length}) `}
+                            </ToggleButton>
+                            <ToggleButton value='customer'>
+                                {` Khách hàng (${generateUserListFilter(userReducer.users, 'customer').length}) `}
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                    </Box>
+                </Stack>
+
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                         <TableHead>
@@ -68,11 +115,12 @@ function Accounts() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            { userReducer.users.map((user, index) => {
+                            { generateUserListFilter(userReducer.users, option).length > 0 ? generateUserListFilter(userReducer.users, option).map((user, index) => {
                                 if (user.role === 3) {
                                     return;
                                 }
 
+                                console.log('user', user);
                                 return (
                                     <TableRow key={user.uid}>
                                         <TableCell>
@@ -89,14 +137,24 @@ function Accounts() {
                                         </TableCell>
                                         <TableCell align='left'>
                                             <Link to={`/accounts/${user.uid}`}>
-                                                <IconButton>
+                                                <Button
+                                                    variant='contained'
+                                                    color='info'
+                                                    size='small'
+                                                >
                                                     <VisibilityIcon />
-                                                </IconButton>
+                                                </Button>
                                             </Link>
                                         </TableCell>
                                     </TableRow>
                                 );
-                            })}
+                            }) : (
+                                <div style={{width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                    <Typography variant='h6'>
+                                        Không có người dùng nào.
+                                    </Typography>
+                                </div>
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>

@@ -1,6 +1,7 @@
 import { Box, Button, Paper, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { authSelector } from '../../redux/reducers/authSlice';
 import useAuthEffect from '../../customHook/useAuthEffect';
 import QRCodeScanner from '../../components/qr-code-scanner';
@@ -23,6 +24,7 @@ function VerifyProduct() {
     useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
     const [productScannerData, setProductScannerData] = useState(null);
+    const [isResetScanner, setIsResetScanner] = useState(false);
     const [isRealStatus, setIsRealStatus] = useState(false);
     const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
@@ -46,7 +48,6 @@ function VerifyProduct() {
                 web3Reducer.contract,
                 web3Reducer.accountAddress
             );
-            console.log(productScannerData, productInBlockchain);
 
             let isReal = true;
             Object.keys(productInBlockchain).forEach((key) => {
@@ -63,7 +64,7 @@ function VerifyProduct() {
             });
 
             if (isReal) {
-                await showSweetAlert('success', 'This product is genuine.');
+                await showSweetAlert('success', 'Sản phẩm này là thật.');
                 setIsRealStatus(true);
                 dispatch(
                     getProductById({
@@ -73,21 +74,31 @@ function VerifyProduct() {
                     })
                 );
             } else {
-                await showSweetAlert('error', 'This product is fake.');
+                await showSweetAlert('error', 'Sản phẩm này là giả.');
             }
         } catch (error) {
             console.log(error);
-            await showSweetAlert('error', 'This product is fake.');
+            await showSweetAlert('error', 'Sản phẩm này là giả.');
         }
+    };
+
+    const handleContinueScan = () => {
+        setProductScannerData(null);
+        setIsResetScanner(!isResetScanner);
+        setIsRealStatus(false);
     };
 
     return (
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
-            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+                <Typography variant='h4' sx={{mb: 2}}>
+                    Xác minh sản phẩm
+                </Typography>
                 <Paper
                     sx={{
-                        p: 3,
+                        px: 3,
+                        pb: 3,
                         maxWidth: 720,
                         width: '100%',
                         display: 'flex',
@@ -97,12 +108,13 @@ function VerifyProduct() {
                         gap: 3
                     }}
                 >
-                    <QRCodeScanner setResult={setProductScannerData} />
-                    <Typography variant='h5'>
-                        {isRealStatus ? 'Product Information' : 'Product Information from QR code'}
-                    </Typography>
+                    <QRCodeScanner setResult={setProductScannerData} isResetScanner={isResetScanner} />
+
                     {productScannerData && (
                         <>
+                            <Typography variant='h5'>
+                                {isRealStatus ? 'Thông tin sản phẩm' : 'Thông tin từ mã QR'}
+                            </Typography>
                             <ProductInfoTable
                                 productInfo={isRealStatus ? productReducer.product : productScannerData}
                             />
@@ -111,15 +123,16 @@ function VerifyProduct() {
                                     variant='contained'
                                     onClick={handleVerify}
                                 >
-                                    Verify
+                                    Xác minh
                                 </Button>
                             )}
-                            { isRealStatus && (
+                            {isRealStatus && (
                                 <Button
-                                    variant='text'
+                                    color='info'
+                                    variant='contained'
                                     onClick={() => setOpenModalTimeline(true)}
                                 >
-                                    Show Product History
+                                    Xem lịch sử sản phẩm
                                 </Button>
                             )}
                             {isRealStatus && (
@@ -133,6 +146,16 @@ function VerifyProduct() {
                                     onClose={() => setOpenModalTimeline(false)}
                                 />
                             )}
+                            <Button
+                                startIcon={<NavigateNextIcon />}
+                                variant='contained'
+                                onClick={handleContinueScan}
+                                size='small'
+                                sx={{alignSelf: 'flex-end'}}
+                                color='success'
+                            >
+                                Tiếp tục quét
+                            </Button>
                         </>
                     )}
 

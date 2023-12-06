@@ -25,7 +25,7 @@ export const createProduct = createAsyncThunk(
 
             dispatch(
                 showAlert({
-                    success: 'Successfully saved product to the blockchain.'
+                    success: 'Lưu sản phẩm vào blockchain thành công.'
                 })
             );
             window.location.href = '/products';
@@ -34,7 +34,7 @@ export const createProduct = createAsyncThunk(
 
             dispatch(
                 showAlert({
-                    error: 'Failed to save product to the blockchain.'
+                    error: 'Lưu sản phẩm vào blockchain thất bại.'
                 })
             );
         }
@@ -54,7 +54,6 @@ export const getAllOfProducts = createAsyncThunk(
             dispatch(showAlert({ loading: true }));
 
             const products = await getAllProducts(contract, accountAddress);
-            console.log('products', products);
 
             dispatch(showAlert({ loading: false }));
 
@@ -62,7 +61,7 @@ export const getAllOfProducts = createAsyncThunk(
         } catch (error) {
             dispatch(
                 showAlert({
-                    error: 'Failed retrieved products information.'
+                    error: 'Lấy thông tin các sản phẩm thất bại.'
                 })
             );
         }
@@ -90,7 +89,7 @@ export const getAllProductsByManufactory = createAsyncThunk(
         } catch (error) {
             dispatch(
                 showAlert({
-                    error: 'Failed retrieved products information.'
+                    error: 'Lấy thông tin các sản phẩm thất bại.'
                 })
             );
         }
@@ -118,7 +117,7 @@ export const getAllProductsByRetailer = createAsyncThunk(
         } catch (error) {
             dispatch(
                 showAlert({
-                    error: 'Failed retrieved products information.'
+                    error: 'Lấy thông tin các sản phẩm thất bại.'
                 })
             );
         }
@@ -146,7 +145,7 @@ export const getAllProductsByCustomer = createAsyncThunk(
         } catch (error) {
             dispatch(
                 showAlert({
-                    error: 'Failed retrieved products information.'
+                    error: 'Lấy thông tin các sản phẩm thất bại.'
                 })
             );
         }
@@ -172,8 +171,6 @@ export const getProductById = createAsyncThunk(
                 accountAddress
             );
 
-            console.log('productproduct', product);
-
             dispatch(showAlert({ loading: false }));
 
             return product;
@@ -181,7 +178,7 @@ export const getProductById = createAsyncThunk(
             console.log(error);
             dispatch(
                 showAlert({
-                    error: 'Failed retrieved product information.'
+                    error: 'Lấy thông tin các sản phẩm thất bại.'
                 })
             );
         }
@@ -215,13 +212,13 @@ export const moveProductToRetailer = createAsyncThunk(
 
             dispatch(showAlert({ loading: false }));
 
-            await showSweetAlert('success', 'Successfully moved the product to the retailer.');
+            await showSweetAlert('success', 'Di chuyển sản phẩm sang đại lý thành công.');
 
             return product;
         } catch (error) {
             console.error(error);
             dispatch(showAlert({ loading: false }));
-            await showSweetAlert('error', 'Failed to move the product to the retailer.');
+            await showSweetAlert('error', 'Di chuyển sản phẩm sang đại lý thất bại.');
 
             const product = await getProductDetail(
                 data.productID,
@@ -260,11 +257,12 @@ export const sellProductToCustomer = createAsyncThunk(
 
             dispatch(showAlert({ loading: false }));
 
-            await showSweetAlert('success', 'Successfully sold the product to the customer.');
+            await showSweetAlert('success', 'Bán sản phẩm thành công.');
 
             return product;
         } catch (error) {
-            await showSweetAlert('error', 'Failed to sell the product to the customer.');
+            dispatch(showAlert({ loading: false }));
+            await showSweetAlert('error', 'Bán sản phẩm thất bại.');
 
             const product = await getProductDetail(
                 data.productID,
@@ -302,12 +300,13 @@ export const changeCustomerOfProduct = createAsyncThunk(
             );
 
             dispatch(showAlert({ loading: false }));
-
-            await showSweetAlert('success', 'Successfully changed the product to another customer.');
+            await showSweetAlert('success', 'Thay đổi quyền sở hữu cho khách hàng khách thành công.');
 
             return product;
         } catch (error) {
-            await showSweetAlert('error', 'Failed to change the product.');
+            dispatch(showAlert({ loading: false }));
+            dispatch(showAlert({ loading: false }));
+            await showSweetAlert('error', 'Thay đổi quyền sở hữu cho khách hàng khách thất bại.');
 
             const product = await getProductDetail(
                 data.productID,

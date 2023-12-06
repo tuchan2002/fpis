@@ -6,6 +6,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.5",
+    "@heroicons/react": "^2.0.18",
     "@metamask/detect-provider": "^2.0.0",
     "@mui/icons-material": "^5.14.0",
     "@mui/lab": "^5.0.0-alpha.144",
@@ -36,8 +37,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "npx eslint .",
-    "lint-fix": "npx eslint . --fix",
+    "lint": "npx eslint ./src/",
+    "lint-fix": "npx eslint ./src/ --fix",
     "compile": "npx hardhat compile",
     "deploy:testnet": "npx hardhat run --network bscTestnet scripts/deploy.js",
     "test-smc": "npx hardhat test"

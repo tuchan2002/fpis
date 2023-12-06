@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Html5QrcodeScanType, Html5QrcodeScanner } from 'html5-qrcode';
 
 function QRCodeScanner({
-    setResult
+    setResult, isResetScanner
 }) {
     useEffect(() => {
         const scanner = new Html5QrcodeScanner(
@@ -12,10 +12,10 @@ function QRCodeScanner({
                     width: 225,
                     height: 225
                 },
-                fps: 5,
+                fps: 10,
                 supportedScanTypes: [
-                    Html5QrcodeScanType.SCAN_TYPE_CAMERA,
-                    Html5QrcodeScanType.SCAN_TYPE_FILE
+                    Html5QrcodeScanType.SCAN_TYPE_FILE,
+                    Html5QrcodeScanType.SCAN_TYPE_CAMERA
                 ]
             },
             false
@@ -40,7 +40,7 @@ function QRCodeScanner({
         return () => {
             scanner.clear();
         };
-    }, []);
+    }, [isResetScanner]);
 
     return (
         <div id='reader' style={{ width: 400 }} />

@@ -29,7 +29,6 @@ export const getDocumentsCondition = async (
     const q = query(docRef, where(key, operator, value));
     const querySnapshot = await getDocs(q);
     const data = querySnapshot.docs.map((docItem) => docItem.data());
-    console.log(data);
     return data;
 };
 
@@ -69,7 +68,6 @@ export const updateDocument = async (
     const querySnapshot = await getDocs(q);
     const docId = querySnapshot.docs.map((docItem) => docItem.id)[0];
 
-    console.log(docId);
     const docRef = doc(db, collectionName, docId);
     await updateDoc(docRef, data);
 };

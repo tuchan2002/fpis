@@ -14,13 +14,13 @@ function CustomAlert({
     return (
         <Snackbar
             open={open}
-            autoHideDuration={3000}
+            autoHideDuration={5000}
             onClose={handleClose}
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
             <Alert
                 severity={success ? 'success' : 'error'}
-                sx={{ minWidth: '350px' }}
+                sx={{ minWidth: '375px' }}
             >
                 <AlertTitle>{success ? 'Success' : 'Error'}</AlertTitle>
                 {message}

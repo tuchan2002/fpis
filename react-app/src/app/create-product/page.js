@@ -51,8 +51,8 @@ function CreateProduct() {
         if (model.trim() === '' || description.trim() === '') {
             setFieldValidator({
                 ...fieldValidator,
-                model: model.trim() === '' ? 'This field cannot be left blank' : '',
-                description: description.trim() === '' ? 'This field cannot be left blank' : ''
+                model: model.trim() === '' ? 'Không được bỏ trống trường này' : '',
+                description: description.trim() === '' ? 'Không được bỏ trống trường này' : ''
             });
             return true;
         }
@@ -66,7 +66,7 @@ function CreateProduct() {
         for (let i = 0; i < byteString.length; i++) {
             ia[i] = byteString.charCodeAt(i);
         }
-        return new Blob([ab], { type: 'image/png' });
+        return new Blob([ab], { type: 'image/jpeg' });
     };
 
     const handleSubmit = async (e) => {
@@ -81,10 +81,10 @@ function CreateProduct() {
         }
 
         html2canvas(qrCodeRef.current).then((canvas) => {
-            const qrCodeImage = canvas.toDataURL('image/png');
+            const qrCodeImage = canvas.toDataURL('image/jpeg');
             const blob = dataURLToBlob(qrCodeImage);
 
-            const imgRef = ref(imageDb, `qrcode/${productInputData.productID}`);
+            const imgRef = ref(imageDb, `qrcode/${productInputData.model}_${productInputData.productID}.jpg`);
             uploadBytes(imgRef, blob).then((snapshot) => getDownloadURL(snapshot.ref))
                 .then((downloadURL) => {
                     dispatch(
@@ -106,7 +106,7 @@ function CreateProduct() {
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
             <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-                <Paper sx={{ p: 3, maxWidth: 720, width: '100%' }}>
+                <Paper sx={{ px: 3, maxWidth: 720, width: '100%' }}>
                     <Box
                         component='form'
                         onSubmit={handleSubmit}
@@ -117,7 +117,7 @@ function CreateProduct() {
                             gap: 3
                         }}
                     >
-                        <Typography variant='h4'>Create Product</Typography>
+                        <Typography variant='h4'>Thêm sản phẩm</Typography>
                         <TextField
                             variant='standard'
                             required
@@ -135,7 +135,7 @@ function CreateProduct() {
                             required
                             fullWidth
                             id='description'
-                            label='Description'
+                            label='Mô tả sản phẩm'
                             name='description'
                             value={description}
                             onChange={onChangeProductInputData}
@@ -175,9 +175,9 @@ function CreateProduct() {
                         <Button
                             type='submit'
                             variant='contained'
-                            sx={{ alignSelf: 'flex-end' }}
+                            sx={{ alignSelf: 'flex-end', mb: 4 }}
                         >
-                            Create
+                            Thêm
                         </Button>
 
                     </Box>

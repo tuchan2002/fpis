@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { getUsersByRole, userSelector } from '../../redux/reducers/userSlice';
 import { getProductById, moveProductToRetailer, productSelector } from '../../redux/reducers/productSlice';
 import { authSelector } from '../../redux/reducers/authSlice';
@@ -33,7 +34,7 @@ function MoveProduct() {
     useAuthEffect(currentUserRole, allowedRolesList, authReducer.user?.isActive);
 
     const [productScannerData, setProductScannerData] = useState(null);
-
+    const [isResetScanner, setIsResetScanner] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState('');
     const [openModalTimeline, setOpenModalTimeline] = useState(false);
 
@@ -88,15 +89,23 @@ function MoveProduct() {
         }));
     };
 
-    console.log(productReducer.product);
+    const handleContinueScan = () => {
+        setProductScannerData(null);
+        setIsResetScanner(!isResetScanner);
+    };
+
     return (
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
             <>
-                <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+                <Box sx={{ p: 3, display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center'}}>
+                    <Typography variant='h4' sx={{mb: 2}}>
+                        Di chuyển sản phẩm
+                    </Typography>
                     <Paper
                         sx={{
-                            p: 3,
+                            px: 3,
+                            pb: 3,
                             maxWidth: 720,
                             width: '100%',
                             display: 'flex',
@@ -106,22 +115,23 @@ function MoveProduct() {
                             gap: 3
                         }}
                     >
-                        <QRCodeScanner setResult={setProductScannerData} />
-                        <Typography variant='h5'>
-                            Product Information
-                        </Typography>
+                        <QRCodeScanner setResult={setProductScannerData} isResetScanner={isResetScanner} />
                         {productScannerData && (
                             <>
                                 {productReducer.product && (
                                     <>
+                                        <Typography variant='h5'>
+                                            Thông tin sản phẩm
+                                        </Typography>
                                         <ProductInfoTable
                                             productInfo={{...productReducer.product, description: productScannerData.description}}
                                         />
                                         <Button
-                                            variant='text'
+                                            color='info'
+                                            variant='contained'
                                             onClick={() => setOpenModalTimeline(true)}
                                         >
-                                            Show Product History
+                                            Xem lịch sử sản phẩm
                                         </Button>
                                     </>
                                 )}
@@ -134,7 +144,7 @@ function MoveProduct() {
                                                 sx={{ width: '50%' }}
                                                 id='userId'
                                                 select
-                                                label='Retailer'
+                                                label='Chọn đại lý bán lẻ'
                                                 variant='standard'
                                                 value={selectedUserId}
                                                 onChange={(e) => setSelectedUserId(e.target.value)}
@@ -150,11 +160,21 @@ function MoveProduct() {
                                                 disabled={!selectedUserId}
                                                 onClick={handleMoveToRetailer}
                                             >
-                                                Move
+                                                Di chuyển
                                             </Button>
                                         </>
                                     )
                                 }
+                                <Button
+                                    startIcon={<NavigateNextIcon />}
+                                    variant='contained'
+                                    onClick={handleContinueScan}
+                                    size='small'
+                                    sx={{alignSelf: 'flex-end'}}
+                                    color='success'
+                                >
+                                    Tiếp tục quét
+                                </Button>
                             </>
                         )}
                     </Paper>
