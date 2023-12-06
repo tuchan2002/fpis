@@ -1,13 +1,13 @@
 const convertRoleToText = (role) => {
     switch (role) {
     case 0:
-        return 'Manufactory';
+        return 'Nhà máy';
     case 1:
-        return 'Retailer';
+        return 'Đại lý';
     case 2:
-        return 'Customer';
+        return 'Khách hàng';
     case 3:
-        return 'Admin';
+        return 'Quản trị viên';
     default:
         return 'Guest';
     }

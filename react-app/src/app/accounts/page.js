@@ -1,15 +1,18 @@
 import {Box,
     Button,
     Paper,
+    Stack,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
+    ToggleButton,
+    ToggleButtonGroup,
     Typography} from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { authSelector } from '../../redux/reducers/authSlice';
@@ -31,6 +34,27 @@ function Accounts() {
         dispatch(getAllOfUsers());
     }, []);
 
+    const generateUserListFilter = (users = [], optionFilter = 'total') => {
+        if (optionFilter === 'manufactory') {
+            return users.filter((user) => user?.role === 0);
+        } if (optionFilter === 'retailer') {
+            return users.filter((user) => user?.role === 1);
+        } if (optionFilter === 'customer') {
+            return users.filter((user) => user?.role === 2);
+        }
+        return users;
+    };
+
+    const [option, setOption] = useState('total');
+    const handleChangeOption = (
+        event,
+        newOption,
+    ) => {
+        if (newOption !== null) {
+            setOption(newOption);
+        }
+    };
+
     return (
         currentUserRole !== null
         && allowedRolesList.includes(currentUserRole) && (
@@ -43,9 +67,42 @@ function Accounts() {
                     gap: 3
                 }}
             >
-                <Typography variant='h4'>
-                    Quản lý tài khoản
-                </Typography>
+
+                <Stack
+                    direction='row'
+                    justifyContent='space-between'
+                    spacing={4}
+                >
+                    <Typography variant='h4'>
+                        Quản lý tài khoản
+                    </Typography>
+                    <Box sx={{display: 'flex', gap: 4, alignItems: 'center'}}>
+
+                        <ToggleButtonGroup
+                            color='secondary'
+                            value={option}
+                            exclusive
+                            onChange={handleChangeOption}
+                            size='small'
+                        >
+                            <ToggleButton value='total'>
+                                {` Tất cả (${generateUserListFilter(userReducer.users, 'total').length}) `}
+                            </ToggleButton>
+                            {currentUserRole !== 1 && (
+                                <ToggleButton value='manufactory'>
+                                    {` Nhà máy (${generateUserListFilter(userReducer.users, 'manufactory').length}) `}
+                                </ToggleButton>
+                            )}
+                            <ToggleButton value='retailer'>
+                                {` Đại lý (${generateUserListFilter(userReducer.users, 'retailer').length}) `}
+                            </ToggleButton>
+                            <ToggleButton value='customer'>
+                                {` Khách hàng (${generateUserListFilter(userReducer.users, 'customer').length}) `}
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+                    </Box>
+                </Stack>
+
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label='simple table'>
                         <TableHead>
@@ -58,7 +115,7 @@ function Accounts() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            { userReducer.users.map((user, index) => {
+                            { generateUserListFilter(userReducer.users, option).length > 0 ? generateUserListFilter(userReducer.users, option).map((user, index) => {
                                 if (user.role === 3) {
                                     return;
                                 }
@@ -90,7 +147,13 @@ function Accounts() {
                                         </TableCell>
                                     </TableRow>
                                 );
-                            })}
+                            }) : (
+                                <div style={{width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                    <Typography variant='h6'>
+                                        Không có người dùng nào.
+                                    </Typography>
+                                </div>
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
