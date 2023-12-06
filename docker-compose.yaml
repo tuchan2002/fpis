@@ -7,4 +7,4 @@ services:
       context: ./react-app
     restart: always
     ports:
-      - "80:80"
+      - "80:3000"
