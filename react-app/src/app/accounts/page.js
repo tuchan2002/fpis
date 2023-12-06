@@ -120,6 +120,7 @@ function Accounts() {
                                     return;
                                 }
 
+                                console.log('user', user);
                                 return (
                                     <TableRow key={user.uid}>
                                         <TableCell>
