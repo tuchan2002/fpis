@@ -18,7 +18,7 @@ function ProductInfoTable({ productInfo }) {
                                 ID
                             </TableCell>
                             <TableCell align='right'>
-                                {productInfo.productID}
+                                {productInfo?.productID}
                             </TableCell>
                         </TableRow>
                         <TableRow>
